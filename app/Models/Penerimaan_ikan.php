@@ -13,11 +13,11 @@ class Penerimaan_ikan extends Model
 
     public function ikan()
     {
-        return $this->belongsTo(Ikan::class);
+        return $this->belongsTo(Ikan::class, 'ikan_id');
     }
 
     public function supplier()
     {
-        return $this->belongsTo(Supplier::class);
+        return $this->belongsTo(Supplier::class, 'supplier_id');
     }
 }

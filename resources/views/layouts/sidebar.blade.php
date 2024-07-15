@@ -88,13 +88,13 @@
 
                     <ul class="submenu ">
 
-                        <li class="submenu-item  ">
-                            <a href="component-accordion.html" class="submenu-link">Ikan Masuk</a>
+                        <li class="submenu-item  {{ Request::is('penerimaan_ikan') ? 'active' : '' }}">
+                            <a href="/penerimaan_ikan" class="submenu-link">Ikan Masuk</a>
 
                         </li>
 
-                        <li class="submenu-item  ">
-                            <a href="component-alert.html" class="submenu-link">Cutting</a>
+                        <li class="submenu-item  {{ Request::is('cutting') ? 'active' : '' }}">
+                            <a href="/cutting" class="submenu-link">Cutting</a>
 
                         </li>
 

@@ -12,8 +12,8 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Data Akun Karyawan</h3>
-                        <p class="text-subtitle text-muted">Silahkan kelola data akun</p>
+                        <h3>Data Supplier</h3>
+                        <p class="text-subtitle text-muted">Silahkan kelola data supplier</p>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -29,42 +29,38 @@
                 <div class="card">
                     <div class="card-header">
                         <h5 class="card-title">
-                            Tambah Akun Karyawan
+                            Tambah Supplier
                         </h5>
-                        <button type="button" class="btn btn-outline-primary block" data-bs-toggle="modal" data-bs-target="#tambahAkunModal">
-                            Tambah Akun
+                        <button type="button" class="btn btn-outline-primary block" data-bs-toggle="modal" data-bs-target="#tambahSupplierModal">
+                            Tambah Supplier
                         </button>
                         
                         <!-- Vertically Centered modal Modal -->
-                        <div class="modal fade" id="tambahAkunModal" tabindex="-1" role="dialog" aria-labelledby="tambahAkunModalTitle" aria-hidden="true">
+                        <div class="modal fade" id="tambahSupplierModal" tabindex="-1" role="dialog" aria-labelledby="tambahSupplierModalTitle" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
                                 <div class="modal-content">
                         
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="tambahAkunModalTitle">Tambah Akun</h5>
+                                        <h5 class="modal-title" id="tambahSupplierModalTitle">Tambah Supplier</h5>
                                         <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                             <i data-feather="x"></i>
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form method="POST" action="{{ route('akun.store') }}" enctype="multipart/form-data" class="mt-0">
+                                        <form method="POST" action="{{ route('supplier.store') }}" enctype="multipart/form-data" class="mt-0">
                                             @csrf
                                             <div class="form-group">
-                                                <label for="name">Nama</label>
-                                                <input type="text" name="name" class="form-control border-primary" required>
+                                                <label for="nama_supplier">Nama Supplier</label>
+                                                <input type="text" name="nama_supplier" class="form-control border-primary" required>
                                             </div>
                                             <div class="form-group">
-                                                <label for="email">Email</label>
-                                                <input type="email" name="email" class="form-control border-primary" required>
+                                                <label for="nama_kapal">Nama Kapal</label>
+                                                <input type="text" name="nama_kapal" class="form-control border-primary" required>
                                             </div>
                                             <div class="form-group">
-                                                <label for="password">Password</label>
-                                                <input type="password" name="password" class="form-control border-primary" required>
+                                                <label for="alamat">Alamat</label>
+                                                <input type="text" name="alamat" class="form-control border-primary" required>
                                             </div>
-                                            {{-- <div class="form-group">
-                                                <label for="password_confirmation">Konfirmasi Password</label>
-                                                <input type="password" name="password_confirmation" class="form-control border-primary" required>
-                                            </div> --}}
                                             <button type="submit" class="btn btn-primary ms-1">
                                                 <span class="d-none d-sm-block">Submit</span>
                                             </button>
@@ -82,8 +78,9 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Email</th>
-                                        <th>Name</th>
+                                        <th>Nama Supplier</th>
+                                        <th>Nama Kapal</th>
+                                        <th>Alamat</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -91,42 +88,43 @@
                                     @foreach ($data as $item)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $item->email }}</td>
-                                            <td>{{ $item->name }}</td>
+                                            <td>{{ $item->nama_supplier }}</td>
+                                            <td>{{ $item->nama_kapal }}</td>
+                                            <td>{{ $item->alamat }}</td>
                                             <td>
-                                                <button type="button" class="btn btn-outline-primary block" data-bs-toggle="modal" data-bs-target="#editAkunModal{{ $item->id }}">
-                                                    Edit akun
+                                                <button type="button" class="btn btn-outline-primary block" data-bs-toggle="modal" data-bs-target="#editSupplierModal{{ $item->id }}">
+                                                    Edit Supplier
                                                 </button>
-                                                <button type="button" class="btn btn-outline-danger block" data-bs-toggle="modal" data-bs-target="#hapusAkunModal{{ $item->id }}">
-                                                    Hapus akun
+                                                <button type="button" class="btn btn-outline-danger block" data-bs-toggle="modal" data-bs-target="#hapusSupplierModal{{ $item->id }}">
+                                                    Hapus Supplier
                                                 </button>
                                             </td>
                                         </tr>
-                                        <!-- Modal Edit Akun -->
-                                        <div class="modal fade" id="editAkunModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="editAkunModalTitle{{ $item->id }}" aria-hidden="true">
+                                        <!-- Modal Edit Supplier -->
+                                        <div class="modal fade" id="editSupplierModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="editSupplierModalTitle{{ $item->id }}" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="editAkunModalTitle{{ $item->id }}">Edit Akun</h5>
+                                                        <h5 class="modal-title" id="editSupplierModalTitle{{ $item->id }}">Edit Supplier</h5>
                                                         <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                                             <i data-feather="x"></i>
                                                         </button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <form method="POST" action="{{ route('akun.update', $item->id) }}" enctype="multipart/form-data" class="mt-0">
+                                                        <form method="POST" action="{{ route('supplier.update', $item->id) }}" enctype="multipart/form-data" class="mt-0">
                                                             @csrf
                                                             @method('PUT')
                                                             <div class="form-group">
-                                                                <label for="name">Nama</label>
-                                                                <input type="text" name="name" class="form-control border-primary" value="{{ $item->name }}" required>
+                                                                <label for="nama_supplier">Nama Supplier</label>
+                                                                <input type="text" name="nama_supplier" class="form-control border-primary" value="{{ $item->nama_supplier }}" required>
                                                             </div>
                                                             <div class="form-group">
-                                                                <label for="email">Email</label>
-                                                                <input type="email" name="email" class="form-control border-primary" value="{{ $item->email }}" required>
+                                                                <label for="nama_kapal">Nama Kapal</label>
+                                                                <input type="text" name="nama_kapal" class="form-control border-primary" value="{{ $item->nama_kapal }}" required>
                                                             </div>
                                                             <div class="form-group">
-                                                                <label for="password">Password (Biarkan kosong jika tidak ingin mengubah)</label>
-                                                                <input type="password" name="password" class="form-control border-primary">
+                                                                <label for="alamat">Alamat</label>
+                                                                <input type="text" name="alamat" class="form-control border-primary" value="{{ $item->alamat }}" required>
                                                             </div>
                                                             <button type="submit" class="btn btn-primary ms-1">
                                                                 <span class="d-none d-sm-block">Update</span>
@@ -137,24 +135,24 @@
                                             </div>
                                         </div>
                                 
-                                        <!-- Modal Hapus Akun -->
-                                        <div class="modal fade" id="hapusAkunModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="hapusAkunModalTitle{{ $item->id }}" aria-hidden="true">
+                                        <!-- Modal Hapus Supplier -->
+                                        <div class="modal fade" id="hapusSupplierModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="hapusSupplierModalTitle{{ $item->id }}" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="hapusAkunModalTitle{{ $item->id }}">Hapus Akun</h5>
+                                                        <h5 class="modal-title" id="hapusSupplierModalTitle{{ $item->id }}">Hapus Supplier</h5>
                                                         <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                                             <i data-feather="x"></i>
                                                         </button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <p>Apakah Anda yakin ingin menghapus akun ini?</p>
+                                                        <p>Apakah Anda yakin ingin menghapus supplier ini?</p>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
                                                             <span class="d-none d-sm-block">Close</span>
                                                         </button>
-                                                        <form method="POST" action="{{ route('akun.destroy', $item->id) }}" class="d-inline">
+                                                        <form method="POST" action="{{ route('supplier.destroy', $item->id) }}" class="d-inline">
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="submit" class="btn btn-danger ms-1">

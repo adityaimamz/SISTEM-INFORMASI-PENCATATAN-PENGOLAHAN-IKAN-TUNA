@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Ikan extends Model
+class Cutting extends Model
 {
     use HasFactory;
 
@@ -13,11 +13,11 @@ class Ikan extends Model
 
     public function penerimaan_ikan()
     {
-        return $this->hasMany(Penerimaan_ikan::class);
+        return $this->belongsTo(Penerimaan_ikan::class, 'id_produk');
     }
 
-    public function kategori()
+    public function services()
     {
-        return $this->belongsTo(Kategori::class, 'kategoris_id');
+        return $this->hasMany(Service::class);
     }
 }
