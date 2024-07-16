@@ -21,5 +21,10 @@ class Service extends Model
         return $this->belongsTo(DetailProduk::class, 'id_detail');
     }
 
+    public function packing()
+    {
+        return $this->hasMany(Packing::class, 'kode_lot');
+    }
+
     
 }

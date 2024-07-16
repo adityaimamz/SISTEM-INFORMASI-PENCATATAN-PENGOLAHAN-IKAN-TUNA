@@ -3,6 +3,8 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\KaryawanMiddleware;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -12,8 +14,8 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'is_admin' => App\Http\Middleware\AdminMiddleware::class,
-            'is_karyawan' => App\Http\Middleware\KaryawanMiddleware::class
+            'is_admin' => AdminMiddleware::class,
+            'is_karyawan' => KaryawanMiddleware::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
