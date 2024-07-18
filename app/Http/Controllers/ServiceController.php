@@ -16,8 +16,9 @@ class ServiceController extends Controller
     {
         $data = Service::all();
         $cuttings = Cutting::all();
-        $detail_produks = DetailProduk::all();
-        return view('admin.service', ['data' => $data, 'cuttings' => $cuttings, 'detail_produks' => $detail_produks]);
+        $detailproduk = DetailProduk::all();
+        
+        return view('admin.service', ['data' => $data, 'cuttings' => $cuttings, 'detailproduk' => $detailproduk]);
     }
 
     /**

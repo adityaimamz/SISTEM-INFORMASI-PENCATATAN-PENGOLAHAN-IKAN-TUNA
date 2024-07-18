@@ -7,7 +7,7 @@
     <title>Dashboard</title>
     <link rel="shortcut icon" href="{{ asset('img/logo-removebg.png') }}" type="image/x-icon">
 
-
+    @livewireStyles
     @include('layouts.additional.styles')
 
     @stack('css')
@@ -23,7 +23,9 @@
 
     @include('layouts.additional.script')
 
+    
     @stack('js')
+    @livewireScripts
 </body>
 
 </html>

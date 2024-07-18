@@ -3,6 +3,7 @@ let jquery_datatable = $("#table1").DataTable({
 })
 let customized_datatable = $("#table2").DataTable({
     responsive: true,
+    
     pagingType: 'simple',
     dom:
 		"<'row'<'col-3'l><'col-9'f>>" +

@@ -10,6 +10,9 @@ use App\Http\Controllers\PackingController;
 use App\Http\Controllers\PenerimaanIkanController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SupplierController;
+use App\Models\Penerimaan_Ikan;
+use App\Models\Supplier;
+use App\Models\Ikan;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LoginController::class, 'index'])->name('login');
@@ -31,11 +34,15 @@ Route::middleware('is_karyawan')->group(function () {
     });
 });
 
-Route::resource('penerimaan_ikan', PenerimaanIkanController::class)->middleware('is_karyawan', 'is_admin');
-Route::resource('cutting', CuttingController::class)->middleware('is_karyawan', 'is_admin');
-Route::resource('detailproduk', DetailProdukController::class)->middleware('is_karyawan', 'is_admin');
-Route::resource('service', ServiceController::class)->middleware('is_karyawan' ,'is_admin');
-Route::resource('packing', PackingController::class)->middleware('is_karyawan','is_admin');
+Route::get('/laporan_ikan_masuk', function () {
+    return view('admin.laporan_penerimaan_ikan');
+})->middleware('is_admin');
+
+Route::resource('penerimaan_ikan', PenerimaanIkanController::class)->middleware('auth');
+Route::resource('cutting', CuttingController::class)->middleware('auth');
+Route::resource('detailproduk', DetailProdukController::class)->middleware('auth');
+Route::resource('service', ServiceController::class)->middleware('auth');
+Route::resource('packing', PackingController::class)->middleware('auth');
 
 Route::get('/login', [LoginController::class, 'index'])->name('login');
 Route::post('/login', [LoginController::class, 'store'])->name('login.store');

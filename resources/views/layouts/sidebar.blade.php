@@ -126,8 +126,8 @@
 
                     <ul class="submenu ">
 
-                        <li class="submenu-item  ">
-                            <a href="extra-component-avatar.html" class="submenu-link">Laporan Ikan Masuk</a>
+                        <li class="submenu-item  {{ Request::is('laporan_ikan_masuk') ? 'active' : '' }}">
+                            <a href="/laporan_ikan_masuk" class="submenu-link">Laporan Ikan Masuk</a>
 
                         </li>
 
