@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('ikans', function (Blueprint $table) {
             $table->id();
             $table->string('jenis_ikan');
-            $table->string('berat_ikan');
+            $table->integer('berat_ikan');
             $table->foreignId('kategoris_id')->constrained('kategoris')->onDelete('cascade');
             $table->timestamps();
         });

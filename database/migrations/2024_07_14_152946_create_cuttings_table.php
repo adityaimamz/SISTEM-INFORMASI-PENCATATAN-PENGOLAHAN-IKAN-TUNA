@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('cuttings', function (Blueprint $table) {
-            $table->id();
+            $table->string('no_batch')->primary();
             $table->foreignId('id_produk')->constrained('penerimaan_ikans')->onDelete('cascade');
-            $table->string('berat_produk');
+            $table->integer('berat_produk');
             $table->string('nama_produk');
             $table->timestamps();
         });

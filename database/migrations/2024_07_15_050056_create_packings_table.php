@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('packings', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('kode_lot')->constrained('services')->onDelete('cascade');    
+            $table->string('no_box')->primary(); // Menjadikan no_box sebagai primary key
+            $table->string('kode_trace');
+            $table->foreign('kode_trace')->references('kode_trace')->on('services')->onDelete('cascade');
             $table->date('tgl_packing');
             $table->timestamps();
         });

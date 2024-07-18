@@ -9,7 +9,9 @@ class Service extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id'];
+    protected $guarded = ['kode_lot'];
+    public $incrementing = false;
+    protected $keyType = 'string';
 
     public function cutting()
     {
@@ -25,6 +27,4 @@ class Service extends Model
     {
         return $this->hasMany(Packing::class, 'kode_lot');
     }
-
-    
 }

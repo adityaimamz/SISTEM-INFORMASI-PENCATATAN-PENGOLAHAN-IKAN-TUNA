@@ -37,38 +37,42 @@
                         
                         <!-- Vertically Centered modal Modal -->
                         <div class="modal fade" id="tambahPackingModal" tabindex="-1" role="dialog" aria-labelledby="tambahPackingModalTitle" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-                                <div class="modal-content">
-                        
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="tambahPackingModalTitle">Tambah Packing</h5>
-                                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                            <i data-feather="x"></i>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form method="POST" action="{{ route('packing.store') }}" enctype="multipart/form-data" class="mt-0">
-                                            @csrf
-                                            <div class="form-group">
-                                                <label for="kode_lot">Kode Lot</label>
-                                                <select name="kode_lot" class="form-control border-primary" required>
-                                                    @foreach ($services as $service)
-                                                        <option value="{{ $service->id }}">{{ $service->id }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="tgl_packing">Tanggal Packing</label>
-                                                <input type="date" name="tgl_packing" class="form-control border-primary" required>
-                                            </div>
-                                            <button type="submit" class="btn btn-primary ms-1">
-                                                <span class="d-none d-sm-block">Submit</span>
+                                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="tambahPackingModalTitle">Tambah Packing</h5>
+                                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                                <i data-feather="x"></i>
                                             </button>
-                                        </form>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form method="POST" action="{{ route('packing.store') }}" enctype="multipart/form-data" class="mt-0">
+                                                @csrf
+                                                <div class="form-group">
+                                                    <label for="no_box">No Box</label>
+                                                    <input type="text" name="no_box" class="form-control border-primary" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="kode_lot">Kode Lot</label>
+                                                    <select name="kode_lot" class="form-control border-primary" required>
+                                                        @foreach ($services as $service)
+                                                            <option value="{{ $service->kode_lot }}">{{ $service->kode_lot }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="tgl_packing">Tanggal Packing</label>
+                                                    <input type="date" name="tgl_packing" class="form-control border-primary" required>
+                                                </div>
+                                                <button type="submit" class="btn btn-primary ms-1">
+                                                    <span class="d-none d-sm-block">Submit</span>
+                                                </button>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+
                         
 
                     </div>

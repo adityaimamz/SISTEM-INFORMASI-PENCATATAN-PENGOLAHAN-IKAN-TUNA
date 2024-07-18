@@ -59,7 +59,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="berat_ikan">Berat Ikan</label>
-                                                <input type="text" name="berat_ikan" class="form-control border-primary"
+                                                <input type="number" name="berat_ikan" class="form-control border-primary"
                                                     required>
                                             </div>
                                             <div class="form-group">
@@ -90,6 +90,7 @@
                                         <th>Jenis Ikan</th>
                                         <th>Berat Ikan</th>
                                         <th>Kategori</th>
+                                        <th>Grade</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -100,6 +101,7 @@
                                             <td>{{ $item->jenis_ikan }}</td>
                                             <td>{{ $item->berat_ikan }}</td>
                                             <td>{{ $item->kategori->kategori }}</td>
+                                            <td>{{ $item->kategori->grade }}</td>z
                                             <td>
                                                 <button type="button" class="btn btn-outline-primary block"
                                                     data-bs-toggle="modal"

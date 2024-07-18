@@ -40,7 +40,7 @@ class DetailProdukController extends Controller // Mengubah nama controller menj
             'nama_produk' => $request->nama_produk,
         ]);
 
-        return redirect()->route('cutting.index')->with('success', 'Detail Produk berhasil ditambahkan.'); // Mengubah route redirect menjadi 'detail_produk.index'
+        return redirect()->route('service.index')->with('success', 'Detail Produk berhasil ditambahkan.'); // Mengubah route redirect menjadi 'detail_produk.index'
     }
 
     /**
@@ -77,7 +77,7 @@ class DetailProdukController extends Controller // Mengubah nama controller menj
 
         $detailProduk->update($data);
 
-        return redirect()->route('cutting.index')->with('success', 'Detail Produk berhasil diperbarui.'); // Mengubah route redirect menjadi 'detail_produk.index'
+        return redirect()->route('service.index')->with('success', 'Detail Produk berhasil diperbarui.'); // Mengubah route redirect menjadi 'detail_produk.index'
     }
 
     /**

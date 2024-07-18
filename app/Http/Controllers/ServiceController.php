@@ -34,18 +34,15 @@ class ServiceController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'no_batch' => 'required|exists:cuttings,id',
-            'id_detail' => 'required|exists:detail_produks,id',
-        ]);
-
         Service::create([
+            'kode_trace' => $request->kode_trace, // Menambahkan kode_lot
             'no_batch' => $request->no_batch,
             'id_detail' => $request->id_detail,
         ]);
-
+    
         return redirect()->route('service.index')->with('success', 'Service berhasil ditambahkan.');
     }
+    
 
     /**
      * Display the specified resource.
@@ -66,14 +63,14 @@ class ServiceController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $kode_trace)
     {
         $request->validate([
             'no_batch' => 'required|exists:cuttings,id',
             'id_detail' => 'required|exists:detail_produks,id',
         ]);
 
-        $service = Service::findOrFail($id);
+        $service = Service::findOrFail($kode_trace);
         $service->update([
             'no_batch' => $request->no_batch,
             'id_detail' => $request->id_detail,

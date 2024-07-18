@@ -32,18 +32,15 @@ class PackingController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'kode_lot' => 'required|exists:services,id',
-            'tgl_packing' => 'required|date',
-        ]);
-
         Packing::create([
+            'no_box' => $request->no_box, // Menambahkan no_box
             'kode_lot' => $request->kode_lot,
             'tgl_packing' => $request->tgl_packing,
         ]);
-
+    
         return redirect()->route('packing.index')->with('success', 'Packing berhasil ditambahkan.');
     }
+    
 
     /**
      * Display the specified resource.

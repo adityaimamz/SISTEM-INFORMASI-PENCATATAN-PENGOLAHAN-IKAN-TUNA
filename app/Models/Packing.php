@@ -5,11 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class packing extends Model
+class Packing extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id'];
+    protected $guarded = ['no_box']; // Menggunakan no_box sebagai primary key
+    public $incrementing = false; // Menonaktifkan auto increment
+    protected $keyType = 'string'; // Mengatur tipe primary key menjadi string
 
     public function service()
     {

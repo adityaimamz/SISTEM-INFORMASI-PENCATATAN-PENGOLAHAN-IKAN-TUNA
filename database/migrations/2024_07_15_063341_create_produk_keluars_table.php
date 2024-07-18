@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('produk_keluars', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('no_box')->constrained('packings')->onDelete('cascade');
+            $table->string('no_box');
+            $table->foreign('no_box')->references('no_box')->on('packings')->onDelete('cascade');
             $table->integer('jumlah_produk');
             $table->integer('no_seal');
             $table->integer('no_container');

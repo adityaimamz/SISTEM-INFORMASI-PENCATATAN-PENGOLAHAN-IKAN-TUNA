@@ -14,10 +14,23 @@ class CuttingController extends Controller // Mengubah nama controller menjadi C
      */
     public function index()
     {
-        $cutting = Cutting::all(); // Mengubah variabel menjadi $cutting
+        $cutting = Cutting::all();
         $detailproduk = DetailProduk::all();
         $penerimaan_ikan = Penerimaan_ikan::all();
-        return view('admin.cutting', ['cutting' => $cutting, 'detailproduk' => $detailproduk, 'penerimaan_ikan' => $penerimaan_ikan]); // Mengubah view yang dipanggil menjadi 'admin.cutting'
+    
+        $totalBeratPerGrade = Cutting::selectRaw('kategoris.grade, SUM(cuttings.berat_produk) as total_berat')
+            ->join('penerimaan_ikans', 'cuttings.id_produk', '=', 'penerimaan_ikans.id')
+            ->join('ikans', 'penerimaan_ikans.ikan_id', '=', 'ikans.id')
+            ->join('kategoris', 'ikans.kategoris_id', '=', 'kategoris.id')
+            ->groupBy('kategoris.grade')
+            ->get();
+    
+        return view('admin.cutting', [
+            'cutting' => $cutting,
+            'detailproduk' => $detailproduk,
+            'penerimaan_ikan' => $penerimaan_ikan,
+            'totalBeratPerGrade' => $totalBeratPerGrade
+        ]);
     }
 
     /**
@@ -33,20 +46,17 @@ class CuttingController extends Controller // Mengubah nama controller menjadi C
      */
     public function store(Request $request)
     {
-        // $request->validate([
-        //     'jenis_ikan' => 'required|string|max:255',
-        //     'berat_ikan' => 'required|string|max:255',
-        //     'kategoris_id' => 'required|integer',
-        // ]);
 
-        Cutting::create([ // Mengubah model yang digunakan menjadi Cutting
+        Cutting::create([
+            'no_batch' => $request->no_batch, // Menambahkan no_batch
             'id_produk' => $request->id_produk,
             'berat_produk' => $request->berat_produk,
             'nama_produk' => $request->nama_produk,
         ]);
-
-        return redirect()->route('cutting.index')->with('success', 'Cutting berhasil ditambahkan.'); // Mengubah route redirect menjadi 'cutting.index'
+    
+        return redirect()->route('cutting.index')->with('success', 'Cutting berhasil ditambahkan.');
     }
+    
 
     /**
      * Display the specified resource.
@@ -67,7 +77,7 @@ class CuttingController extends Controller // Mengubah nama controller menjadi C
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $no_batch)
     {
         // $request->validate([
         //     'jenis_ikan' => 'required|string|max:255',
@@ -75,7 +85,7 @@ class CuttingController extends Controller // Mengubah nama controller menjadi C
         //     'kategoris_id' => 'required|integer',
         // ]);
 
-        $cutting = Cutting::findOrFail($id); // Mengubah model yang digunakan menjadi Cutting
+        $cutting = Cutting::findOrFail($no_batch); // Mengubah model yang digunakan menjadi Cutting
         $data = [
             'id_produk' => $request->id_produk,
             'berat_produk' => $request->berat_produk,

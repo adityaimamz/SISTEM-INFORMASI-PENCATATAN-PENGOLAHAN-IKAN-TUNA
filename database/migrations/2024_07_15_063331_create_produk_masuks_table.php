@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('produk_masuks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('no_box')->constrained('packings')->onDelete('cascade');
+            $table->string('no_box');
+            $table->foreign('no_box')->references('no_box')->on('packings')->onDelete('cascade');
             $table->integer('stok_masuk');
             $table->timestamps();
         });
