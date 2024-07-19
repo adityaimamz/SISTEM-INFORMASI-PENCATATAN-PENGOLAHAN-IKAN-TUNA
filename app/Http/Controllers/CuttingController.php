@@ -100,9 +100,9 @@ class CuttingController extends Controller // Mengubah nama controller menjadi C
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy($no_batch)
     {
-        $cutting = Cutting::findOrFail($id); // Mengubah model yang digunakan menjadi Cutting
+        $cutting = Cutting::findOrFail($no_batch); // Mengubah model yang digunakan menjadi Cutting
         $cutting->delete();
 
         return redirect()->route('cutting.index')->with('success', 'Cutting berhasil dihapus.'); // Mengubah route redirect menjadi 'cutting.index'

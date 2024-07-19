@@ -9,7 +9,7 @@ class Cutting extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id'];
+    protected $guarded = ['no_batch'];
     public $incrementing = false;
     protected $keyType = 'string'; 
 
