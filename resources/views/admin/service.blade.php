@@ -97,12 +97,13 @@
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $item->cutting->nama_produk }}</td>
                                             <td>{{ $item->detail->nama_produk }}</td>
+                                            <td>{{ $item->cutting->penerimaan_ikan->ikan->kategori->grade }}</td>
                                             <td>{{ $item->cutting->berat_produk }}</td>
                                             <td>
-                                                <button type="button" class="btn btn-outline-primary block" data-bs-toggle="modal" data-bs-target="#editServiceModal{{ $item->id }}">
+                                                <button type="button" class="btn btn-outline-primary block" data-bs-toggle="modal" data-bs-target="#editServiceModal{{ $item->kode_trace }}">
                                                     Edit Service
                                                 </button>
-                                                <button type="button" class="btn btn-outline-danger block" data-bs-toggle="modal" data-bs-target="#hapusServiceModal{{ $item->id }}">
+                                                <button type="button" class="btn btn-outline-danger block" data-bs-toggle="modal" data-bs-target="#hapusServiceModal{{ $item->kode_trace }}">
                                                     Hapus Service
                                                 </button>
                                             </td>
@@ -147,11 +148,11 @@
                                         </div>
                                 
                                         <!-- Modal Hapus Service -->
-                                        <div class="modal fade" id="hapusServiceModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="hapusServiceModalTitle{{ $item->id }}" aria-hidden="true">
+                                        <div class="modal fade" id="hapusServiceModal{{ $item->kode_trace }}" tabindex="-1" role="dialog" aria-labelledby="hapusServiceModalTitle{{ $item->id }}" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="hapusServiceModalTitle{{ $item->id }}">Hapus Service</h5>
+                                                        <h5 class="modal-title" id="hapusServiceModalTitle{{ $item->kode_trace }}">Hapus Service</h5>
                                                         <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                                             <i data-feather="x"></i>
                                                         </button>
@@ -163,7 +164,7 @@
                                                         <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
                                                             <span class="d-none d-sm-block">Close</span>
                                                         </button>
-                                                        <form method="POST" action="{{ route('service.destroy', $item->id) }}" class="d-inline">
+                                                        <form method="POST" action="{{ route('service.destroy', $item->kode_trace) }}" class="d-inline">
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="submit" class="btn btn-danger ms-1">

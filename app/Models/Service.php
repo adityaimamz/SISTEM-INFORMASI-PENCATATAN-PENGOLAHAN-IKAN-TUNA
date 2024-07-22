@@ -15,7 +15,7 @@ class Service extends Model
 
     public function cutting()
     {
-        return $this->belongsTo(Cutting::class, 'no_batch');
+        return $this->belongsTo(Cutting::class, 'no_batch', 'no_batch'); // Ensure both local and foreign keys match
     }
 
     public function detail()

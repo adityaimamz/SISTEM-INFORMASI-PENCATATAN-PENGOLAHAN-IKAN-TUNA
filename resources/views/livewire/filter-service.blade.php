@@ -4,7 +4,8 @@
             <label for="month">Month</label>
             <select id="month" wire:model="month" wire:change="filterData" class="form-control">
                 @for ($m = 1; $m <= 12; $m++)
-                    <option value="{{ sprintf('%02d', $m) }}">{{ DateTime::createFromFormat('!m', $m)->format('F') }}</option>
+                    <option value="{{ sprintf('%02d', $m) }}">{{ DateTime::createFromFormat('!m', $m)->format('F') }}
+                    </option>
                 @endfor
             </select>
         </div>
@@ -19,7 +20,8 @@
     </div>
 
     <div class="mb-3">
-        <a href="{{ route('ikan.pdf', ['month' => $month, 'year' => $year]) }}" class="btn btn-primary">Export PDF</a>
+        <a href="{{ route('service.pdf', ['month' => $month, 'year' => $year]) }}" class="btn btn-primary">Export
+            PDF</a>
     </div>
 
     <div class="table-responsive">
@@ -27,22 +29,20 @@
             <thead>
                 <tr>
                     <th>No</th>
-                    <th>Supplier</th>
-                    <th>Ikan</th>
-                    <th>Tanggal Penerimaan</th>
-                    <th>Berat Ikan</th>
+                    <th>Nama Produk Cutting</th>
+                    <th>Nama Detail Produk</th>
                     <th>Grade</th>
+                    <th>Berat Produk</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($data as $item)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td>{{ $item->supplier->nama_supplier }}</td>
-                        <td>{{ $item->ikan->jenis_ikan }}</td>
-                        <td>{{ $item->tgl_penerimaan }}</td>
-                        <td>{{ $item->ikan->berat_ikan }}</td>
-                        <td>{{ $item->ikan->kategori->grade }}</td>
+                        <td>{{ $item->cutting->nama_produk }}</td>
+                        <td>{{ $item->detail->nama_produk }}</td>
+                        <td>{{ $item->cutting->penerimaan_ikan->ikan->kategori->grade }}</td>
+                        <td>{{ $item->cutting->berat_produk }}</td>
                     </tr>
                 @endforeach
             </tbody>

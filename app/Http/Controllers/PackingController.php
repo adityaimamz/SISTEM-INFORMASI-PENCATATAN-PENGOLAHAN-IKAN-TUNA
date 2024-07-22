@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Packing;
 use App\Models\Service;
 use App\Models\ProdukMasuk;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 class PackingController extends Controller
 {
@@ -34,18 +36,28 @@ class PackingController extends Controller
     {
         Packing::create([
             'no_box' => $request->no_box, // Menambahkan no_box
-            'kode_lot' => $request->kode_lot,
+            'kode_trace' => $request->kode_trace,
             'tgl_packing' => $request->tgl_packing,
         ]);
     
         return redirect()->route('packing.index')->with('success', 'Packing berhasil ditambahkan.');
+    }
+
+    public function packingPdf($month, $year)
+    {
+        $data = Packing::whereYear('created_at', $year)
+            ->whereMonth('created_at', $month)
+            ->get();
+
+        $pdf = Pdf::loadView('pdf.packing', compact('data', 'month', 'year'));
+        return $pdf->download('packing_report_' . $month . '_' . $year . '.pdf');
     }
     
 
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show($no_box)
     {
         //
     }
@@ -53,7 +65,7 @@ class PackingController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id)
+    public function edit($no_box)
     {
         //
     }
@@ -61,14 +73,14 @@ class PackingController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $no_box)
     {
         $request->validate([
             'kode_lot' => 'required|exists:services,id',
             'tgl_packing' => 'required|date',
         ]);
 
-        $packing = Packing::findOrFail($id);
+        $packing = Packing::findOrFail($no_box);
         $packing->update([
             'kode_lot' => $request->kode_lot,
             'tgl_packing' => $request->tgl_packing,
@@ -80,9 +92,9 @@ class PackingController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy($no_box)
     {
-        $packing = Packing::findOrFail($id);
+        $packing = Packing::findOrFail($no_box);
         $packing->delete();
 
         return redirect()->route('packing.index')->with('success', 'Packing berhasil dihapus.');

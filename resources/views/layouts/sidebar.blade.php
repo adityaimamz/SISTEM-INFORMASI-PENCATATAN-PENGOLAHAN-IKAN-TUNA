@@ -109,9 +109,12 @@
 
                         </li>
 
+                        <li class="submenu-item {{ Request::is('produk-masuk') ? 'active' : '' }} ">
+                            <a href="/produk-masuk" class="submenu-link">Produk Masuk</a>
+                        </li>
+
                         <li class="submenu-item {{ Request::is('produk-keluar') ? 'active' : '' }} ">
                             <a href="/produk-keluar" class="submenu-link">Produk Keluar</a>
-
                         </li>
 
                     </ul>
@@ -131,28 +134,28 @@
 
                         </li>
 
-                        <li class="submenu-item  ">
-                            <a href="extra-component-divider.html" class="submenu-link">Laporan Cutting</a>
+                        <li class="submenu-item  {{ Request::is('laporan_cutting') ? 'active' : '' }}">
+                            <a href="/laporan_cutting" class="submenu-link">Laporan Cutting</a>
 
                         </li>
 
-                        <li class="submenu-item  ">
-                            <a href="extra-component-date-picker.html" class="submenu-link">Laporan Service</a>
+                        <li class="submenu-item  {{ Request::is('laporan_service') ? 'active' : '' }}">
+                            <a href="/laporan_service" class="submenu-link">Laporan Service</a>
 
                         </li>
 
-                        <li class="submenu-item  ">
-                            <a href="extra-component-sweetalert.html" class="submenu-link">Laporan Packing</a>
+                        <li class="submenu-item  {{ Request::is('laporan_packing') ? 'active' : '' }}">
+                            <a href="/laporan_packing" class="submenu-link">Laporan Packing</a>
 
                         </li>
 
-                        <li class="submenu-item  ">
-                            <a href="extra-component-toastify.html" class="submenu-link">Laporan Produk Masuk</a>
+                        <li class="submenu-item  {{ Request::is('laporan_stok_masuk') ? 'active' : '' }}">
+                            <a href="/laporan_stok_masuk" class="submenu-link">Laporan Produk Masuk</a>
 
                         </li>
 
-                        <li class="submenu-item  ">
-                            <a href="extra-component-rating.html" class="submenu-link">Laporan Produk Keluar</a>
+                        <li class="submenu-item  {{ Request::is('laporan_stok_keluar') ? 'active' : '' }}">
+                            <a href="/laporan_stok_keluar" class="submenu-link">Laporan Produk Keluar</a>
 
                         </li>
 

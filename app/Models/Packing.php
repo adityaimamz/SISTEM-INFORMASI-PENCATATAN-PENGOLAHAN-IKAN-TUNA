@@ -9,13 +9,13 @@ class Packing extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['no_box']; // Menggunakan no_box sebagai primary key
+    protected $guarded = ['id']; // Menggunakan no_box sebagai primary key
     public $incrementing = false; // Menonaktifkan auto increment
     protected $keyType = 'string'; // Mengatur tipe primary key menjadi string
 
     public function service()
     {
-        return $this->belongsTo(Service::class, 'kode_lot');
+        return $this->belongsTo(Service::class, 'kode_trace', 'kode_trace');
     }
 
     public function produk_masuk()

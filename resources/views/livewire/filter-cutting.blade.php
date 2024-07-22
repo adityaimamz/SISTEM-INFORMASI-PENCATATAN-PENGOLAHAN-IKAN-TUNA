@@ -19,7 +19,7 @@
     </div>
 
     <div class="mb-3">
-        <a href="{{ route('ikan.pdf', ['month' => $month, 'year' => $year]) }}" class="btn btn-primary">Export PDF</a>
+        <a href="{{ route('cutting.pdf', ['month' => $month, 'year' => $year]) }}" class="btn btn-primary">Export PDF</a>
     </div>
 
     <div class="table-responsive">
@@ -27,10 +27,10 @@
             <thead>
                 <tr>
                     <th>No</th>
-                    <th>Supplier</th>
-                    <th>Ikan</th>
-                    <th>Tanggal Penerimaan</th>
-                    <th>Berat Ikan</th>
+                    <th>No Batch</th>
+                    <th>Id Produk</th>
+                    <th>Berat Produk</th>
+                    <th>Nama Produk</th>
                     <th>Grade</th>
                 </tr>
             </thead>
@@ -38,11 +38,11 @@
                 @foreach ($data as $item)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td>{{ $item->supplier->nama_supplier }}</td>
-                        <td>{{ $item->ikan->jenis_ikan }}</td>
-                        <td>{{ $item->tgl_penerimaan }}</td>
-                        <td>{{ $item->ikan->berat_ikan }}</td>
-                        <td>{{ $item->ikan->kategori->grade }}</td>
+                        <td>{{ $item->no_batch }}</td>
+                        <td>{{ $item->id_produk }}</td>
+                        <td>{{ $item->berat_produk }}</td>
+                        <td>{{ $item->nama_produk }}</td>
+                        <td>{{ $item->penerimaan_ikan->ikan->kategori->grade }}</td>
                     </tr>
                 @endforeach
             </tbody>

@@ -19,7 +19,7 @@
     </div>
 
     <div class="mb-3">
-        <a href="{{ route('ikan.pdf', ['month' => $month, 'year' => $year]) }}" class="btn btn-primary">Export PDF</a>
+        <a href="{{ route('stok-keluar.pdf', ['month' => $month, 'year' => $year]) }}" class="btn btn-primary">Export PDF</a>
     </div>
 
     <div class="table-responsive">
@@ -27,22 +27,26 @@
             <thead>
                 <tr>
                     <th>No</th>
-                    <th>Supplier</th>
-                    <th>Ikan</th>
-                    <th>Tanggal Penerimaan</th>
-                    <th>Berat Ikan</th>
-                    <th>Grade</th>
+                    <th>No Box</th>
+                    <th>Jumlah Produk</th>
+                    <th>No Seal</th>
+                    <th>No Container</th>
+                    <th>Tanggal Keluar</th>
+                    <th>Tanggal Berangkat</th>
+                    <th>Tanggal Tiba</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($data as $item)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td>{{ $item->supplier->nama_supplier }}</td>
-                        <td>{{ $item->ikan->jenis_ikan }}</td>
-                        <td>{{ $item->tgl_penerimaan }}</td>
-                        <td>{{ $item->ikan->berat_ikan }}</td>
-                        <td>{{ $item->ikan->kategori->grade }}</td>
+                        <td>{{ $item->no_box }}</td>
+                        <td>{{ $item->jumlah_produk }}</td>
+                        <td>{{ $item->no_seal }}</td>
+                        <td>{{ $item->no_container }}</td>
+                        <td>{{ $item->tgl_keluar }}</td>
+                        <td>{{ $item->tgl_berangkat }}</td>
+                        <td>{{ $item->tgl_tiba }}</td>
                     </tr>
                 @endforeach
             </tbody>

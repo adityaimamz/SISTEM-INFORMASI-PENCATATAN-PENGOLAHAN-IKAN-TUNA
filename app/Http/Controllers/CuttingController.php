@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Cutting; // Mengubah model yang digunakan menjadi Cutting
 use App\Models\DetailProduk;
 use App\Models\Penerimaan_ikan;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 class CuttingController extends Controller // Mengubah nama controller menjadi CuttingController
 {
@@ -39,6 +41,16 @@ class CuttingController extends Controller // Mengubah nama controller menjadi C
     public function create()
     {
         //
+    }
+
+    public function cuttingPdf($month, $year)
+    {
+        $data = Cutting::whereYear('created_at', $year)
+            ->whereMonth('created_at', $month)
+            ->get();
+
+        $pdf = Pdf::loadView('pdf.cutting', compact('data', 'month', 'year'));
+        return $pdf->download('cutting_report_'.$month.'_'.$year.'.pdf');
     }
 
     /**

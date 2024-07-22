@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Penerimaan_Ikan;
 use App\Models\Supplier;
 use App\Models\Ikan;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 class PenerimaanIkanController extends Controller
 {
@@ -26,6 +28,16 @@ class PenerimaanIkanController extends Controller
     public function create()
     {
         //
+    }
+
+    public function ikanPdf($month, $year)
+    {
+        $data = Penerimaan_Ikan::whereYear('tgl_penerimaan', $year)
+            ->whereMonth('tgl_penerimaan', $month)
+            ->get();
+
+        $pdf = Pdf::loadView('pdf.ikan', compact('data', 'month', 'year'));
+        return $pdf->download('ikan_report_'.$month.'_'.$year.'.pdf');
     }
 
     /**

@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('cuttings', function (Blueprint $table) {
-            $table->string('no_batch')->primary();
+            $table->id(); // Add this line to include an id column
+            $table->string('no_batch')->unique();
             $table->foreignId('id_produk')->constrained('penerimaan_ikans')->onDelete('cascade');
             $table->integer('berat_produk');
             $table->string('nama_produk');

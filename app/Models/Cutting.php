@@ -9,9 +9,7 @@ class Cutting extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['no_batch'];
-    public $incrementing = false;
-    protected $keyType = 'string'; 
+    protected $guarded = ['id'];
 
     public function penerimaan_ikan()
     {
@@ -20,6 +18,6 @@ class Cutting extends Model
 
     public function services()
     {
-        return $this->hasMany(Service::class);
+        return $this->hasMany(Service::class, 'no_batch', 'no_batch'); // Ensure both local and foreign keys match
     }
 }
