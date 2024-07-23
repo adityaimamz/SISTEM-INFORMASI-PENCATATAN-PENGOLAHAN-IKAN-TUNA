@@ -57,7 +57,7 @@
                                                 <label for="no_batch">No Batch</label>
                                                 <select name="no_batch" class="form-control border-primary" required>
                                                     @foreach ($cuttings as $cutting)
-                                                        <option value="{{ $cutting->no_batch }}">{{ $cutting->nama_produk }}</option>
+                                                        <option value="{{ $cutting->no_batch }}">{{ $cutting->no_batch }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -68,6 +68,10 @@
                                                         <option value="{{ $detail_produk->id }}">{{ $detail_produk->nama_produk }}</option>
                                                     @endforeach
                                                 </select>
+                                            </div>
+                                            <div class="form-group"></div>
+                                                <label for="berat_produk">Berat Produk</label>
+                                                <input type="number" name="berat_produk" class="form-control border-primary" required>
                                             </div>
                                             <button type="submit" class="btn btn-primary ms-1">
                                                 <span class="d-none d-sm-block">Submit</span>
@@ -98,7 +102,7 @@
                                             <td>{{ $item->cutting->nama_produk }}</td>
                                             <td>{{ $item->detail->nama_produk }}</td>
                                             <td>{{ $item->cutting->penerimaan_ikan->ikan->kategori->grade }}</td>
-                                            <td>{{ $item->cutting->berat_produk }}</td>
+                                            <td>{{ $item->berat_produk }}</td>
                                             <td>
                                                 <button type="button" class="btn btn-outline-primary block" data-bs-toggle="modal" data-bs-target="#editServiceModal{{ $item->kode_trace }}">
                                                     Edit Service
@@ -123,6 +127,10 @@
                                                             @csrf
                                                             @method('PUT')
                                                             <div class="form-group">
+                                                                <label for="kode_trace">Kode Trace</label>
+                                                                <input type="text" name="kode_trace" class="form-control border-primary" value="{{ $item->kode_trace }}" required>
+                                                            </div>
+                                                            <div class="form-group">
                                                                 <label for="no_batch">No Batch</label>
                                                                 <select name="no_batch" class="form-control border-primary" required>
                                                                     @foreach ($cuttings as $cutting)
@@ -137,6 +145,10 @@
                                                                         <option value="{{ $detail_produk->id }}" {{ $detail_produk->id == $item->id_detail ? 'selected' : '' }}>{{ $detail_produk->nama_produk }}</option>
                                                                     @endforeach
                                                                 </select>
+                                                            </div>
+                                                            <div class="form-group"></div>
+                                                                <label for="berat_produk">Berat Produk</label>
+                                                                <input type="number" name="berat_produk" class="form-control border-primary" value="{{ $item->berat_produk }}" required>
                                                             </div>
                                                             <button type="submit" class="btn btn-primary ms-1">
                                                                 <span class="d-none d-sm-block">Update</span>

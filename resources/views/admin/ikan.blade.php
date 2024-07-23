@@ -63,10 +63,10 @@
                                                     required>
                                             </div>
                                             <div class="form-group">
-                                                <label for="kategoris_id">Kategori</label>
+                                                <label for="kategoris_id">Grade</label>
                                                 <select name="kategoris_id" class="form-control border-primary" required>
                                                     @foreach ($kategori as $kat)
-                                                        <option value="{{ $kat->id }}">{{ $kat->kategori }}</option>
+                                                        <option value="{{ $kat->id }}">{{ $kat->grade }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>

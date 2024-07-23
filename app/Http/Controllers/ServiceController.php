@@ -49,6 +49,7 @@ class ServiceController extends Controller
             'kode_trace' => $request->kode_trace, // Menambahkan kode_lot
             'no_batch' => $request->no_batch,
             'id_detail' => $request->id_detail,
+            'berat_produk' => $request->berat_produk
         ]);
 
         return redirect()->route('service.index')->with('success', 'Service berhasil ditambahkan.');
@@ -78,15 +79,13 @@ class ServiceController extends Controller
  */
     public function update(Request $request, $kode_trace)
     {
-        $request->validate([
-            'no_batch' => 'required|exists:cuttings,no_batch',
-            'id_detail' => 'required|exists:detail_produks,id',
-        ]);
 
         $service = Service::findOrFail($kode_trace);
         $service->update([
+            'kode_trace' => $request->kode_trace,
             'no_batch' => $request->no_batch,
             'id_detail' => $request->id_detail,
+            'berat_produk' => $request->berat_produk
         ]);
 
         return redirect()->route('service.index')->with('success', 'Service berhasil diperbarui.');
