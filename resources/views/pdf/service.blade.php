@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,17 +10,25 @@
             width: 100%;
             border-collapse: collapse;
         }
-        table, th, td {
+
+        table,
+        th,
+        td {
             border: 1px solid black;
         }
-        th, td {
+
+        th,
+        td {
             padding: 8px;
             text-align: left;
         }
     </style>
 </head>
+
 <body>
-    <h2>Report for Month: {{ $month }} Year: {{ $year }}</h2>
+    <h1 style="text-align: center">Laporan Data Service Pt.Tirta Bitung Bahari</h1>
+
+    <h4>Report untuk Bulan: {{ $month }} Tahun: {{ $year }}</h4>
     <table>
         <thead>
             <tr>
@@ -42,5 +51,26 @@
             @endforeach
         </tbody>
     </table>
+
+    <div>
+        <h4>Total Berat Per Grade</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Grade</th>
+                    <th>Total Berat (kg)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($totalBeratPerGrade as $grade)
+                    <tr>
+                        <td>{{ $grade->grade }}</td>
+                        <td>{{ $grade->total_berat }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 </body>
+
 </html>

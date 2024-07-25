@@ -19,7 +19,9 @@
     </style>
 </head>
 <body>
-    <h2>Report for Month: {{ $month }} Year: {{ $year }}</h2>
+    <h1 style="text-align: center">Laporan Data Cutting Pt.Tirta Bitung Bahari</h1>
+
+    <h4>Report untuk Bulan: {{ $month }} Tahun: {{ $year }}</h4>
     <table>
         <thead>
             <tr>
@@ -44,5 +46,25 @@
             @endforeach
         </tbody>
     </table>
+
+    <div>
+        <h4>Total Berat Per Grade</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Grade</th>
+                    <th>Total Berat (kg)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($totalBeratPerGrade as $grade)
+                    <tr>
+                        <td>{{ $grade->grade }}</td>
+                        <td>{{ $grade->total_berat }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>

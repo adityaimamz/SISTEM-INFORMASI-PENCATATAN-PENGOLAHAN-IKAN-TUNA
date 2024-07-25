@@ -19,7 +19,9 @@
     </style>
 </head>
 <body>
-    <h2>Report for Month: {{ $month }} Year: {{ $year }}</h2>
+    <h1 style="text-align: center">Laporan Data Stok Keluar Pt.Tirta Bitung Bahari</h1>
+
+    <h4>Report untuk Bulan: {{ $month }} Tahun: {{ $year }}</h4>
     <table>
         <thead>
             <tr>
@@ -46,6 +48,20 @@
                     <td>{{ $item->tgl_tiba }}</td>
                 </tr>
             @endforeach
+        </tbody>
+    </table>
+
+    <h4>Total Stok Produksi</h4>
+    <table>
+        <thead>
+            <tr>
+                <th>Total Stok</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ $totalStok }}</td>
+            </tr>
         </tbody>
     </table>
 </body>

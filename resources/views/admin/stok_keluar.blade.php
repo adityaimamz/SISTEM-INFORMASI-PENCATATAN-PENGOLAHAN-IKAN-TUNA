@@ -225,17 +225,13 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>No Box</th>
                                         <th>Total Stok</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($totalStok as $stok)
-                                        <tr>
-                                            <td>{{ $stok->no_box }}</td>
-                                            <td>{{ $stok->total_stok }}</td>
-                                        </tr>
-                                    @endforeach
+                                    <tr>
+                                        <td>{{ $totalStok }}</td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>

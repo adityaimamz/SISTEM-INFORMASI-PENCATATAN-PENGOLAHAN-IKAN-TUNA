@@ -101,7 +101,7 @@
                                             <td>{{ $item->jenis_ikan }}</td>
                                             <td>{{ $item->berat_ikan }}</td>
                                             <td>{{ $item->kategori->kategori }}</td>
-                                            <td>{{ $item->kategori->grade }}</td>z
+                                            <td>{{ $item->kategori->grade }}</td>
                                             <td>
                                                 <button type="button" class="btn btn-outline-primary block"
                                                     data-bs-toggle="modal"

@@ -63,11 +63,16 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="id_produk">Id Produk</label>
-                                                <select name="id_produk" class="form-control border-primary" required>
+                                                <select name="id_produk" id="id_produk" class="form-control border-primary" required>
+                                                    <option value="" selected disabled>Pilih Id Produk</option>
                                                     @foreach ($penerimaan_ikan as $kan)
                                                         <option value="{{ $kan->id }}">{{ $kan->id }}</option>
                                                     @endforeach
                                                 </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="nama_supplier">Nama Supplier</label>
+                                                <input type="text" name="nama_supplier" id="nama_supplier" class="form-control border-primary" readonly>
                                             </div>
                                             <button type="submit" class="btn btn-primary ms-1">
                                                 <span class="d-none d-sm-block">Submit</span>
@@ -139,6 +144,10 @@
                                                             <div class="form-group">
                                                                 <label for="nama_produk">Nama Produk</label>
                                                                 <input type="text" name="nama_produk" class="form-control border-primary" value="{{ $item->nama_produk }}" required>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="nama_supplier">Nama Supplier</label>
+                                                                <input type="text" name="nama_supplier" id="nama_supplier" class="form-control border-primary" readonly>
                                                             </div>
                                                             <button type="submit" class="btn btn-primary ms-1">
                                                                 <span class="d-none d-sm-block">Update</span>
@@ -213,4 +222,26 @@
             </section>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const idProdukSelect = document.getElementById('id_produk');
+            const namaSupplierInput = document.getElementById('nama_supplier');
+    
+            idProdukSelect.addEventListener('change', function () {
+                const idProduk = this.value;
+    
+                if (idProduk) {
+                    fetch(`/get-supplier/${idProduk}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            namaSupplierInput.value = data.nama_supplier;
+                        })
+                        .catch(error => console.error('Error fetching supplier name:', error));
+                } else {
+                    namaSupplierInput.value = '';
+                }
+            });
+        });
+    </script>
 @endsection

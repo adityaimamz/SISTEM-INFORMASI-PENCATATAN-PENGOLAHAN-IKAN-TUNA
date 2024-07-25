@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Cutting; // Mengubah model yang digunakan menjadi Cutting
-use App\Models\DetailProduk;
+use App\Models\Cutting;
+use App\Models\DetailProduk; // Mengubah model yang digunakan menjadi Cutting
 use App\Models\Penerimaan_ikan;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
 
+class CuttingController extends Controller// Mengubah nama controller menjadi CuttingController
 
-class CuttingController extends Controller // Mengubah nama controller menjadi CuttingController
 {
     /**
      * Display a listing of the resource.
@@ -19,19 +19,19 @@ class CuttingController extends Controller // Mengubah nama controller menjadi C
         $cutting = Cutting::all();
         $detailproduk = DetailProduk::all();
         $penerimaan_ikan = Penerimaan_ikan::all();
-    
+
         $totalBeratPerGrade = Cutting::selectRaw('kategoris.grade, SUM(cuttings.berat_produk) as total_berat')
             ->join('penerimaan_ikans', 'cuttings.id_produk', '=', 'penerimaan_ikans.id')
             ->join('ikans', 'penerimaan_ikans.ikan_id', '=', 'ikans.id')
             ->join('kategoris', 'ikans.kategoris_id', '=', 'kategoris.id')
             ->groupBy('kategoris.grade')
             ->get();
-    
+
         return view('admin.cutting', [
             'cutting' => $cutting,
             'detailproduk' => $detailproduk,
             'penerimaan_ikan' => $penerimaan_ikan,
-            'totalBeratPerGrade' => $totalBeratPerGrade
+            'totalBeratPerGrade' => $totalBeratPerGrade,
         ]);
     }
 
@@ -49,8 +49,17 @@ class CuttingController extends Controller // Mengubah nama controller menjadi C
             ->whereMonth('created_at', $month)
             ->get();
 
-        $pdf = Pdf::loadView('pdf.cutting', compact('data', 'month', 'year'));
-        return $pdf->download('cutting_report_'.$month.'_'.$year.'.pdf');
+        $totalBeratPerGrade = Cutting::selectRaw('kategoris.grade, SUM(cuttings.berat_produk) as total_berat')
+            ->join('penerimaan_ikans', 'cuttings.id_produk', '=', 'penerimaan_ikans.id')
+            ->join('ikans', 'penerimaan_ikans.ikan_id', '=', 'ikans.id')
+            ->join('kategoris', 'ikans.kategoris_id', '=', 'kategoris.id')
+            ->whereYear('cuttings.created_at', $year)
+            ->whereMonth('cuttings.created_at', $month)
+            ->groupBy('kategoris.grade')
+            ->get();
+
+        $pdf = Pdf::loadView('pdf.cutting', compact('data', 'month', 'year', 'totalBeratPerGrade'));
+        return $pdf->download('cutting_report_' . $month . '_' . $year . '.pdf');
     }
 
     /**
@@ -65,10 +74,9 @@ class CuttingController extends Controller // Mengubah nama controller menjadi C
             'berat_produk' => $request->berat_produk,
             'nama_produk' => $request->nama_produk,
         ]);
-    
+
         return redirect()->route('cutting.index')->with('success', 'Cutting berhasil ditambahkan.');
     }
-    
 
     /**
      * Display the specified resource.
@@ -120,4 +128,3 @@ class CuttingController extends Controller // Mengubah nama controller menjadi C
         return redirect()->route('cutting.index')->with('success', 'Cutting berhasil dihapus.'); // Mengubah route redirect menjadi 'cutting.index'
     }
 }
-

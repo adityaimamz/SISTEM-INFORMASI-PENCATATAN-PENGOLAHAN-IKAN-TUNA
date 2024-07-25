@@ -18,19 +18,13 @@ class ProdukMasukController extends Controller
         $produkMasuk = produk_masuk::all();
         $packing = Packing::all();
 
-        $totalStok = DB::table('produk_masuks')
-            ->select('no_box', DB::raw('SUM(stok_masuk) as total_masuk'))
-            ->groupBy('no_box');
+        $totalMasuk = DB::table('produk_masuks')
+            ->sum('stok_masuk');
 
         $totalKeluar = DB::table('produk_keluars')
-            ->select('no_box', DB::raw('SUM(jumlah_produk) as total_keluar'))
-            ->groupBy('no_box');
+            ->sum('jumlah_produk');
 
-        $totalStok = DB::table(DB::raw("({$totalStok->toSql()}) as pm"))
-            ->mergeBindings($totalStok)
-            ->leftJoin(DB::raw("({$totalKeluar->toSql()}) as pk"), 'pm.no_box', '=', 'pk.no_box')
-            ->select('pm.no_box', DB::raw('pm.total_masuk - COALESCE(pk.total_keluar, 0) as total_stok'))
-            ->get();
+        $totalStok = $totalMasuk - $totalKeluar;
 
         return view('admin.stok_masuk', [
             'produkMasuk' => $produkMasuk,
@@ -53,7 +47,18 @@ class ProdukMasukController extends Controller
             ->whereMonth('created_at', $month)
             ->get();
 
-        $pdf = Pdf::loadView('pdf.stok_masuk', compact('data', 'month', 'year'));
+        $totalMasuk = produk_masuk::whereYear('created_at', $year)
+            ->whereMonth('created_at', $month)
+            ->sum('stok_masuk');
+
+        $totalKeluar = DB::table('produk_keluars')
+            ->whereYear('created_at', $year)
+            ->whereMonth('created_at', $month)
+            ->sum('jumlah_produk');
+
+        $totalStok = $totalMasuk - $totalKeluar;
+
+        $pdf = Pdf::loadView('pdf.stok_masuk', compact('data', 'month', 'year', 'totalStok'));
         return $pdf->download('stok_masuk_report_' . $month . '_' . $year . '.pdf');
     }
 

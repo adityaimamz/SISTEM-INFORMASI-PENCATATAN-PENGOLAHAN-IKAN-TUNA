@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Cutting;
 use App\Models\DetailProduk;
 use App\Models\Service;
-use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
 
 class ServiceController extends Controller
 {
@@ -19,9 +19,22 @@ class ServiceController extends Controller
         $cuttings = Cutting::all();
         $detailproduk = DetailProduk::all();
 
-        return view('admin.service', ['data' => $data, 'cuttings' => $cuttings, 'detailproduk' => $detailproduk]);
-    }
+        // Calculate total weight per grade for services
+        $totalBeratPerGrade = Service::selectRaw('kategoris.grade, SUM(services.berat_produk) as total_berat')
+            ->join('cuttings', 'services.no_batch', '=', 'cuttings.no_batch')
+            ->join('penerimaan_ikans', 'cuttings.id_produk', '=', 'penerimaan_ikans.id')
+            ->join('ikans', 'penerimaan_ikans.ikan_id', '=', 'ikans.id')
+            ->join('kategoris', 'ikans.kategoris_id', '=', 'kategoris.id')
+            ->groupBy('kategoris.grade')
+            ->get();
 
+        return view('admin.service', [
+            'data' => $data,
+            'cuttings' => $cuttings,
+            'detailproduk' => $detailproduk,
+            'totalBeratPerGrade' => $totalBeratPerGrade,
+        ]);
+    }
     /**
      * Show the form for creating a new resource.
      */
@@ -31,7 +44,17 @@ class ServiceController extends Controller
             ->whereMonth('created_at', $month)
             ->get();
 
-        $pdf = Pdf::loadView('pdf.service', compact('data', 'month', 'year'));
+        $totalBeratPerGrade = Service::selectRaw('kategoris.grade, SUM(services.berat_produk) as total_berat')
+            ->join('cuttings', 'services.no_batch', '=', 'cuttings.no_batch')
+            ->join('penerimaan_ikans', 'cuttings.id_produk', '=', 'penerimaan_ikans.id')
+            ->join('ikans', 'penerimaan_ikans.ikan_id', '=', 'ikans.id')
+            ->join('kategoris', 'ikans.kategoris_id', '=', 'kategoris.id')
+            ->whereYear('services.created_at', $year)
+            ->whereMonth('services.created_at', $month)
+            ->groupBy('kategoris.grade')
+            ->get();
+
+        $pdf = Pdf::loadView('pdf.service', compact('data', 'month', 'year', 'totalBeratPerGrade'));
         return $pdf->download('service_report_' . $month . '_' . $year . '.pdf');
     }
 
@@ -49,7 +72,7 @@ class ServiceController extends Controller
             'kode_trace' => $request->kode_trace, // Menambahkan kode_lot
             'no_batch' => $request->no_batch,
             'id_detail' => $request->id_detail,
-            'berat_produk' => $request->berat_produk
+            'berat_produk' => $request->berat_produk,
         ]);
 
         return redirect()->route('service.index')->with('success', 'Service berhasil ditambahkan.');
@@ -85,7 +108,7 @@ class ServiceController extends Controller
             'kode_trace' => $request->kode_trace,
             'no_batch' => $request->no_batch,
             'id_detail' => $request->id_detail,
-            'berat_produk' => $request->berat_produk
+            'berat_produk' => $request->berat_produk,
         ]);
 
         return redirect()->route('service.index')->with('success', 'Service berhasil diperbarui.');

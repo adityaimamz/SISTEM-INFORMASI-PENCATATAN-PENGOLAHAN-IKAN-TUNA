@@ -34,12 +34,10 @@
                         <button type="button" class="btn btn-outline-primary block" data-bs-toggle="modal" data-bs-target="#tambahPenerimaanModal">
                             Tambah Penerimaan
                         </button>
-                        
                         <!-- Vertically Centered modal Modal -->
                         <div class="modal fade" id="tambahPenerimaanModal" tabindex="-1" role="dialog" aria-labelledby="tambahPenerimaanModalTitle" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
                                 <div class="modal-content">
-                        
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="tambahPenerimaanModalTitle">Tambah Penerimaan</h5>
                                         <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
@@ -59,11 +57,16 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="ikan_id">Ikan</label>
-                                                <select name="ikan_id" class="form-control border-primary" required>
+                                                <select name="ikan_id" id="ikan_id" class="form-control border-primary" required>
+                                                    <option value="" selected disabled>Pilih Ikan</option>
                                                     @foreach ($ikans as $ikan)
                                                         <option value="{{ $ikan->id }}">{{ $ikan->jenis_ikan }}</option>
                                                     @endforeach
                                                 </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="grade">Grade</label>
+                                                <input type="text" name="grade" id="grade" class="form-control border-primary" readonly>
                                             </div>
                                             <div class="form-group">
                                                 <label for="tgl_penerimaan">Tanggal Penerimaan</label>
@@ -77,8 +80,7 @@
                                 </div>
                             </div>
                         </div>
-                        
-
+                    </div>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -195,6 +197,27 @@
             <!-- Basic Tables end -->
 
         </div>
-
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const ikanSelect = document.getElementById('ikan_id');
+            const gradeInput = document.getElementById('grade');
+
+            ikanSelect.addEventListener('change', function () {
+                const ikanId = this.value;
+
+                if (ikanId) {
+                    fetch(`/get-grade/${ikanId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            gradeInput.value = data.grade;
+                        })
+                        .catch(error => console.error('Error fetching grade:', error));
+                } else {
+                    gradeInput.value = '';
+                }
+            });
+        });
+    </script>
 @endsection

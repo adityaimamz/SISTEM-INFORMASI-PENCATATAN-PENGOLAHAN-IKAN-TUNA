@@ -19,7 +19,9 @@
     </style>
 </head>
 <body>
-    <h2>Report for Month: {{ $month }} Year: {{ $year }}</h2>
+    <h1 style="text-align: center">Laporan Data Penerimaan Ikan Pt.Tirta Bitung Bahari</h1>
+
+    <h4>Report untuk Bulan: {{ $month }} Tahun: {{ $year }}</h4>
     <table>
         <thead>
             <tr>

@@ -48,4 +48,30 @@
             </tbody>
         </table>
     </div>
+
+    <div class="card mt-3">
+        <div class="card-header">
+            <h5 class="card-title">Total Berat Per Grade</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Grade</th>
+                            <th>Total Berat (kg)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($totalBeratPerGrade as $grade)
+                            <tr>
+                                <td>{{ $grade->grade }}</td>
+                                <td>{{ $grade->total_berat }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>

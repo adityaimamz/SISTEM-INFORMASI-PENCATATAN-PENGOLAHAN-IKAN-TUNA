@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Ikan;
 use App\Models\Penerimaan_Ikan;
 use App\Models\Supplier;
-use App\Models\Ikan;
 use Barryvdh\DomPDF\Facade\Pdf;
-
+use Illuminate\Http\Request;
 
 class PenerimaanIkanController extends Controller
 {
@@ -20,6 +19,13 @@ class PenerimaanIkanController extends Controller
         $suppliers = Supplier::all();
         $ikans = Ikan::all();
         return view('admin.penerimaan_ikan', ['data' => $data, 'suppliers' => $suppliers, 'ikans' => $ikans]);
+    }
+
+    public function getIkan($id)
+    {
+        $ikan = Ikan::find($id);
+
+        return $ikan ? json_encode($ikan) : 'ikan tidak ditemukan';
     }
 
     /**
@@ -37,7 +43,7 @@ class PenerimaanIkanController extends Controller
             ->get();
 
         $pdf = Pdf::loadView('pdf.ikan', compact('data', 'month', 'year'));
-        return $pdf->download('ikan_report_'.$month.'_'.$year.'.pdf');
+        return $pdf->download('ikan_report_' . $month . '_' . $year . '.pdf');
     }
 
     /**

@@ -52,4 +52,26 @@
             </tbody>
         </table>
     </div>
+
+    <div class="card mt-3">
+        <div class="card-header">
+            <h5 class="card-title">Stok Produksi</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Total Stok</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ $totalStok }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
