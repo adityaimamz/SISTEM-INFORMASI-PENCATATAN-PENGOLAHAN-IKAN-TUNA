@@ -29,15 +29,16 @@ class FilterService extends Component
         $this->data = Service::whereYear('created_at', $this->year)
             ->whereMonth('created_at', $this->month)
             ->get();
-
-        $this->$totalBeratPerGrade = Service::selectRaw('kategori_ikans.grade, SUM(services.berat_produk) as total_berat')
+            
+        $this->totalBeratPerGrade = Service::selectRaw('kategori_ikans.grade, SUM(services.berat_produk) as total_berat')
             ->join('cuttings', 'services.no_batch', '=', 'cuttings.no_batch')
             ->join('penerimaan_ikans', 'cuttings.id_produk', '=', 'penerimaan_ikans.id')
             ->join('kategori_ikans', 'penerimaan_ikans.ikan_id', '=', 'kategori_ikans.id')
-            ->whereYear('services.created_at', $this->$year)
-            ->whereMonth('services.created_at', $this->$month)
+            ->whereYear('services.created_at', $this->year)
+            ->whereMonth('services.created_at', $this->month)
             ->groupBy('kategori_ikans.grade')
             ->get();
+
     }
 
     public function render()
