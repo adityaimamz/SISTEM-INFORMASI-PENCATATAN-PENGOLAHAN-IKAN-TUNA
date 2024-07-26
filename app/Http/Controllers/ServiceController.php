@@ -19,14 +19,13 @@ class ServiceController extends Controller
         $cuttings = Cutting::all();
         $detailproduk = DetailProduk::all();
 
-        // Calculate total weight per grade for services
-        $totalBeratPerGrade = Service::selectRaw('kategoris.grade, SUM(services.berat_produk) as total_berat')
-            ->join('cuttings', 'services.no_batch', '=', 'cuttings.no_batch')
-            ->join('penerimaan_ikans', 'cuttings.id_produk', '=', 'penerimaan_ikans.id')
-            ->join('ikans', 'penerimaan_ikans.ikan_id', '=', 'ikans.id')
-            ->join('kategoris', 'ikans.kategoris_id', '=', 'kategoris.id')
-            ->groupBy('kategoris.grade')
-            ->get();
+        $totalBeratPerGrade = Service::selectRaw('kategori_ikans.grade, SUM(services.berat_produk) as total_berat')
+        ->join('cuttings', 'services.no_batch', '=', 'cuttings.no_batch')
+        ->join('penerimaan_ikans', 'cuttings.id_produk', '=', 'penerimaan_ikans.id')
+        ->join('kategori_ikans', 'penerimaan_ikans.ikan_id', '=', 'kategori_ikans.id')
+        ->groupBy('kategori_ikans.grade')
+        ->get();
+    
 
         return view('admin.service', [
             'data' => $data,
@@ -44,15 +43,15 @@ class ServiceController extends Controller
             ->whereMonth('created_at', $month)
             ->get();
 
-        $totalBeratPerGrade = Service::selectRaw('kategoris.grade, SUM(services.berat_produk) as total_berat')
+            $totalBeratPerGrade = Service::selectRaw('kategori_ikans.grade, SUM(services.berat_produk) as total_berat')
             ->join('cuttings', 'services.no_batch', '=', 'cuttings.no_batch')
             ->join('penerimaan_ikans', 'cuttings.id_produk', '=', 'penerimaan_ikans.id')
-            ->join('ikans', 'penerimaan_ikans.ikan_id', '=', 'ikans.id')
-            ->join('kategoris', 'ikans.kategoris_id', '=', 'kategoris.id')
+            ->join('kategori_ikans', 'penerimaan_ikans.ikan_id', '=', 'kategori_ikans.id')
             ->whereYear('services.created_at', $year)
             ->whereMonth('services.created_at', $month)
-            ->groupBy('kategoris.grade')
+            ->groupBy('kategori_ikans.grade')
             ->get();
+        
 
         $pdf = Pdf::loadView('pdf.service', compact('data', 'month', 'year', 'totalBeratPerGrade'));
         return $pdf->download('service_report_' . $month . '_' . $year . '.pdf');
