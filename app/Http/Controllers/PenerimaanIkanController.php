@@ -60,6 +60,7 @@ class PenerimaanIkanController extends Controller
         Penerimaan_Ikan::create([
             'supplier_id' => $request->supplier_id,
             'ikan_id' => $request->ikan_id,
+            'berat_ikan' => $request->berat_ikan,
             'tgl_penerimaan' => $request->tgl_penerimaan,
         ]);
 
@@ -87,17 +88,13 @@ class PenerimaanIkanController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'supplier_id' => 'required|exists:suppliers,id',
-            'ikan_id' => 'required|exists:ikans,id',
-            'tgl_penerimaan' => 'required|date',
-        ]);
 
         $penerimaanIkan = Penerimaan_Ikan::findOrFail($id);
         $penerimaanIkan->update([
             'supplier_id' => $request->supplier_id,
             'ikan_id' => $request->ikan_id,
             'tgl_penerimaan' => $request->tgl_penerimaan,
+            'berat_ikan' => $request->berat_ikan,
         ]);
 
         return redirect()->route('penerimaan_ikan.index')->with('success', 'Penerimaan Ikan berhasil diperbarui.');

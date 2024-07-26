@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id(); 
             $table->string('no_batch')->unique();
             $table->foreignId('id_produk')->constrained('penerimaan_ikans')->onDelete('cascade');
-            $table->integer('berat_produk');
+            $table->float('berat_produk');
             $table->string('nama_produk');
             $table->timestamps();
         });

@@ -69,6 +69,10 @@
                                                 <input type="text" name="grade" id="grade" class="form-control border-primary" readonly>
                                             </div>
                                             <div class="form-group">
+                                                <label for="berat_ikan">Berat Ikan</label>
+                                                <input type="text" name="berat_ikan" id="berat_ikan" class="form-control border-primary" readonly>
+                                            </div>
+                                            <div class="form-group">
                                                 <label for="tgl_penerimaan">Tanggal Penerimaan</label>
                                                 <input type="date" name="tgl_penerimaan" class="form-control border-primary" required>
                                             </div>
@@ -91,7 +95,8 @@
                                         <th>Supplier</th>
                                         <th>Ikan</th>
                                         <th>Tanggal Penerimaan</th>
-                                        <th>Berat Ikan</th>
+                                        <th>Berat Ikan (KG)</th>
+                                        <th>Grade</th>
                                         <th>Kategori</th>
                                         <th>Action</th>
                                     </tr>
@@ -103,6 +108,7 @@
                                             <td>{{ $item->supplier->nama_supplier }}</td>
                                             <td>{{ $item->kategori_ikan->jenis_ikan }}</td>
                                             <td>{{ $item->tgl_penerimaan }}</td>
+                                            <td>{{ $item->berat_ikan }}</td>
                                             <td>{{ $item->kategori_ikan->grade }}</td>
                                             <td>{{ $item->kategori_ikan->kategori }}</td>
                                             <td>

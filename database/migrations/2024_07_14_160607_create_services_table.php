@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('no_batch');
             $table->foreign('no_batch')->references('no_batch')->on('cuttings')->onDelete('cascade');
             $table->foreignId('id_detail')->constrained('detail_produks')->onDelete('cascade');
-            $table->integer('berat_produk');
+            $table->float('berat_produk');
             $table->timestamps();
         });
     }
