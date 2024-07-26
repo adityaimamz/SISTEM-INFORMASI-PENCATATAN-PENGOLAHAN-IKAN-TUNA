@@ -4,7 +4,8 @@
             <label for="month">Month</label>
             <select id="month" wire:model="month" wire:change="filterData" class="form-control">
                 @for ($m = 1; $m <= 12; $m++)
-                    <option value="{{ sprintf('%02d', $m) }}">{{ DateTime::createFromFormat('!m', $m)->format('F') }}</option>
+                    <option value="{{ sprintf('%02d', $m) }}">{{ DateTime::createFromFormat('!m', $m)->format('F') }}
+                    </option>
                 @endfor
             </select>
         </div>
@@ -30,7 +31,9 @@
                     <th>Supplier</th>
                     <th>Ikan</th>
                     <th>Tanggal Penerimaan</th>
-                    <th>Berat Ikan</th>
+                    <th>Berat Ikan (KG)</th>
+                    <th>Grade</th>
+                    <th>Kategori</th>
                     <th>Grade</th>
                 </tr>
             </thead>
@@ -39,10 +42,11 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $item->supplier->nama_supplier }}</td>
-                        <td>{{ $item->ikan->jenis_ikan }}</td>
+                        <td>{{ $item->kategori_ikan->jenis_ikan }}</td>
                         <td>{{ $item->tgl_penerimaan }}</td>
-                        <td>{{ $item->ikan->berat_ikan }}</td>
+                        <td>{{ $item->berat_ikan }}</td>
                         <td>{{ $item->kategori_ikan->grade }}</td>
+                        <td>{{ $item->kategori_ikan->kategori }}</td>
                     </tr>
                 @endforeach
             </tbody>

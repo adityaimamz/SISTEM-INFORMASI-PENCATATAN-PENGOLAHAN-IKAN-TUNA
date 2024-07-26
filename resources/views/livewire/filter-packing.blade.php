@@ -4,7 +4,8 @@
             <label for="month">Month</label>
             <select id="month" wire:model="month" wire:change="filterData" class="form-control">
                 @for ($m = 1; $m <= 12; $m++)
-                    <option value="{{ sprintf('%02d', $m) }}">{{ DateTime::createFromFormat('!m', $m)->format('F') }}</option>
+                    <option value="{{ sprintf('%02d', $m) }}">{{ DateTime::createFromFormat('!m', $m)->format('F') }}
+                    </option>
                 @endfor
             </select>
         </div>
@@ -19,7 +20,8 @@
     </div>
 
     <div class="mb-3">
-        <a href="{{ route('packing.pdf', ['month' => $month, 'year' => $year]) }}" class="btn btn-primary">Export PDF</a>
+        <a href="{{ route('packing.pdf', ['month' => $month, 'year' => $year]) }}" class="btn btn-primary">Export
+            PDF</a>
     </div>
 
     <div class="table-responsive">
@@ -27,8 +29,9 @@
             <thead>
                 <tr>
                     <th>No</th>
-                    <th>No Box</th>
-                    <th>Kode Lot</th>
+                    <th>No box</th>
+                    <th>Nama Detail Produk</th>
+                    <th>Kode Trace</th>
                     <th>Tanggal Packing</th>
                     <th>Grade</th>
                 </tr>
@@ -38,6 +41,7 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $item->no_box }}</td>
+                        <td>{{ $item->service->detail->nama_produk }}</td>
                         <td>{{ $item->service->kode_trace }}</td>
                         <td>{{ $item->tgl_packing }}</td>
                         <td>{{ $item->service->cutting->penerimaan_ikan->kategori_ikan->grade }}</td>

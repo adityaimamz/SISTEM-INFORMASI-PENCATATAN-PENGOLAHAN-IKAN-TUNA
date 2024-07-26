@@ -53,7 +53,7 @@
                                                     <input type="text" name="no_box" class="form-control border-primary" required>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="kode_trace">Kode Lot</label>
+                                                    <label for="kode_trace">Kode Trace</label>
                                                     <select name="kode_trace" class="form-control border-primary" required>
                                                         @foreach ($services as $service)
                                                             <option value="{{ $service->kode_trace }}">{{ $service->kode_trace }}</option>
@@ -83,7 +83,8 @@
                                     <tr>
                                         <th>No</th>
                                         <th>No box</th>
-                                        <th>Kode Lot</th>
+                                        <th>Nama Produk</th>
+                                        <th>Kode Trace</th>
                                         <th>Tanggal Packing</th>
                                         <th>Grade</th>
                                         <th>Action</th>
@@ -94,6 +95,7 @@
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $item->no_box }}</td>
+                                            <td>{{ $item->service->detail->nama_produk }}</td>
                                             <td>{{ $item->service->kode_trace }}</td>
                                             <td>{{ $item->tgl_packing }}</td>
                                             <td>{{ $item->service->cutting->penerimaan_ikan->kategori_ikan->grade }}</td>

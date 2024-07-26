@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,15 +10,21 @@
             width: 100%;
             border-collapse: collapse;
         }
-        table, th, td {
+
+        table,
+        th,
+        td {
             border: 1px solid black;
         }
-        th, td {
+
+        th,
+        td {
             padding: 8px;
             text-align: left;
         }
     </style>
 </head>
+
 <body>
     <h1 style="text-align: center">Laporan Data Cutting Pt.Tirta Bitung Bahari</h1>
 
@@ -27,7 +34,7 @@
             <tr>
                 <th>No</th>
                 <th>No Batch</th>
-                <th>Id Produk</th>
+                <th>Supplier</th>
                 <th>Berat Produk</th>
                 <th>Nama Produk</th>
                 <th>Grade</th>
@@ -38,7 +45,7 @@
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $item->no_batch }}</td>
-                    <td>{{ $item->id_produk }}</td>
+                    <td>{{ $item->penerimaan_ikan->supplier->nama_supplier }}</td>
                     <td>{{ $item->berat_produk }}</td>
                     <td>{{ $item->nama_produk }}</td>
                     <td>{{ $item->penerimaan_ikan->kategori_ikan->grade }}</td>
@@ -67,4 +74,5 @@
         </table>
     </div>
 </body>
+
 </html>

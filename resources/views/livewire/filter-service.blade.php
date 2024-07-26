@@ -29,6 +29,7 @@
             <thead>
                 <tr>
                     <th>No</th>
+                    <th>Kode Trace</th>
                     <th>Nama Produk Cutting</th>
                     <th>Nama Detail Produk</th>
                     <th>Grade</th>
@@ -39,10 +40,11 @@
                 @foreach ($data as $item)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
+                        <td>{{ $item->kode_trace  }}</td>
                         <td>{{ $item->cutting->nama_produk }}</td>
                         <td>{{ $item->detail->nama_produk }}</td>
                         <td>{{ $item->cutting->penerimaan_ikan->kategori_ikan->grade }}</td>
-                        <td>{{ $item->cutting->berat_produk }}</td>
+                        <td>{{ $item->berat_produk }}</td>
                     </tr>
                 @endforeach
             </tbody>

@@ -26,7 +26,9 @@
         <thead>
             <tr>
                 <th>No</th>
-                <th>Kode Lot</th>
+                <th>No box</th>
+                <th>Nama Detail Produk</th>
+                <th>Kode Trace</th>
                 <th>Tanggal Packing</th>
                 <th>Grade</th>
             </tr>
@@ -35,9 +37,11 @@
             @foreach ($data as $item)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
-                    <td>{{ $item->service->kode_trace }}</td>
-                    <td>{{ $item->tgl_packing }}</td>
-                    <td>{{ $item->service->cutting->penerimaan_ikan->kategori_ikan->grade }}</td>
+                        <td>{{ $item->no_box }}</td>
+                        <td>{{ $item->service->detail->nama_produk }}</td>
+                        <td>{{ $item->service->kode_trace }}</td>
+                        <td>{{ $item->tgl_packing }}</td>
+                        <td>{{ $item->service->cutting->penerimaan_ikan->kategori_ikan->grade }}</td>
                 </tr>
             @endforeach
         </tbody>

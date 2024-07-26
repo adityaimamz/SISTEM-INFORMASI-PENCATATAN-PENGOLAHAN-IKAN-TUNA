@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,15 +10,21 @@
             width: 100%;
             border-collapse: collapse;
         }
-        table, th, td {
+
+        table,
+        th,
+        td {
             border: 1px solid black;
         }
-        th, td {
+
+        th,
+        td {
             padding: 8px;
             text-align: left;
         }
     </style>
 </head>
+
 <body>
     <h1 style="text-align: center">Laporan Data Penerimaan Ikan Pt.Tirta Bitung Bahari</h1>
 
@@ -29,7 +36,9 @@
                 <th>Supplier</th>
                 <th>Ikan</th>
                 <th>Tanggal Penerimaan</th>
-                <th>Berat Ikan</th>
+                <th>Berat Ikan (KG)</th>
+                <th>Grade</th>
+                <th>Kategori</th>
                 <th>Grade</th>
             </tr>
         </thead>
@@ -38,13 +47,15 @@
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $item->supplier->nama_supplier }}</td>
-                    <td>{{ $item->ikan->jenis_ikan }}</td>
+                    <td>{{ $item->kategori_ikan->jenis_ikan }}</td>
                     <td>{{ $item->tgl_penerimaan }}</td>
-                    <td>{{ $item->ikan->berat_ikan }}</td>
+                    <td>{{ $item->berat_ikan }}</td>
                     <td>{{ $item->kategori_ikan->grade }}</td>
+                    <td>{{ $item->kategori_ikan->kategori }}</td>
                 </tr>
             @endforeach
         </tbody>
     </table>
 </body>
+
 </html>
