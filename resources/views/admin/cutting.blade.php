@@ -90,7 +90,7 @@
                                     <tr>
                                         <th>No</th>
                                         <th>No Batch</th>
-                                        <th>Id Produk</th>
+                                        <th>Supplier</th>
                                         <th>Berat Produk</th>
                                         <th>Nama Produk</th>
                                         <th>Grade</th>
@@ -102,7 +102,7 @@
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $item->no_batch }}</td>
-                                            <td>{{ $item->id_produk }}</td>
+                                            <td>{{ $item->penerimaan_ikan->supplier->nama_supplier }}</td>
                                             <td>{{ $item->berat_produk }}</td>
                                             <td>{{ $item->nama_produk }}</td>
                                             <td>{{ $item->penerimaan_ikan->kategori_ikan->grade }}</td>
