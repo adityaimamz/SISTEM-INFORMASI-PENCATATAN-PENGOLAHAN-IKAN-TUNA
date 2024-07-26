@@ -37,7 +37,7 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $item->service->kode_trace }}</td>
                     <td>{{ $item->tgl_packing }}</td>
-                    <td>{{ $item->service->cutting->penerimaan_ikan->ikan->grade }}</td>
+                    <td>{{ $item->service->cutting->penerimaan_ikan->kategori_ikan->grade }}</td>
                 </tr>
             @endforeach
         </tbody>

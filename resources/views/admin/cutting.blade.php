@@ -55,7 +55,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="berat_produk">Berat Produk</label>
-                                                <input type="number" name="berat_produk" class="form-control border-primary" required>
+                                                <input type="number" name="berat_produk" class="form-control border-primary" step="0.01" required>
                                             </div>
                                             <div class="form-group">
                                                 <label for="nama_produk">Nama Produk</label>
@@ -105,7 +105,7 @@
                                             <td>{{ $item->id_produk }}</td>
                                             <td>{{ $item->berat_produk }}</td>
                                             <td>{{ $item->nama_produk }}</td>
-                                            <td>{{ $item->penerimaan_ikan->ikan->grade }}</td>
+                                            <td>{{ $item->penerimaan_ikan->kategori_ikan->grade }}</td>
                                             <td>
                                                 <button type="button" class="btn btn-outline-primary block" data-bs-toggle="modal" data-bs-target="#editCuttingModal{{ $item->no_batch }}">
                                                     Edit Cutting
@@ -139,7 +139,7 @@
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="berat_produk">Berat Produk</label>
-                                                                <input type="number" name="berat_produk" class="form-control border-primary" value="{{ $item->berat_produk }}" required>
+                                                                <input type="number" name="berat_produk" class="form-control border-primary" step="0.01" value="{{ $item->berat_produk }}" required>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="nama_produk">Nama Produk</label>
@@ -244,4 +244,20 @@
             });
         });
     </script>
+     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+           const beratIkanInput = document.querySelector('input[name="berat_produk"]');
+
+           beratIkanInput.addEventListener('input', function(event) {
+               const value = beratIkanInput.value;
+
+               // Replace commas with nothing
+               const sanitizedValue = value.replace(',', '');
+
+               if (value !== sanitizedValue) {
+                   beratIkanInput.value = sanitizedValue;
+               }
+           });
+       });
+   </script>
 @endsection

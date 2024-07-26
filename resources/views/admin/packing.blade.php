@@ -96,7 +96,7 @@
                                             <td>{{ $item->no_box }}</td>
                                             <td>{{ $item->service->kode_trace }}</td>
                                             <td>{{ $item->tgl_packing }}</td>
-                                            <td>{{ $item->service->cutting->penerimaan_ikan->ikan->grade }}</td>
+                                            <td>{{ $item->service->cutting->penerimaan_ikan->kategori_ikan->grade }}</td>
                                             <td>
                                                 <button type="button" class="btn btn-outline-primary block" data-bs-toggle="modal" data-bs-target="#editPackingModal{{ $item->no_box }}">
                                                     Edit Packing

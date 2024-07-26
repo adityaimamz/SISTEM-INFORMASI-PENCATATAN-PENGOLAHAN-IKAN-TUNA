@@ -41,7 +41,7 @@
                     <td>{{ $item->id_produk }}</td>
                     <td>{{ $item->berat_produk }}</td>
                     <td>{{ $item->nama_produk }}</td>
-                    <td>{{ $item->penerimaan_ikan->ikan->grade }}</td>
+                    <td>{{ $item->penerimaan_ikan->kategori_ikan->grade }}</td>
                 </tr>
             @endforeach
         </tbody>

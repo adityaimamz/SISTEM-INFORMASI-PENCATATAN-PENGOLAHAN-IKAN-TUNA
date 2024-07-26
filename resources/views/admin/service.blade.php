@@ -106,7 +106,7 @@
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $item->cutting->nama_produk }}</td>
                                             <td>{{ $item->detail->nama_produk }}</td>
-                                            <td>{{ $item->cutting->penerimaan_ikan->ikan->grade }}</td>
+                                            <td>{{ $item->cutting->penerimaan_ikan->kategori_ikan->grade }}</td>
                                             <td>{{ $item->berat_produk }}</td>
                                             <td>
                                                 <button type="button" class="btn btn-outline-primary block"
@@ -174,7 +174,7 @@
                                                             <div class="form-group"></div>
                                                             <label for="berat_produk">Berat Produk</label>
                                                             <input type="number" name="berat_produk"
-                                                                class="form-control border-primary"
+                                                                class="form-control border-primary" step="0.01"
                                                                 value="{{ $item->berat_produk }}" required>
                                                     </div>
                                                     <button type="submit" class="btn btn-primary ms-1">
@@ -184,7 +184,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                        </div>
+                                    </div>
 
                         <!-- Modal Hapus Service -->
                         <div class="modal fade" id="hapusServiceModal{{ $item->kode_trace }}" tabindex="-1"
@@ -233,7 +233,7 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table">
+                    <table class="table" id="table1">
                         <thead>
                             <tr>
                                 <th>Grade</th>
@@ -412,4 +412,20 @@
     </div>
 
     </div>
+    <script>
+         document.addEventListener('DOMContentLoaded', function() {
+            const beratIkanInput = document.querySelector('input[name="berat_produk"]');
+
+            beratIkanInput.addEventListener('input', function(event) {
+                const value = beratIkanInput.value;
+
+                // Replace commas with nothing
+                const sanitizedValue = value.replace(',', '');
+
+                if (value !== sanitizedValue) {
+                    beratIkanInput.value = sanitizedValue;
+                }
+            });
+        });
+    </script>
 @endsection
