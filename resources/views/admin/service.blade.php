@@ -105,7 +105,7 @@
                                     @foreach ($data as $item)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
-                                            <th>{{ $item->kode_trace  }}</th>
+                                            <td>{{ $item->kode_trace  }}</td>
                                             <td>{{ $item->cutting->nama_produk }}</td>
                                             <td>{{ $item->detail->nama_produk }}</td>
                                             <td>{{ $item->cutting->penerimaan_ikan->kategori_ikan->grade }}</td>
