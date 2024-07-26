@@ -2,8 +2,8 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
 use App\Models\Service;
+use Livewire\Component;
 
 class FilterService extends Component
 {
@@ -30,14 +30,13 @@ class FilterService extends Component
             ->whereMonth('created_at', $this->month)
             ->get();
 
-        $this->totalBeratPerGrade = Service::selectRaw('kategoris.grade, SUM(services.berat_produk) as total_berat')
+        $this->$totalBeratPerGrade = Service::selectRaw('kategori_ikans.grade, SUM(services.berat_produk) as total_berat')
             ->join('cuttings', 'services.no_batch', '=', 'cuttings.no_batch')
             ->join('penerimaan_ikans', 'cuttings.id_produk', '=', 'penerimaan_ikans.id')
-            ->join('ikans', 'penerimaan_ikans.ikan_id', '=', 'ikans.id')
-            ->join('kategoris', 'ikans.kategoris_id', '=', 'kategoris.id')
-            ->whereYear('services.created_at', $this->year)
-            ->whereMonth('services.created_at', $this->month)
-            ->groupBy('kategoris.grade')
+            ->join('kategori_ikans', 'penerimaan_ikans.ikan_id', '=', 'kategori_ikans.id')
+            ->whereYear('services.created_at', $this->$year)
+            ->whereMonth('services.created_at', $this->$month)
+            ->groupBy('kategori_ikans.grade')
             ->get();
     }
 
@@ -45,7 +44,7 @@ class FilterService extends Component
     {
         return view('livewire.filter-service', [
             'data' => $this->data,
-            'totalBeratPerGrade' => $this->totalBeratPerGrade
+            'totalBeratPerGrade' => $this->totalBeratPerGrade,
         ]);
     }
 }
