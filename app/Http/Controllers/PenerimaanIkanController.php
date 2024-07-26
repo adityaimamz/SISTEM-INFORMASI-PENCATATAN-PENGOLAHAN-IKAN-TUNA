@@ -23,7 +23,7 @@ class PenerimaanIkanController extends Controller
 
     public function getIkan($id)
     {
-        $ikan = Ikan::find($id);
+        $ikan = Kategori_ikan::find($id);
 
         return $ikan ? json_encode($ikan) : 'ikan tidak ditemukan';
     }
@@ -51,11 +51,11 @@ class PenerimaanIkanController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'supplier_id' => 'required|exists:suppliers,id',
-            'ikan_id' => 'required|exists:ikans,id',
-            'tgl_penerimaan' => 'required|date',
-        ]);
+        // $request->validate([
+        //     'supplier_id' => 'required|exists:suppliers,id',
+        //     'ikan_id' => 'required|exists:ikans,id',
+        //     'tgl_penerimaan' => 'required|date',
+        // ]);
 
         Penerimaan_Ikan::create([
             'supplier_id' => $request->supplier_id,

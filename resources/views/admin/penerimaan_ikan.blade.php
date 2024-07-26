@@ -92,7 +92,7 @@
                                         <th>Ikan</th>
                                         <th>Tanggal Penerimaan</th>
                                         <th>Berat Ikan</th>
-                                        <th>Grade</th>
+                                        <th>Kategori</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -101,10 +101,10 @@
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $item->supplier->nama_supplier }}</td>
-                                            <td>{{ $item->ikan->jenis_ikan }}</td>
+                                            <td>{{ $item->kategori_ikan->jenis_ikan }}</td>
                                             <td>{{ $item->tgl_penerimaan }}</td>
-                                            <td>{{ $item->ikan->berat_ikan }}</td>
-                                            <td>{{ $item->ikan->grade }}</td>
+                                            <td>{{ $item->kategori_ikan->grade }}</td>
+                                            <td>{{ $item->kategori_ikan->kategori }}</td>
                                             <td>
                                                 <button type="button" class="btn btn-outline-primary block" data-bs-toggle="modal" data-bs-target="#editPenerimaanModal{{ $item->id }}">
                                                     Edit Penerimaan
