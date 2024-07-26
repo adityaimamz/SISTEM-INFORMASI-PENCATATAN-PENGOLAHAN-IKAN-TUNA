@@ -41,7 +41,7 @@
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $item->cutting->nama_produk }}</td>
                         <td>{{ $item->detail->nama_produk }}</td>
-                        <td>{{ $item->cutting->penerimaan_ikan->ikan->kategori->grade }}</td>
+                        <td>{{ $item->cutting->penerimaan_ikan->ikan->grade }}</td>
                         <td>{{ $item->cutting->berat_produk }}</td>
                     </tr>
                 @endforeach

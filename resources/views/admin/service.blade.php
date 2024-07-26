@@ -76,7 +76,7 @@
                                             <div class="form-group">
                                                 <label for="berat_produk">Berat Produk</label>
                                                 <input type="number" name="berat_produk"
-                                                    class="form-control border-primary" required>
+                                                    class="form-control border-primary" step="0.01" required>
                                             </div>
                                             <button type="submit" class="btn btn-primary ms-1">
                                                 <span class="d-none d-sm-block">Submit</span>
@@ -106,7 +106,7 @@
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $item->cutting->nama_produk }}</td>
                                             <td>{{ $item->detail->nama_produk }}</td>
-                                            <td>{{ $item->cutting->penerimaan_ikan->ikan->kategori->grade }}</td>
+                                            <td>{{ $item->cutting->penerimaan_ikan->ikan->grade }}</td>
                                             <td>{{ $item->berat_produk }}</td>
                                             <td>
                                                 <button type="button" class="btn btn-outline-primary block"

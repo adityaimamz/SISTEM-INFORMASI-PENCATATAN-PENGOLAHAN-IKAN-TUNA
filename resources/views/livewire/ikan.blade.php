@@ -42,7 +42,7 @@
                         <td>{{ $item->ikan->jenis_ikan }}</td>
                         <td>{{ $item->tgl_penerimaan }}</td>
                         <td>{{ $item->ikan->berat_ikan }}</td>
-                        <td>{{ $item->ikan->kategori->grade }}</td>
+                        <td>{{ $item->ikan->grade }}</td>
                     </tr>
                 @endforeach
             </tbody>

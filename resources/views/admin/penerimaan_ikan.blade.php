@@ -104,7 +104,7 @@
                                             <td>{{ $item->ikan->jenis_ikan }}</td>
                                             <td>{{ $item->tgl_penerimaan }}</td>
                                             <td>{{ $item->ikan->berat_ikan }}</td>
-                                            <td>{{ $item->ikan->kategori->grade }}</td>
+                                            <td>{{ $item->ikan->grade }}</td>
                                             <td>
                                                 <button type="button" class="btn btn-outline-primary block" data-bs-toggle="modal" data-bs-target="#editPenerimaanModal{{ $item->id }}">
                                                     Edit Penerimaan

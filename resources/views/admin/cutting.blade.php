@@ -105,7 +105,7 @@
                                             <td>{{ $item->id_produk }}</td>
                                             <td>{{ $item->berat_produk }}</td>
                                             <td>{{ $item->nama_produk }}</td>
-                                            <td>{{ $item->penerimaan_ikan->ikan->kategori->grade }}</td>
+                                            <td>{{ $item->penerimaan_ikan->ikan->grade }}</td>
                                             <td>
                                                 <button type="button" class="btn btn-outline-primary block" data-bs-toggle="modal" data-bs-target="#editCuttingModal{{ $item->no_batch }}">
                                                     Edit Cutting

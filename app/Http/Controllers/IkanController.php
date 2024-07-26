@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Ikan;
+use App\Models\Kategori_ikan;
 use App\Models\Kategori;
 
 class IkanController extends Controller
@@ -13,9 +13,8 @@ class IkanController extends Controller
      */
     public function index()
     {
-        $ikan = Ikan::all();
-        $kategori = Kategori::all();
-        return view('admin.ikan', ['ikan' => $ikan, 'kategori' => $kategori]);
+        $ikan = Kategori_ikan::all();
+        return view('admin.ikan', ['ikan' => $ikan]);
     }
 
     /**
@@ -37,10 +36,10 @@ class IkanController extends Controller
         //     'kategoris_id' => 'required|integer',
         // ]);
 
-        Ikan::create([
+        Kategori_ikan::create([
             'jenis_ikan' => $request->jenis_ikan,
-            'berat_ikan' => $request->berat_ikan,
-            'kategoris_id' => $request->kategoris_id,
+            'kategori' => $request->kategori,
+            'grade' => $request->grade,
         ]);
 
         return redirect()->route('ikan.index')->with('success', 'Ikan berhasil ditambahkan.');
@@ -76,8 +75,8 @@ class IkanController extends Controller
         $ikan = Ikan::findOrFail($id);
         $data = [
             'jenis_ikan' => $request->jenis_ikan,
-            'berat_ikan' => $request->berat_ikan,
-            'kategoris_id' => $request->kategoris_id,
+            'kategori' => $request->kategori,
+            'grade' => $request->grade,
         ];
 
         $ikan->update($data);

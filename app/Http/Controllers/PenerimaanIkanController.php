@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Ikan;
+use App\Models\Kategori_ikan;
 use App\Models\Penerimaan_Ikan;
 use App\Models\Supplier;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -17,7 +17,7 @@ class PenerimaanIkanController extends Controller
     {
         $data = Penerimaan_Ikan::all();
         $suppliers = Supplier::all();
-        $ikans = Ikan::all();
+        $ikans = Kategori_ikan::all();
         return view('admin.penerimaan_ikan', ['data' => $data, 'suppliers' => $suppliers, 'ikans' => $ikans]);
     }
 

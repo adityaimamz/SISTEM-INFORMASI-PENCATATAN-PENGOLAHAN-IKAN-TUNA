@@ -40,7 +40,7 @@
                         <td>{{ $item->no_box }}</td>
                         <td>{{ $item->service->kode_trace }}</td>
                         <td>{{ $item->tgl_packing }}</td>
-                        <td>{{ $item->service->cutting->penerimaan_ikan->ikan->kategori->grade }}</td>
+                        <td>{{ $item->service->cutting->penerimaan_ikan->ikan->grade }}</td>
                     </tr>
                 @endforeach
             </tbody>
