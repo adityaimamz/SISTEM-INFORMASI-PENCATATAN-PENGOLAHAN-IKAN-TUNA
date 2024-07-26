@@ -20,12 +20,12 @@ class CuttingController extends Controller// Mengubah nama controller menjadi Cu
         $detailproduk = DetailProduk::all();
         $penerimaan_ikan = Penerimaan_ikan::all();
 
-        $totalBeratPerGrade = Cutting::selectRaw('kategoris.grade, SUM(cuttings.berat_produk) as total_berat')
-            ->join('penerimaan_ikans', 'cuttings.id_produk', '=', 'penerimaan_ikans.id')
-            ->join('ikans', 'penerimaan_ikans.ikan_id', '=', 'ikans.id')
-            ->join('kategoris', 'ikans.kategoris_id', '=', 'kategoris.id')
-            ->groupBy('kategoris.grade')
-            ->get();
+        $totalBeratPerGrade = Cutting::selectRaw('kategori_ikans.grade, SUM(cuttings.berat_produk) as total_berat')
+        ->join('penerimaan_ikans', 'cuttings.id_produk', '=', 'penerimaan_ikans.id')
+        ->join('kategori_ikans', 'penerimaan_ikans.ikan_id', '=', 'kategori_ikans.id')
+        ->groupBy('kategori_ikans.grade')
+        ->get();
+    
 
         return view('admin.cutting', [
             'cutting' => $cutting,
@@ -49,14 +49,14 @@ class CuttingController extends Controller// Mengubah nama controller menjadi Cu
             ->whereMonth('created_at', $month)
             ->get();
 
-        $totalBeratPerGrade = Cutting::selectRaw('kategoris.grade, SUM(cuttings.berat_produk) as total_berat')
+            $totalBeratPerGrade = Cutting::selectRaw('kategori_ikans.grade, SUM(cuttings.berat_produk) as total_berat')
             ->join('penerimaan_ikans', 'cuttings.id_produk', '=', 'penerimaan_ikans.id')
-            ->join('ikans', 'penerimaan_ikans.ikan_id', '=', 'ikans.id')
-            ->join('kategoris', 'ikans.kategoris_id', '=', 'kategoris.id')
+            ->join('kategori_ikans', 'penerimaan_ikans.ikan_id', '=', 'kategori_ikans.id')
             ->whereYear('cuttings.created_at', $year)
             ->whereMonth('cuttings.created_at', $month)
-            ->groupBy('kategoris.grade')
+            ->groupBy('kategori_ikans.grade')
             ->get();
+        
 
         $pdf = Pdf::loadView('pdf.cutting', compact('data', 'month', 'year', 'totalBeratPerGrade'));
         return $pdf->download('cutting_report_' . $month . '_' . $year . '.pdf');
