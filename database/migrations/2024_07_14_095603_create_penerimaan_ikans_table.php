@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('penerimaan_ikans', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('supplier_id')->constrained('suppliers')->onDelete('cascade');
+            $table->string('supplier_id');
+            $table->foreign('supplier_id')->references('supplier_id')->on('suppliers')->onDelete('cascade');
             $table->foreignId('ikan_id')->constrained('kategori_ikans')->onDelete('cascade');
             $table->float('berat_ikan');
             $table->string('tgl_penerimaan');

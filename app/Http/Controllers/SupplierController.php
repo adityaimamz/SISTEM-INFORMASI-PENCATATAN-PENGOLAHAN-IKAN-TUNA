@@ -36,6 +36,7 @@ class SupplierController extends Controller
         // ]);
 
         Supplier::create([
+            'supplier_id' => $request->supplier_id,
             'nama_supplier' => $request->nama_supplier,
             'nama_kapal' => $request->nama_kapal,
             'alamat' => $request->alamat,
@@ -73,6 +74,7 @@ class SupplierController extends Controller
 
         $supplier = Supplier::findOrFail($id);
         $data = [
+            'supplier_id' => $request->supplier_id,
             'nama_supplier' => $request->nama_supplier,
             'nama_kapal' => $request->nama_kapal,
             'alamat' => $request->alamat,

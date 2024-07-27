@@ -50,6 +50,10 @@
                                         <form method="POST" action="{{ route('supplier.store') }}" enctype="multipart/form-data" class="mt-0">
                                             @csrf
                                             <div class="form-group">
+                                                <label for="supplier_id">Id Supplier</label>
+                                                <input type="text" name="supplier_id" class="form-control border-primary" required>
+                                            </div>
+                                            <div class="form-group">
                                                 <label for="nama_supplier">Nama Supplier</label>
                                                 <input type="text" name="nama_supplier" class="form-control border-primary" required>
                                             </div>
@@ -78,6 +82,7 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
+                                        <th>Id Supplier</th>
                                         <th>Nama Supplier</th>
                                         <th>Nama Kapal</th>
                                         <th>Alamat</th>
@@ -88,6 +93,7 @@
                                     @foreach ($data as $item)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $item->supplier_id }}</td>
                                             <td>{{ $item->nama_supplier }}</td>
                                             <td>{{ $item->nama_kapal }}</td>
                                             <td>{{ $item->alamat }}</td>
@@ -114,6 +120,10 @@
                                                         <form method="POST" action="{{ route('supplier.update', $item->id) }}" enctype="multipart/form-data" class="mt-0">
                                                             @csrf
                                                             @method('PUT')
+                                                            <div class="form-group">
+                                                                <label for="supplier_id">Id Supplier</label>
+                                                                <input type="text" name="supplier_id" class="form-control border-primary" value="{{ $item->supplier_id }}" required>
+                                                            </div>
                                                             <div class="form-group">
                                                                 <label for="nama_supplier">Nama Supplier</label>
                                                                 <input type="text" name="nama_supplier" class="form-control border-primary" value="{{ $item->nama_supplier }}" required>

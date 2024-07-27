@@ -11,8 +11,9 @@ class Supplier extends Model
 
     protected $guarded = ['id'];
 
+
     public function penerimaan_ikan()
     {
-        return $this->hasMany(Penerimaan_ikan::class);
+        return $this->hasMany(Penerimaan_ikan::class, 'supplier_id', 'supplier_id');
     }
 }

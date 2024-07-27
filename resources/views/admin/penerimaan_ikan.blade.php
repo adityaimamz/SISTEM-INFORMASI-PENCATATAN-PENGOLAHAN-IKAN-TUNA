@@ -54,7 +54,7 @@
                                                 <label for="supplier_id">Supplier</label>
                                                 <select name="supplier_id" class="form-control border-primary" required>
                                                     @foreach ($suppliers as $supplier)
-                                                        <option value="{{ $supplier->id }}">{{ $supplier->nama_supplier }}
+                                                        <option value="{{ $supplier->supplier_id }}">{{ $supplier->nama_supplier }}
                                                         </option>
                                                     @endforeach
                                                 </select>
@@ -76,7 +76,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="berat_ikan">Berat Ikan</label>
-                                                <input type="text" name="berat_ikan" id="berat_ikan" step="0.01"
+                                                <input type="number" name="berat_ikan" id="berat_ikan" step="0.01"
                                                     class="form-control border-primary" required>
                                             </div>
                                             <div class="form-group">
@@ -159,8 +159,8 @@
                                                             <select name="supplier_id" class="form-control border-primary"
                                                                 required>
                                                                 @foreach ($suppliers as $supplier)
-                                                                    <option value="{{ $supplier->id }}"
-                                                                        {{ $supplier->id == $item->supplier_id ? 'selected' : '' }}>
+                                                                    <option value="{{ $supplier->supplier_id }}"
+                                                                        {{ $supplier->supplier_id == $item->supplier_id ? 'selected' : '' }}>
                                                                         {{ $supplier->nama_supplier }}</option>
                                                                 @endforeach
                                                             </select>
