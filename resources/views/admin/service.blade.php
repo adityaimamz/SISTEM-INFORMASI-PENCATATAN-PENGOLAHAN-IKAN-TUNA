@@ -36,8 +36,7 @@
                             Tambah Service
                         </button>
 
-                        <div class="modal fade" id="tambahServiceModal" tabindex="-1" role="dialog"
-                            aria-labelledby="tambahServiceModalTitle" aria-hidden="true">
+                        <div class="modal fade" id="tambahServiceModal" tabindex="-1" role="dialog" aria-labelledby="tambahServiceModalTitle" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -47,20 +46,18 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form method="POST" action="{{ route('service.store') }}"
-                                            enctype="multipart/form-data" class="mt-0">
+                                        <form method="POST" action="{{ route('service.store') }}" enctype="multipart/form-data" class="mt-0">
                                             @csrf
                                             <div class="form-group">
                                                 <label for="kode_trace">Kode Trace</label>
-                                                <input type="text" name="kode_trace" class="form-control border-primary"
-                                                    required>
+                                                <input type="text" name="kode_trace" class="form-control border-primary" required>
                                             </div>
                                             <div class="form-group">
                                                 <label for="no_batch">No Batch</label>
-                                                <select name="no_batch" class="form-control border-primary" required>
+                                                <select name="no_batch" id="no_batch" class="form-control border-primary" required>
+                                                    <option value="" disabled selected>Pilih No Batch</option>
                                                     @foreach ($cuttings as $cutting)
-                                                        <option value="{{ $cutting->no_batch }}">{{ $cutting->no_batch }}
-                                                        </option>
+                                                        <option value="{{ $cutting->no_batch }}">{{ $cutting->no_batch }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -68,15 +65,17 @@
                                                 <label for="id_detail">Detail Produk</label>
                                                 <select name="id_detail" class="form-control border-primary" required>
                                                     @foreach ($detailproduk as $detail_produk)
-                                                        <option value="{{ $detail_produk->id }}">
-                                                            {{ $detail_produk->nama_produk }}</option>
+                                                        <option value="{{ $detail_produk->id }}">{{ $detail_produk->nama_produk }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
                                             <div class="form-group">
                                                 <label for="berat_produk">Berat Produk</label>
-                                                <input type="number" name="berat_produk"
-                                                    class="form-control border-primary" step="0.01" required>
+                                                <input type="number" name="berat_produk" class="form-control border-primary" step="0.01" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="supplier_id">Id Supplier</label>
+                                                <input type="text" name="supplier_id" id="supplier_id" class="form-control border-primary" readonly>
                                             </div>
                                             <button type="submit" class="btn btn-primary ms-1">
                                                 <span class="d-none d-sm-block">Submit</span>
@@ -430,4 +429,27 @@
             });
         });
     </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const noBatchSelect = document.getElementById('no_batch');
+        const supplierIdInput = document.getElementById('supplier_id');
+
+        noBatchSelect.addEventListener('change', function () {
+            const noBatch = this.value;
+
+            if (noBatch) {
+                fetch(`/get-supplier-by-batch/${noBatch}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        supplierIdInput.value = data.supplier_id;
+                    })
+                    .catch(error => console.error('Error fetching supplier ID:', error));
+            } else {
+                supplierIdInput.value = '';
+            }
+        });
+    });
+</script>
+    
 @endsection

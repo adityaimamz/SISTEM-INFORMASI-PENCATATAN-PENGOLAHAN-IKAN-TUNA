@@ -14,6 +14,7 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SupplierController;
 use App\Models\Kategori_ikan;
 use App\Models\Penerimaan_ikan;
+use App\Models\Cutting;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
@@ -90,6 +91,16 @@ Route::get('/get-grade/{ikan}', function (Kategori_ikan $ikan) {
 Route::get('/get-supplier/{penerimaan_ikan}', function (Penerimaan_ikan $penerimaan_ikan) {
     return response()->json(['nama_supplier' => $penerimaan_ikan->supplier->nama_supplier]);
 });
+
+Route::get('/get-supplier-by-batch/{no_batch}', function ($no_batch) {
+    $cutting = Cutting::where('no_batch', $no_batch)->first();
+    if ($cutting && $cutting->penerimaan_ikan) {
+        $supplier_id = $cutting->penerimaan_ikan->supplier->supplier_id;
+        return response()->json(['supplier_id' => $supplier_id]);
+    }
+    return response()->json(['supplier_id' => ''], 404);
+});
+
 
 Route::get('/ikan-pdf/{month}/{year}', [PenerimaanIkanController::class, 'ikanPdf'])->name('ikan.pdf');
 Route::get('/cutting-pdf/{month}/{year}', [CuttingController::class, 'cuttingPdf'])->name('cutting.pdf');
