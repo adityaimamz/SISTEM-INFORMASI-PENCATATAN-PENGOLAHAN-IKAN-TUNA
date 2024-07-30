@@ -13,7 +13,7 @@ class AccountController extends Controller
      */
     public function index()
     {
-        $data = User::where('role_id', 2)->get();
+        $data = User::all();
         return view('admin.account', ['data' => $data]);
     }
 
@@ -38,7 +38,7 @@ class AccountController extends Controller
 
         User::create([
             'name' => $request->name,
-            'role_id' => 2,
+            'role_id' => $request->role_id,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);

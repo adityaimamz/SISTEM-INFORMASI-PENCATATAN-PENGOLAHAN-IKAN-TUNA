@@ -12,9 +12,9 @@ use App\Http\Controllers\ProdukKeluarController;
 use App\Http\Controllers\ProdukMasukController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SupplierController;
+use App\Models\Cutting;
 use App\Models\Kategori_ikan;
 use App\Models\Penerimaan_ikan;
-use App\Models\Cutting;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
@@ -46,12 +46,12 @@ Route::middleware('is_admin')->group(function () {
 Route::middleware('is_karyawan')->group(function () {
     Route::get('/karyawan', function () {
         $totalMasuk = DB::table('produk_masuks')
-        ->sum('stok_masuk');
+            ->sum('stok_masuk');
 
-    $totalKeluar = DB::table('produk_keluars')
-        ->sum('jumlah_produk');
+        $totalKeluar = DB::table('produk_keluars')
+            ->sum('jumlah_produk');
 
-    $totalStok = $totalMasuk - $totalKeluar;
+        $totalStok = $totalMasuk - $totalKeluar;
         return view('karyawan.dashboard', [
             'totalStok' => $totalStok,
             'totalMasuk' => $totalMasuk,
@@ -100,7 +100,6 @@ Route::get('/get-supplier-by-batch/{no_batch}', function ($no_batch) {
     }
     return response()->json(['supplier_id' => ''], 404);
 });
-
 
 Route::get('/ikan-pdf/{month}/{year}', [PenerimaanIkanController::class, 'ikanPdf'])->name('ikan.pdf');
 Route::get('/cutting-pdf/{month}/{year}', [CuttingController::class, 'cuttingPdf'])->name('cutting.pdf');

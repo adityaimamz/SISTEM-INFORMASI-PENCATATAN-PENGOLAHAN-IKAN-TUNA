@@ -16,7 +16,7 @@ class KaryawanMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::user()->role_id == 2) {
+        if (Auth::user()->role_id == 3 || Auth::user()->role_id == 4 || Auth::user()->role_id == 5 || Auth::user()->role_id == 6) {
             return $next($request);
         } else {
             abort(403);

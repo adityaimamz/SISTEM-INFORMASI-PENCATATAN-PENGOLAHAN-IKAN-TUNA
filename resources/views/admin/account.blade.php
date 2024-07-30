@@ -12,7 +12,7 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Data Akun Karyawan</h3>
+                        <h3>Data Akun</h3>
                         <p class="text-subtitle text-muted">Silahkan kelola data akun</p>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
@@ -61,6 +61,15 @@
                                                 <label for="password">Password</label>
                                                 <input type="password" name="password" class="form-control border-primary" required>
                                             </div>
+                                            <div class="form-group">
+                                                <label for="role_id">Jabatan</label>
+                                                <select name="role_id" class="form-control border-primary" required>
+                                                    <option value="3">Kepala Produksi Cutting</option>
+                                                    <option value="4">Kepala Produksi Service</option>
+                                                    <option value="5">Kepala Produksi Packing</option>
+                                                </select>
+                                            </div>
+
                                             <button type="submit" class="btn btn-primary ms-1">
                                                 <span class="d-none d-sm-block">Submit</span>
                                             </button>
@@ -80,6 +89,7 @@
                                         <th>No</th>
                                         <th>Email</th>
                                         <th>Name</th>
+                                        <th>Role</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -89,6 +99,7 @@
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $item->email }}</td>
                                             <td>{{ $item->name }}</td>
+                                            <td>{{ $item->role_id == 1 ? 'Pimpinan' : ($item->role_id == 2 ? 'Admin' : ($item->role_id == 3 ? 'Kepala Produksi Cutting' : ($item->role_id == 4 ? 'Kepala Produksi Service' : 'Kepala Produksi Packing'))) }}</td>
                                             <td>
                                                 <button type="button" class="btn btn-outline-primary block" data-bs-toggle="modal" data-bs-target="#editAkunModal{{ $item->id }}">
                                                     Edit akun
