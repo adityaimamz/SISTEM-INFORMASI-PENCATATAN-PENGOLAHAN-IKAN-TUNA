@@ -83,7 +83,7 @@
 
                 <li class="sidebar-item  has-sub">
                     <a href="#" class='sidebar-link'>
-                        <i class="bi bi-folder-plus"></i>
+                        <i class="bi bi-database-fill"></i>
                         <span>Data Master</span>
                     </a>
 

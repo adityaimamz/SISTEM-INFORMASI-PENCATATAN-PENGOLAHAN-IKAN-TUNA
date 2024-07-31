@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('services', function (Blueprint $table) {
+        Schema::create('no_batches', function (Blueprint $table) {
             $table->id();
-            $table->string('kode_trace')->unique();
-            $table->foreignId('no_batch')->constrained('cuttings')->onDelete('cascade');
-            $table->foreignId('id_detail')->constrained('detail_produks')->onDelete('cascade');
-            $table->float('berat_produk');
+            $table->string('no_batch');
             $table->timestamps();
         });
     }
@@ -26,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('services');
+        Schema::dropIfExists('no_batches');
     }
 };

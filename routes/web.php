@@ -2,11 +2,12 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CuttingController;
-use App\Http\Controllers\DetailProdukController;
+use App\Http\Controllers\NoBatchController;
 use App\Http\Controllers\IkanController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\KategoriBeratPenerimaanController;
+use App\Http\Controllers\KategoriBeratCuttingController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\PackingController;
 use App\Http\Controllers\PenerimaanIkanController;
@@ -44,6 +45,7 @@ Route::middleware('is_admin')->group(function () {
     Route::resource('ikan', IkanController::class);
     Route::resource('grade', GradeController::class);
     Route::resource('kategori_berat_penerimaan', KategoriBeratPenerimaanController::class);
+    Route::resource('kategori_berat_cutting', KategoriBeratCuttingController::class);
 });
 
 Route::middleware('is_karyawan')->group(function () {
@@ -68,7 +70,7 @@ Route::get('/laporan_ikan_masuk', function () {
 })->middleware('is_admin');
 
 Route::get('/laporan_cutting', function () {
-    return view('admin.laporan_cutting');
+    return view('admin.laporan.laporan_cutting');
 })->middleware('is_admin');
 
 Route::get('/laporan_service', function () {
@@ -112,7 +114,7 @@ Route::get('/stok-masuk-pdf/{month}/{year}', [ProdukMasukController::class, 'sto
 Route::get('/stok-keluar-pdf/{month}/{year}', [ProdukKeluarController::class, 'stokKeluarPdf'])->name('stok-keluar.pdf');
 Route::resource('penerimaan_ikan', PenerimaanIkanController::class)->middleware('auth');
 Route::resource('cutting', CuttingController::class)->middleware('auth');
-Route::resource('detailproduk', DetailProdukController::class)->middleware('auth');
+Route::resource('no_batch', NoBatchController::class)->middleware('auth');
 Route::resource('service', ServiceController::class)->middleware('auth');
 Route::resource('packing', PackingController::class)->middleware('auth');
 Route::resource('produk-masuk', ProdukMasukController::class)->middleware('auth');

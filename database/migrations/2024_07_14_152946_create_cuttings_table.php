@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('cuttings', function (Blueprint $table) {
             $table->id(); 
-            $table->string('no_batch')->unique();
+            $table->foreignId('no_batch')->constrained('no_batches')->onDelete('cascade');
             $table->foreignId('id_produk')->constrained('penerimaan_ikans')->onDelete('cascade');
+            $table->foreignId('kategori_berat_id')->constrained('kategori_berat_cuttings')->onDelete('cascade');
             $table->float('berat_produk');
-            $table->string('nama_produk');
             $table->timestamps();
         });
     }

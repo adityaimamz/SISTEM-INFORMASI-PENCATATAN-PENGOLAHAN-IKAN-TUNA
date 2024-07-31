@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Grade;
 use App\Models\Supplier;
 use App\Models\KategoriBeratPenerimaan;
+use App\Models\KategoriBeratCutting;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -53,6 +54,16 @@ class DatabaseSeeder extends Seeder
         ]);
         KategoriBeratPenerimaan::create([
             'kategori_berat' => '30 UP',
+        ]);
+
+        KategoriBeratCutting::create([
+            'kategori_berat' => '1/3',
+        ]);
+        KategoriBeratCutting::create([
+            'kategori_berat' => '3/5',
+        ]);
+        KategoriBeratCutting::create([
+            'kategori_berat' => '5 UP',
         ]);
 
         Supplier::create([

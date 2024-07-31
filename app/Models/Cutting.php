@@ -16,8 +16,19 @@ class Cutting extends Model
         return $this->belongsTo(Penerimaan_ikan::class, 'id_produk');
     }
 
+    public function no_batch()
+    {
+        return $this->belongsTo(NoBatch::class, 'no_batch');
+    }
+
     public function services()
     {
         return $this->hasMany(Service::class, 'no_batch', 'no_batch'); // Ensure both local and foreign keys match
     }
+
+    public function kategori_berat()
+    {
+        return $this->belongsTo(KategoriBeratCutting::class, 'kategori_berat_id');
+    }
+
 }
