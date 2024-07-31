@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('supplier_id');
             $table->foreign('supplier_id')->references('supplier_id')->on('suppliers')->onDelete('cascade');
-            $table->foreignId('ikan_id')->constrained('kategori_ikans')->onDelete('cascade');
+            $table->foreignId('grade_id')->constrained('grades')->onDelete('cascade');
+            $table->foreignId('kategori_berat_id')->constrained('kategori_berat_penerimaans')->onDelete('cascade');
             $table->float('berat_ikan');
             $table->string('tgl_penerimaan');
             $table->timestamps();

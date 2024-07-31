@@ -3,7 +3,10 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Grade;
+use App\Models\Supplier;
+use App\Models\KategoriBeratPenerimaan;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -28,5 +31,37 @@ class DatabaseSeeder extends Seeder
             'role_id' => '3',
             'password' => Hash::make('superadmin'),
         ]);
+
+        Grade::create([
+            'grade' => 'AB',
+        ]);
+        Grade::create([
+            'grade' => 'ABC',
+        ]);
+        Grade::create([
+            'grade' => 'C',
+        ]);
+        Grade::create([
+            'grade' => 'Lokal',
+        ]);
+
+        KategoriBeratPenerimaan::create([
+            'kategori_berat' => '10 UP',
+        ]);
+        KategoriBeratPenerimaan::create([
+            'kategori_berat' => '20 UP',
+        ]);
+        KategoriBeratPenerimaan::create([
+            'kategori_berat' => '30 UP',
+        ]);
+
+        Supplier::create([
+            'supplier_id' => 001,
+            'nama_supplier' => 'Mansur',
+            'nama_kapal' => 'Kapal A',
+            'alamat' => 'Jl. A',
+        ]);
+
+        
     }
 }

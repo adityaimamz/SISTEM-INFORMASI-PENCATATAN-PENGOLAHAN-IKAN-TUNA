@@ -6,6 +6,8 @@ use App\Http\Controllers\DetailProdukController;
 use App\Http\Controllers\IkanController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\KategoriBeratPenerimaanController;
+use App\Http\Controllers\GradeController;
 use App\Http\Controllers\PackingController;
 use App\Http\Controllers\PenerimaanIkanController;
 use App\Http\Controllers\ProdukKeluarController;
@@ -40,7 +42,8 @@ Route::middleware('is_admin')->group(function () {
     Route::resource('supplier', SupplierController::class);
     Route::resource('kategori', KategoriController::class);
     Route::resource('ikan', IkanController::class);
-
+    Route::resource('grade', GradeController::class);
+    Route::resource('kategori_berat_penerimaan', KategoriBeratPenerimaanController::class);
 });
 
 Route::middleware('is_karyawan')->group(function () {

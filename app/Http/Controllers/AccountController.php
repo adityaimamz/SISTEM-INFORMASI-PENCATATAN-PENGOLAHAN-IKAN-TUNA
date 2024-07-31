@@ -14,7 +14,7 @@ class AccountController extends Controller
     public function index()
     {
         $data = User::all();
-        return view('admin.account', ['data' => $data]);
+        return view('admin.data-master.account', ['data' => $data]);
     }
 
     /**
