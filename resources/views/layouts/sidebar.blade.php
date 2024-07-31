@@ -43,24 +43,24 @@
             <ul class="menu">
                
                 <li class="sidebar-title">Menu</li>
-                @if (Auth::user()->role_id == 1)
+                @if (Auth::user()->role_id == 1 || Auth::user()->role_id == 2)
                 <li class="sidebar-item {{ Request::is('admin') ? 'active' : '' }} ">
                     <a href="/admin" class='sidebar-link'>
                         <i class="bi bi-grid-fill"></i>
-                        <span>Dashboard Admin</span>
+                        <span>Dashboard</span>
                     </a>
                 </li>
                 @else
                 <li class="sidebar-item {{ Request::is('karyawan') ? 'active' : '' }} ">
                     <a href="/karyawan" class='sidebar-link'>
                         <i class="bi bi-grid-fill"></i>
-                        <span>Dashboard Karyawan</span>
+                        <span>Dashboard</span>
                     </a>
                 </li> 
                 @endif
            
 
-                @if(Auth::user()->role_id == 1)               
+                {{-- @if(Auth::user()->role_id == 1)               
                 <li class="sidebar-item {{ Request::is('akun') ? 'active' : '' }}">
                     <a href="/akun" class='sidebar-link'>
                         <i class="bi bi-people-fill"></i>
@@ -79,8 +79,47 @@
                         <span>Ikan</span>
                     </a>
                 </li>
-                @endif
+                @endif --}}
 
+                <li class="sidebar-item  has-sub">
+                    <a href="#" class='sidebar-link'>
+                        <i class="bi bi-folder-plus"></i>
+                        <span>Data Master</span>
+                    </a>
+
+                    <ul class="submenu ">
+
+                        <li class="submenu-item  {{ Request::is('akun') ? 'active' : '' }}">
+                            <a href="/akun" class="submenu-link">Data Akun</a>
+
+                        </li>
+
+                        <li class="submenu-item  {{ Request::is('supplier') ? 'active' : '' }}">
+                            <a href="/supplier" class="submenu-link">Data Supplier</a>
+
+                        </li>
+
+                        <li class="submenu-item {{ Request::is('grade') ? 'active' : '' }} ">
+                            <a href="/grade" class="submenu-link">Data Grade</a>
+                        </li>
+
+                        <li class="submenu-item {{ Request::is('kategori_berat_penerimaan') ? 'active' : '' }} ">
+                            <a href="/kategori_berat_penerimaan" class="submenu-link">Kategori Berat Penerimaan</a>
+
+                        </li>
+
+                        <li class="submenu-item {{ Request::is('kategori_berat_cutting') ? 'active' : '' }} ">
+                            <a href="/kategori_berat_cutting" class="submenu-link">Kategori Berat Cutting</a>
+
+                        </li>
+
+                        <li class="submenu-item {{ Request::is('ikan') ? 'active' : '' }} ">
+                            <a href="/ikan" class="submenu-link">Data Ikan</a>
+                        </li>
+
+
+                    </ul>
+                </li>
                 <li class="sidebar-item  has-sub">
                     <a href="#" class='sidebar-link'>
                         <i class="bi bi-stack"></i>

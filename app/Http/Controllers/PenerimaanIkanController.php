@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Kategori_ikan;
 use App\Models\Penerimaan_Ikan;
 use App\Models\Supplier;
+use App\Models\Grade;
+use App\Models\KategoriBeratPenerimaan;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
@@ -17,8 +19,9 @@ class PenerimaanIkanController extends Controller
     {
         $data = Penerimaan_Ikan::all();
         $suppliers = Supplier::all();
-        $ikans = Kategori_ikan::all();
-        return view('admin.penerimaan_ikan', ['data' => $data, 'suppliers' => $suppliers, 'ikans' => $ikans]);
+        $grades = Grade::all();
+        $kategori_berat_penerimaans = KategoriBeratPenerimaan::all();
+        return view('admin.transaksi.penerimaan_ikan', ['data' => $data, 'suppliers' => $suppliers, 'grades' => $grades, 'kategori_berat_penerimaans' => $kategori_berat_penerimaans]);
     }
 
     public function getIkan($id)
@@ -59,7 +62,8 @@ class PenerimaanIkanController extends Controller
 
         Penerimaan_Ikan::create([
             'supplier_id' => $request->supplier_id,
-            'ikan_id' => $request->ikan_id,
+            'grade_id' => $request->grade_id,
+            'kategori_berat_id' => $request->kategori_berat_id,
             'berat_ikan' => $request->berat_ikan,
             'tgl_penerimaan' => $request->tgl_penerimaan,
         ]);
@@ -92,7 +96,8 @@ class PenerimaanIkanController extends Controller
         $penerimaanIkan = Penerimaan_Ikan::findOrFail($id);
         $penerimaanIkan->update([
             'supplier_id' => $request->supplier_id,
-            'ikan_id' => $request->ikan_id,
+            'grade_id' => $request->grade_id,
+            'kategori_berat_id' => $request->kategori_berat_id,
             'tgl_penerimaan' => $request->tgl_penerimaan,
             'berat_ikan' => $request->berat_ikan,
         ]);

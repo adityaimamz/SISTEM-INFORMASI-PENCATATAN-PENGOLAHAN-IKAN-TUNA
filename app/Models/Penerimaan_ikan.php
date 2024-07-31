@@ -11,9 +11,14 @@ class Penerimaan_ikan extends Model
 
     protected $guarded = ['id'];
 
-    public function kategori_ikan()
+    public function grade()
     {
-        return $this->belongsTo(Kategori_ikan::class, 'ikan_id');
+        return $this->belongsTo(Grade::class, 'grade_id');
+    }
+
+    public function kategori_berat_penerimaan()
+    {
+        return $this->belongsTo(KategoriBeratPenerimaan::class, 'kategori_berat_id');
     }
 
     public function supplier()

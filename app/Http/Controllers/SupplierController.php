@@ -13,7 +13,7 @@ class SupplierController extends Controller
     public function index()
     {
         $data = Supplier::all();
-        return view('admin.supplier', ['data' => $data]);
+        return view('admin.data-master.supplier', ['data' => $data]);
     }
 
     /**
