@@ -27,17 +27,17 @@ Route::get('/reload-captcha', [LoginController::class, 'reloadCaptcha']);
 
 Route::middleware('is_admin')->group(function () {
     Route::get('/admin', function () {
-        $totalMasuk = DB::table('produk_masuks')
-            ->sum('stok_masuk');
+        // $totalMasuk = DB::table('produk_masuks')
+        //     ->sum('stok_masuk');
 
-        $totalKeluar = DB::table('produk_keluars')
-            ->sum('jumlah_produk');
+        // $totalKeluar = DB::table('produk_keluars')
+        //     ->sum('jumlah_produk');
 
-        $totalStok = $totalMasuk - $totalKeluar;
+        // $totalStok = $totalMasuk - $totalKeluar;
         return view('admin.dashboard', [
-            'totalStok' => $totalStok,
-            'totalMasuk' => $totalMasuk,
-            'totalKeluar' => $totalKeluar,
+            // 'totalStok' => $totalStok,
+            // 'totalMasuk' => $totalMasuk,
+            // 'totalKeluar' => $totalKeluar,
         ]);
     });
     Route::resource('akun', AccountController::class);
@@ -51,17 +51,17 @@ Route::middleware('is_admin')->group(function () {
 
 Route::middleware('is_karyawan')->group(function () {
     Route::get('/karyawan', function () {
-        $totalMasuk = DB::table('produk_masuks')
-            ->sum('stok_masuk');
+        // $totalMasuk = DB::table('produk_masuks')
+        //     ->sum('stok_masuk');
 
-        $totalKeluar = DB::table('produk_keluars')
-            ->sum('jumlah_produk');
+        // $totalKeluar = DB::table('produk_keluars')
+        //     ->sum('jumlah_produk');
 
-        $totalStok = $totalMasuk - $totalKeluar;
+        // $totalStok = $totalMasuk - $totalKeluar;
         return view('karyawan.dashboard', [
-            'totalStok' => $totalStok,
-            'totalMasuk' => $totalMasuk,
-            'totalKeluar' => $totalKeluar,
+            // 'totalStok' => $totalStok,
+            // 'totalMasuk' => $totalMasuk,
+            // 'totalKeluar' => $totalKeluar,
         ]);
     });
 });
