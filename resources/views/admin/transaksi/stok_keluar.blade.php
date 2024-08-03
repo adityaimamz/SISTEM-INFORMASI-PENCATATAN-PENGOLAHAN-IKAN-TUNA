@@ -92,6 +92,7 @@
                         </div>
                     </div>
                     <div class="card-body">
+                        <a href={{ route('stok-keluar.pdf') }} class="btn btn-primary">Export</a>
                         <div class="table-responsive">
                             <table class="table" id="table2">
                                 <thead>

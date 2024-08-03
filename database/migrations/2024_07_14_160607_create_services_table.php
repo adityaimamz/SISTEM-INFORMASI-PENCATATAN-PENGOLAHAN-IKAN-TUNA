@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('services', function (Blueprint $table) {
             $table->id();
             $table->foreignId('kode_trace_id')->constrained('kode_traces')->onDelete('cascade');
-            $table->foreignId('no_batch_id')->constrained('cuttings')->onDelete('cascade'); // corrected to use 'cuttings' table
+            $table->foreignId('no_batch_id')->constrained('no_batches')->onDelete('cascade'); // corrected to use 'cuttings' table
             $table->foreignId('id_ikan')->constrained('kategori_ikans')->onDelete('cascade');
             $table->float('kg');
             $table->integer('pcs');

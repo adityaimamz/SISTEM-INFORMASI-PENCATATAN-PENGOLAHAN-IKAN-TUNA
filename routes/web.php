@@ -107,12 +107,12 @@ Route::get('/get-supplier-by-batch/{no_batch}', function ($no_batch) {
     return response()->json(['supplier_id' => ''], 404);
 });
 
-Route::get('/ikan-pdf/{month}/{year}', [PenerimaanIkanController::class, 'ikanPdf'])->name('ikan.pdf');
-Route::get('/cutting-pdf/{month}/{year}', [CuttingController::class, 'cuttingPdf'])->name('cutting.pdf');
-Route::get('/service-pdf/{month}/{year}', [ServiceController::class, 'servicePdf'])->name('service.pdf');
-Route::get('/packing-pdf/{month}/{year}', [PackingController::class, 'packingPdf'])->name('packing.pdf');
+Route::get('/ikan-pdf', [PenerimaanIkanController::class, 'ikanPdf'])->name('ikan.pdf');
+Route::get('/cutting-pdf/{no_batch}', [CuttingController::class, 'cuttingPdf'])->name('cutting.pdf');
+Route::get('/service-pdf/{kode_trace}', [ServiceController::class, 'servicePdf'])->name('service.pdf');
+Route::get('/packing-pdf/{date}', [PackingController::class, 'packingPdf'])->name('packing.pdf');
 Route::get('/stok-masuk-pdf/{month}/{year}', [ProdukMasukController::class, 'stokMasukPdf'])->name('stok-masuk.pdf');
-Route::get('/stok-keluar-pdf/{month}/{year}', [ProdukKeluarController::class, 'stokKeluarPdf'])->name('stok-keluar.pdf');
+Route::get('/stok-keluar-pdf', [ProdukKeluarController::class, 'stokKeluarPdf'])->name('stok-keluar.pdf');
 Route::resource('penerimaan_ikan', PenerimaanIkanController::class)->middleware('auth');
 Route::resource('cutting', CuttingController::class)->middleware('auth');
 Route::resource('no_batch', NoBatchController::class)->middleware('auth');

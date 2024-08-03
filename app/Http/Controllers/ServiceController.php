@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cutting;
-use App\Models\KodeTrace;
-use App\Models\Service;
 use App\Models\Kategori_ikan;
+use App\Models\KodeTrace;
+use App\Models\NoBatch;
+use App\Models\Service;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
@@ -17,28 +17,27 @@ class ServiceController extends Controller
     public function index()
     {
         $data = Service::all();
-        $cuttings = Cutting::all();
+        $no_batches = NoBatch::all();
         $kode_trace = KodeTrace::all();
         $kategori_ikan = Kategori_ikan::all();
 
         return view('admin.transaksi.service', [
             'data' => $data,
-            'cuttings' => $cuttings,
+            'no_batches' => $no_batches,
             'kode_trace' => $kode_trace,
-            'kategori_ikan' => $kategori_ikan
+            'kategori_ikan' => $kategori_ikan,
         ]);
     }
     /**
      * Show the form for creating a new resource.
      */
-    public function servicePdf($month, $year)
+// app/Http/Controllers/ServiceController.php
+    public function servicePdf($kode_trace)
     {
-        $data = Service::whereYear('created_at', $year)
-            ->whereMonth('created_at', $month)
-            ->get();
+        $services = Service::where('kode_trace_id', $kode_trace)->get();
 
-        $pdf = Pdf::loadView('pdf.service', compact('data', 'month', 'year', 'totalBeratPerGrade'));
-        return $pdf->download('service_report_' . $month . '_' . $year . '.pdf');
+        $pdf = Pdf::loadView('pdf.service', compact('services', 'kode_trace'));
+        return $pdf->download('service_report_' . $kode_trace . '.pdf');
     }
 
     public function create()

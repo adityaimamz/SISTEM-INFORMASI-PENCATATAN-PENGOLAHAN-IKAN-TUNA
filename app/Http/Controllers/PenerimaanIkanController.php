@@ -38,17 +38,27 @@ class PenerimaanIkanController extends Controller
     {
         //
     }
-
-    public function ikanPdf($month, $year)
+    public function ikanPdf(Request $request)
     {
-        $data = Penerimaan_Ikan::whereYear('tgl_penerimaan', $year)
-            ->whereMonth('tgl_penerimaan', $month)
-            ->get();
-
-        $pdf = Pdf::loadView('pdf.ikan', compact('data', 'month', 'year'));
-        return $pdf->download('ikan_report_' . $month . '_' . $year . '.pdf');
+        $date = $request->get('date');
+        $supplier = $request->get('supplier');
+    
+        $query = Penerimaan_Ikan::query();
+    
+        if ($date) {
+            $query->whereDate('tgl_penerimaan', $date);
+        }
+    
+        if ($supplier) {
+            $query->where('supplier_id', $supplier);
+        }
+    
+        $data = $query->get();
+    
+        $pdf = Pdf::loadView('pdf.ikan', compact('data'));
+        return $pdf->download('ikan_report_' . $date . '.pdf');
     }
-
+    
     /**
      * Store a newly created resource in storage.
      */

@@ -1,19 +1,21 @@
 <div>
     <div class="row mb-3">
         <div class="col-md-6">
-            <label for="month">Tanggal</label>
-            <input type="date" class="form-control" wire:model="date" wire:change="filterData"
-                value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
+            <label for="date">Tanggal</label>
+            <input type="date" id="date" class="form-control" wire:model="date" >
         </div>
         <div class="col-md-6">
             <label for="supplier">Supplier</label>
-            <select id="supplier" wire:model="supplier" wire:change="filterData" class="form-control">
+            <select id="supplier" wire:model="supplier" class="form-control" wire:change="filterData">
                 <option value="">Pilih Supplier</option>
                 @foreach ($suppliers as $supplier)
-                    <option value="{{ $supplier->supplier_id }}">{{ $supplier->nama_supplier }}</option>
+                    <option value="{{ $supplier->id }}">{{ $supplier->nama_supplier }}</option>
                 @endforeach
             </select>
         </div>
+    </div>
+    <div class="mb-3">
+        <a href="{{ route('ikan.pdf', ['date' => $date, 'supplier' => $supplier]) }}" class="btn btn-primary">Export PDF</a>
     </div>
 
     <style>

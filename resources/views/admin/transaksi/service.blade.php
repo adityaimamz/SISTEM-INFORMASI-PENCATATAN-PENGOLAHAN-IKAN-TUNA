@@ -66,9 +66,9 @@
                                                 <select name="no_batch_id" id="no_batch_id"
                                                     class="form-control border-primary" required>
                                                     <option value="" disabled selected>Pilih No Batch</option>
-                                                    @foreach ($cuttings as $cutting)
-                                                        <option value="{{ $cutting->id }}">
-                                                            {{ $cutting->no_batch->no_batch }}</option>
+                                                    @foreach ($no_batches as $no_batch)
+                                                        <option value="{{ $no_batch->id }}">
+                                                            {{ $no_batch->no_batch }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>

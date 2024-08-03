@@ -38,25 +38,12 @@ class ProdukKeluarController extends Controller
         //
     }
 
-    public function stokKeluarPdf($month, $year)
+    public function stokKeluarPdf()
     {
-        $data = produk_keluar::whereYear('created_at', $year)
-            ->whereMonth('created_at', $month)
-            ->get();
+        $produkKeluar = produk_keluar::all();
 
-        $totalKeluar = produk_keluar::whereYear('created_at', $year)
-            ->whereMonth('created_at', $month)
-            ->sum('jumlah_produk');
-
-        $totalMasuk = DB::table('produk_masuks')
-            ->whereYear('created_at', $year)
-            ->whereMonth('created_at', $month)
-            ->sum('stok_masuk');
-
-        $totalStok = $totalMasuk - $totalKeluar;
-
-        $pdf = Pdf::loadView('pdf.stok_keluar', compact('data', 'month', 'year', 'totalStok'));
-        return $pdf->download('stok_keluar_report_'.$month.'_'.$year.'.pdf');
+        $pdf = Pdf::loadView('pdf.stok_keluar', compact('produkKeluar'));
+        return $pdf->download('stok_keluar_report_'.'.pdf');
     }
 
     /**

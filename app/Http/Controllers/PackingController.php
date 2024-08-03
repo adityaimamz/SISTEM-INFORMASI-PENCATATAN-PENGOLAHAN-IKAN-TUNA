@@ -9,6 +9,8 @@ use App\Models\StokCS;
 use App\Models\ProdukMasuk;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+
 
 
 class PackingController extends Controller
@@ -83,14 +85,13 @@ class PackingController extends Controller
         return redirect()->route('packing.index')->with('success', 'Packing berhasil ditambahkan.');
     }
 
-    public function packingPdf($month, $year)
+    public function packingPdf($date)
     {
-        $data = Packing::whereYear('created_at', $year)
-            ->whereMonth('created_at', $month)
-            ->get();
+        $parsedDate = Carbon::parse($date);
+        $packings = Packing::whereDate('tgl_packing', $parsedDate)->get();
 
-        $pdf = Pdf::loadView('pdf.packing', compact('data', 'month', 'year'));
-        return $pdf->download('packing_report_' . $month . '_' . $year . '.pdf');
+        $pdf = Pdf::loadView('pdf.packing', compact('packings', 'date'));
+        return $pdf->download('packing_report_' . $parsedDate->format('Y-m-d') . '.pdf');
     }
     
 

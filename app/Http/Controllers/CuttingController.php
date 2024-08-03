@@ -35,23 +35,12 @@ class CuttingController extends Controller// Mengubah nama controller menjadi Cu
     }
 
 
-    public function cuttingPdf($month, $year)
+    public function cuttingPdf($no_batch)
     {
-        $data = Cutting::whereYear('created_at', $year)
-            ->whereMonth('created_at', $month)
-            ->get();
+        $cuttings = Cutting::where('no_batch_id', $no_batch)->get();
 
-            $totalBeratPerGrade = Cutting::selectRaw('kategori_ikans.grade, SUM(cuttings.berat_produk) as total_berat')
-            ->join('penerimaan_ikans', 'cuttings.id_produk', '=', 'penerimaan_ikans.id')
-            ->join('kategori_ikans', 'penerimaan_ikans.ikan_id', '=', 'kategori_ikans.id')
-            ->whereYear('cuttings.created_at', $year)
-            ->whereMonth('cuttings.created_at', $month)
-            ->groupBy('kategori_ikans.grade')
-            ->get();
-        
-
-        $pdf = Pdf::loadView('pdf.cutting', compact('data', 'month', 'year', 'totalBeratPerGrade'));
-        return $pdf->download('cutting_report_' . $month . '_' . $year . '.pdf');
+        $pdf = Pdf::loadView('pdf.cutting', compact('cuttings', 'no_batch'));
+        return $pdf->download('cutting_report_' . $no_batch . '.pdf');
     }
 
     /**

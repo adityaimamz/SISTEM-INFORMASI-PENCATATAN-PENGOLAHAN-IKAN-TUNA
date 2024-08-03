@@ -21,27 +21,28 @@
 <body>
     <h1 style="text-align: center">Laporan Data Packing Pt.Tirta Bitung Bahari</h1>
 
-    <h4>Report untuk Bulan: {{ $month }} Tahun: {{ $year }}</h4>
-    <table>
+    <table class="table" id="table1">
         <thead>
             <tr>
                 <th>No</th>
-                <th>No box</th>
-                <th>Nama Detail Produk</th>
+                <th>No Box</th>
+                <th>Buyer</th>
+                <th>Produk</th>
+                <th>pcs</th>
+                <th>Berat</th>
                 <th>Kode Trace</th>
-                <th>Tanggal Packing</th>
-                <th>Grade</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($data as $item)
+            @foreach ($packings as $item)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
-                        <td>{{ $item->no_box }}</td>
-                        <td>{{ $item->service->detail->nama_produk }}</td>
-                        <td>{{ $item->service->kode_trace }}</td>
-                        <td>{{ $item->tgl_packing }}</td>
-                        <td>{{ $item->service->cutting->penerimaan_ikan->kategori_ikan->grade }}</td>
+                    <td>{{ $item->no_box }}</td>
+                    <td>{{ $item->buyer }}</td>
+                    <td>{{ $item->service->ikan->jenis_ikan }}</td>
+                    <td>{{ $item->pcs }}</td>
+                    <td>{{ $item->berat }}</td>
+                    <td>{{ $item->service->kode_trace->kode_trace }}</td>
                 </tr>
             @endforeach
         </tbody>

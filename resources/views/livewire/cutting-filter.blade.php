@@ -27,6 +27,14 @@
         </div>
     </div>
 
+    <div class="mb-3">
+        @if($no_batch)
+            <a href="{{ route('cutting.pdf', ['no_batch' => $no_batch]) }}" class="btn btn-primary">Export PDF</a>
+        @else
+            <button class="btn btn-primary" disabled>Export PDF</button>
+        @endif
+    </div>
+
     <style>
         #table {
             border: 1.5px solid black;

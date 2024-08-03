@@ -27,52 +27,30 @@
 
 <body>
     <h1 style="text-align: center">Laporan Data Service Pt.Tirta Bitung Bahari</h1>
-
-    <h4>Report untuk Bulan: {{ $month }} Tahun: {{ $year }}</h4>
-    <table>
+    <table class="table" id="table1">
         <thead>
             <tr>
                 <th>No</th>
-                <th>Kode Trace</th>
-                <th>Nama Produk Cutting</th>
-                <th>Nama Detail Produk</th>
-                <th>Grade</th>
-                <th>Berat Produk</th>
+                <th>Nama Produk</th>
+                <th>No Batch</th>
+                <th>Tanggal Service</th>
+                <th>KG</th>
+                <th>Pcs</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($data as $item)
+            @foreach ($services as $item)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
-                        <td>{{ $item->kode_trace  }}</td>
-                        <td>{{ $item->cutting->nama_produk }}</td>
-                        <td>{{ $item->detail->nama_produk }}</td>
-                        <td>{{ $item->cutting->penerimaan_ikan->kategori_ikan->grade }}</td>
-                        <td>{{ $item->berat_produk }}</td>
+                    <td>{{ $item->ikan->jenis_ikan }}</td>
+                    <td>{{ $item->no_batch->no_batch }}</td>
+                    <td>{{ $item->tgl_service }}</td>
+                    <td>{{ $item->kg }}</td>
+                    <td>{{ $item->pcs }}</td>
                 </tr>
             @endforeach
         </tbody>
     </table>
-
-    <div>
-        <h4>Total Berat Per Grade</h4>
-        <table>
-            <thead>
-                <tr>
-                    <th>Grade</th>
-                    <th>Total Berat (kg)</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($totalBeratPerGrade as $grade)
-                    <tr>
-                        <td>{{ $grade->grade }}</td>
-                        <td>{{ $grade->total_berat }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
 </body>
 
 </html>

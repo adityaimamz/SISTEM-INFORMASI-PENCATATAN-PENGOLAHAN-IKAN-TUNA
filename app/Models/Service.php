@@ -13,9 +13,9 @@ class Service extends Model
     public $incrementing = false;
     protected $keyType = 'string';
 
-    public function cutting()
+    public function no_batch()
     {
-        return $this->belongsTo(Cutting::class, 'no_batch_id', 'id'); // corrected to use 'id'
+        return $this->belongsTo(NoBatch::class, 'no_batch_id', 'id'); // corrected to use 'id'
     }
 
     public function ikan()

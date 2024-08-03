@@ -158,7 +158,7 @@
 
                     </ul>
                 </li>
-
+{{-- 
                 @if(Auth::user()->role_id == 1)
                 <li class="sidebar-item  has-sub">
                     <a href="#" class='sidebar-link'>
@@ -200,7 +200,7 @@
 
                     </ul>
                 </li>
-                @endif
+                @endif --}}
 
                 <li class="sidebar-item  ">
                     <a href="/logout" class='sidebar-link'>
