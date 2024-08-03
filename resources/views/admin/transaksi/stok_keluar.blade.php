@@ -50,16 +50,17 @@
                                         <form method="POST" action="{{ route('produk-keluar.store') }}" enctype="multipart/form-data" class="mt-0">
                                             @csrf
                                             <div class="form-group">
-                                                <label for="no_box ">No Box</label>
-                                                <select name="no_box" class="form-control border-primary" required>
-                                                    @foreach ($packing as $data)
-                                                        <option value="{{ $data->no_box }}">{{ $data->no_box }}</option>
+                                                <label for="kode_trace">Kode Trace</label>
+                                                <select name="kode_trace_id" class="form-control border-primary" required>
+                                                    @foreach ($services as $service)
+                                                        <option value="{{ $service->id }}">
+                                                            {{ $service->kode_trace->kode_trace }} {{ $service->ikan->jenis_ikan }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
                                             <div class="form-group">
-                                                <label for="jumlah_produk">Jumlah Produk</label>
-                                                <input type="number" name="jumlah_produk" class="form-control border-primary" required>
+                                                <label for="jumlah_produk">pcs</label>
+                                                <input type="number" name="pcs" class="form-control border-primary" required>
                                             </div>
                                             <div class="form-group">
                                                 <label for="no_seal">No Seal</label>
@@ -96,8 +97,8 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>No Box</th>
-                                        <th>Jumlah Produk</th>
+                                        <th>Nama Produk</th>
+                                        <th>Pcs</th>
                                         <th>No Seal</th>
                                         <th>No Container</th>
                                         <th>Tanggal Keluar</th>
@@ -110,8 +111,8 @@
                                     @foreach ($produkKeluar as $item)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $item->no_box }}</td>
-                                            <td>{{ $item->jumlah_produk }}</td>
+                                            <td>{{ $item->service->ikan->jenis_ikan }}</td>
+                                            <td>{{ $item->pcs }}</td>
                                             <td>{{ $item->no_seal }}</td>
                                             <td>{{ $item->no_container }}</td>
                                             <td>{{ $item->tgl_keluar }}</td>
@@ -141,16 +142,17 @@
                                                             @csrf
                                                             @method('PUT')
                                                             <div class="form-group">
-                                                                <label for="no_box">No Box</label>
-                                                                <select name="no_box" class="form-control border-primary" required>
-                                                                    @foreach ($packing as $data)
-                                                                        <option value="{{ $data->no_box }}" {{ $data->no_box == $item->no_box ? 'selected' : '' }}>{{ $data->no_box }}</option>
+                                                                <label for="kode_trace">Kode Trace</label>
+                                                                <select name="kode_trace_id" class="form-control border-primary" required>
+                                                                    @foreach ($services as $service)
+                                                                        <option value="{{ $service->id }}">
+                                                                            {{ $service->kode_trace->kode_trace }} {{ $service->ikan->jenis_ikan }}</option>
                                                                     @endforeach
                                                                 </select>
                                                             </div>
                                                             <div class="form-group">
-                                                                <label for="jumlah_produk">Jumlah Produk</label>
-                                                                <input type="number" name="jumlah_produk" class="form-control border-primary" value="{{ $item->jumlah_produk }}" required>
+                                                                <label for="jumlah_produk">pcs</label>
+                                                                <input type="number" name="pcs" class="form-control border-primary" value="{{ $item->pcs }}" required>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="no_seal">No Seal</label>
@@ -210,28 +212,6 @@
                                             </div>
                                         </div>
                                     @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card mt-3">
-                    <div class="card-header">
-                        <h5 class="card-title">Stok Produksi</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Total Stok</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>{{ $totalStok }}</td>
-                                    </tr>
                                 </tbody>
                             </table>
                         </div>

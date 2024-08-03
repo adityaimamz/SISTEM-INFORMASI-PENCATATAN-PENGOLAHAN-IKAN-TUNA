@@ -14,6 +14,7 @@
                     <th>No Box</th>
                     <th>Buyer</th>
                     <th>Produk</th>
+                    <th>pcs</th>
                     <th>Berat</th>
                     <th>Kode Trace</th>
                     <th>Action</th>
@@ -26,28 +27,29 @@
                         <td>{{ $item->no_box }}</td>
                         <td>{{ $item->buyer }}</td>
                         <td>{{ $item->service->ikan->jenis_ikan }}</td>
+                        <td>{{ $item->pcs }}</td>
                         <td>{{ $item->berat }}</td>
                         <td>{{ $item->service->kode_trace->kode_trace }}</td>
                         <td>
                             <button type="button" class="btn btn-outline-primary block" data-bs-toggle="modal"
-                                data-bs-target="#editPackingModal{{ $item->no_box }}">
+                                data-bs-target="#editPackingModal{{ $item->id }}">
                                 Edit Packing
                             </button>
                             <button type="button" class="btn btn-outline-danger block" data-bs-toggle="modal"
-                                data-bs-target="#hapusPackingModal{{ $item->no_box }}">
+                                data-bs-target="#hapusPackingModal{{ $item->id }}">
                                 Hapus Packing
                             </button>
                         </td>
                     </tr>
                     <!-- Modal Edit Packing -->
-                    <div class="modal fade" id="editPackingModal{{ $item->no_box }}" tabindex="-1"
-                        role="dialog" aria-labelledby="editPackingModalTitle{{ $item->no_box }}"
+                    <div class="modal fade" id="editPackingModal{{ $item->id }}" tabindex="-1"
+                        role="dialog" aria-labelledby="editPackingModalTitle{{ $item->id }}"
                         aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
                             role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="editPackingModalTitle{{ $item->no_box }}">Edit Packing
+                                    <h5 class="modal-title" id="editPackingModalTitle{{ $item->id }}">Edit Packing
                                     </h5>
                                     <button type="button" class="close" data-bs-dismiss="modal"
                                         aria-label="Close">
@@ -56,7 +58,7 @@
                                 </div>
                                 <div class="modal-body">
                                     <form method="POST"
-                                        action="{{ route('packing.update', $item->no_box) }}"
+                                        action="{{ route('packing.update', $item->id) }}"
                                         enctype="multipart/form-data" class="mt-0">
                                         @csrf
                                         @method('PUT')
@@ -86,15 +88,15 @@
                     </div>
 
                     <!-- Modal Hapus Packing -->
-                    <div class="modal fade" id="hapusPackingModal{{ $item->no_box }}"
+                    <div class="modal fade" id="hapusPackingModal{{ $item->id }}"
                         tabindex="-1" role="dialog"
-                        aria-labelledby="hapusPackingModalTitle{{ $item->no_box }}"
+                        aria-labelledby="hapusPackingModalTitle{{ $item->id }}"
                         aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
                             role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="hapusPackingModalTitle{{ $item->no_box }}">Hapus
+                                    <h5 class="modal-title" id="hapusPackingModalTitle{{ $item->id }}">Hapus
                                         Packing</h5>
                                     <button type="button" class="close" data-bs-dismiss="modal"
                                         aria-label="Close">
@@ -110,7 +112,7 @@
                                         <span class="d-none d-sm-block">Close</span>
                                     </button>
                                     <form method="POST"
-                                        action="{{ route('packing.destroy', $item->no_box) }}"
+                                        action="{{ route('packing.destroy', $item->id) }}"
                                         class="d-inline">
                                         @csrf
                                         @method('DELETE')

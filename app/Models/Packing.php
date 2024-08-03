@@ -16,13 +16,5 @@ class Packing extends Model
         return $this->belongsTo(Service::class, 'kode_trace_id', 'id');
     }
 
-    public function produk_masuk()
-    {
-        return $this->hasMany(ProdukMasuk::class, 'no_box');
-    }
-
-    public function produk_keluar()
-    {
-        return $this->hasMany(ProdukKeluar::class, 'no_box');
-    }
+   
 }

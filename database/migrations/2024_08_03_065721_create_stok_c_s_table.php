@@ -11,14 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('packings', function (Blueprint $table) {
+        Schema::create('stok_c_s', function (Blueprint $table) {
             $table->id();
-            $table->string('no_box')->unique(); // Menjadikan no_box sebagai primary key
             $table->foreignId('kode_trace_id')->constrained('services')->onDelete('cascade');
-            $table->string('buyer');
+            $table->string('tipe_stok');
             $table->integer('pcs');
-            $table->float('berat');
-            $table->date('tgl_packing');
             $table->timestamps();
         });
     }
@@ -28,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('packings');
+        Schema::dropIfExists('stok_c_s');
     }
 };

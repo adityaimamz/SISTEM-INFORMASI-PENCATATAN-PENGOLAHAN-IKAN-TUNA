@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\produk_keluar;
 use App\Models\produk_masuk;
 use App\Models\Packing;
+use App\Models\Service;
+use App\Models\StokCS;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 
@@ -18,19 +20,12 @@ class ProdukKeluarController extends Controller
     {
         $produkKeluar = produk_keluar::all();
         $packing = Packing::all();
-    
-        $totalMasuk = DB::table('produk_masuks')
-            ->sum('stok_masuk');
+        $services = Service::all();
 
-        $totalKeluar = DB::table('produk_keluars')
-            ->sum('jumlah_produk');
-
-        $totalStok = $totalMasuk - $totalKeluar;
-
-        return view('admin.stok_keluar', [
+        return view('admin.transaksi.stok_keluar', [
             'produkKeluar' => $produkKeluar,
+            'services' => $services,
             'packing' => $packing,
-            'totalStok' => $totalStok
         ]);
     }
 
@@ -70,14 +65,21 @@ class ProdukKeluarController extends Controller
     public function store(Request $request)
     {
         produk_keluar::create([
-            'no_box' => $request->no_box,
-            'jumlah_produk' => $request->jumlah_produk,
+            'kode_trace_id' => $request->kode_trace_id,
+            'pcs' => $request->pcs,
             'no_seal' => $request->no_seal,
             'no_container' => $request->no_container,
             'tgl_keluar' => $request->tgl_keluar,
             'tgl_berangkat' => $request->tgl_berangkat,
             'tgl_tiba' => $request->tgl_tiba,
         ]);
+
+        StokCS::create([
+            'kode_trace_id' => $request->kode_trace_id,
+            'pcs' => $request->pcs,
+            'tipe_stok' => 'Stok Keluar',
+        ]);
+
     
         return redirect()->route('produk-keluar.index')->with('success', 'Produk Keluar berhasil ditambahkan.');
     }
@@ -106,7 +108,8 @@ class ProdukKeluarController extends Controller
     {
         $produkKeluar = produk_keluar::findOrFail($id);
         $data = [
-            'jumlah_produk' => $request->jumlah_produk,
+            'kode_trace_id' => $request->kode_trace_id,
+            'pcs' => $request->pcs,
             'no_seal' => $request->no_seal,
             'no_container' => $request->no_container,
             'tgl_keluar' => $request->tgl_keluar,

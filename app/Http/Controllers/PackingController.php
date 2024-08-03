@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Packing;
 use App\Models\Service;
+use App\Models\StokCS;
 use App\Models\ProdukMasuk;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
 
 
 class PackingController extends Controller
@@ -16,9 +18,38 @@ class PackingController extends Controller
      */
     public function index()
     {
+        // Retrieve all packing data
         $data = Packing::all();
         $services = Service::all();
-        return view('admin.transaksi.packing', ['data' => $data,  'services' => $services]);
+
+        // Calculate totals for each product
+        $productTotals = Packing::select('services.id as service_id', 'services.id_ikan', 'kategori_ikans.jenis_ikan', 
+            DB::raw('SUM(packings.pcs) as total_pcs'),
+            DB::raw('SUM(packings.berat) as total_kg')
+        )
+        ->join('services', 'services.id', '=', 'packings.kode_trace_id')
+        ->join('kategori_ikans', 'kategori_ikans.id', '=', 'services.id_ikan')
+        ->groupBy('services.id', 'services.id_ikan', 'kategori_ikans.jenis_ikan')
+        ->get();
+
+        // Calculate grand totals
+        $grandTotals = Packing::select(
+            DB::raw('SUM(pcs) as total_pcs'),
+            DB::raw('SUM(berat) as total_kg')
+        )->first();
+
+        // Prepare data for the view
+        $namaproduk = $productTotals->mapWithKeys(function ($item) {
+            return [$item->jenis_ikan => ['pcs' => $item->total_pcs, 'kg' => $item->total_kg]];
+        })->toArray();
+
+        return view('admin.transaksi.packing', [
+            'data' => $data,
+            'services' => $services,
+            'productTotals' => $productTotals,
+            'totalpcs' => $grandTotals->total_pcs,
+            'totalkg' => $grandTotals->total_kg,
+        ]);
     }
 
     /**
@@ -38,8 +69,15 @@ class PackingController extends Controller
             'no_box' => $request->no_box, 
             'kode_trace_id' => $request->kode_trace_id,
             'buyer' => $request->buyer,
+            'pcs' => $request->pcs,
             'berat' => $request->berat,
             'tgl_packing' => $request->tgl_packing,
+        ]);
+
+        StokCS::create([
+            'kode_trace_id' => $request->kode_trace_id,
+            'pcs' => $request->pcs,
+            'tipe_stok' => 'Stok Masuk',
         ]);
     
         return redirect()->route('packing.index')->with('success', 'Packing berhasil ditambahkan.');
@@ -75,13 +113,14 @@ class PackingController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $no_box)
+    public function update(Request $request, $id)
     {
-        $packing = Packing::findOrFail($no_box);
+        $packing = Packing::findOrFail($id);
         $packing->update([
             'no_box' => $request->no_box, 
             'kode_trace_id' => $request->kode_trace_id,
             'buyer' => $request->buyer,
+            'pcs' => $request->pcs,
             'berat' => $request->berat,
             'tgl_packing' => $request->tgl_packing,
         ]);
@@ -92,9 +131,9 @@ class PackingController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($no_box)
+    public function destroy($id)
     {
-        $packing = Packing::findOrFail($no_box);
+        $packing = Packing::findOrFail($id);
         $packing->delete();
 
         return redirect()->route('packing.index')->with('success', 'Packing berhasil dihapus.');

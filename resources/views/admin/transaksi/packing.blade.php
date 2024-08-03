@@ -43,8 +43,7 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="tambahPackingModalTitle">Tambah Packing</h5>
-                                        <button type="button" class="close" data-bs-dismiss="modal"
-                                            aria-label="Close">
+                                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                             <i data-feather="x"></i>
                                         </button>
                                     </div>
@@ -59,11 +58,10 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="kode_trace">Kode Trace</label>
-                                                <select name="kode_trace_id" class="form-control border-primary"
-                                                    required>
+                                                <select name="kode_trace_id" class="form-control border-primary" required>
                                                     @foreach ($services as $service)
                                                         <option value="{{ $service->id }}">
-                                                            {{ $service->kode_trace->kode_trace }}</option>
+                                                            {{ $service->kode_trace->kode_trace }} {{ $service->ikan->jenis_ikan }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -74,8 +72,13 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="berat">Berat</label>
-                                                <input type="text" name="berat" class="form-control border-primary"
-                                                    required>
+                                                <input type="number" name="berat" class="form-control border-primary"
+                                                    step="0.01" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="supplier_id">Pcs</label>
+                                                <input type="number" name="pcs" id="pcs"
+                                                    class="form-control border-primary" required>
                                             </div>
                                             <div class="form-group">
                                                 <label for="tgl_packing">Tgl Packing</label>
@@ -94,6 +97,42 @@
                     </div>
                     <div class="card-body">
                         @livewire('packing-filter')
+                    </div>
+
+                    <!-- Tabel Total Stok -->
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h5 class="card-title">Jumlah Produk dalam packing</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Nama Produk</th>
+                                            <th>Pcs</th>
+                                            <th>Kg</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($productTotals as $product)
+                                            <tr>
+                                                <td>{{ $product->jenis_ikan }}</td>
+                                                <td>{{ $product->total_pcs }}</td>
+                                                <td>{{ $product->total_kg }}</td>
+                                            </tr>
+                                        @endforeach
+
+                                        <!-- Grand Total -->
+                                        <tr>
+                                            <td>Grand Total</td>
+                                            <td>{{ $totalpcs }}</td>
+                                            <td>{{ $totalkg }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>

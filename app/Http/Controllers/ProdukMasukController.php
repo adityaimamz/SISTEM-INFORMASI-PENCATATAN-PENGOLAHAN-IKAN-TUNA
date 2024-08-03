@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Packing;
-use App\Models\produk_masuk;
-use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\StokCS;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -15,21 +14,19 @@ class ProdukMasukController extends Controller
      */
     public function index()
     {
-        $produkMasuk = produk_masuk::all();
+        $stokCS = StokCS::all();
         $packing = Packing::all();
 
-        $totalMasuk = DB::table('produk_masuks')
-            ->sum('stok_masuk');
+        // Calculate grand total
+        $grandtotal = DB::table('stok_c_s')
+            ->select(DB::raw('SUM(CASE WHEN tipe_stok = "Stok Masuk" THEN pcs ELSE 0 END) - SUM(CASE WHEN tipe_stok = "Stok Keluar" THEN pcs ELSE 0 END) AS grandtotal'))
+            ->first()
+            ->grandtotal;
 
-        $totalKeluar = DB::table('produk_keluars')
-            ->sum('jumlah_produk');
-
-        $totalStok = $totalMasuk - $totalKeluar;
-
-        return view('admin.stok_masuk', [
-            'produkMasuk' => $produkMasuk,
+        return view('admin.transaksi.stok_masuk', [
+            'stokCS' => $stokCS,
             'packing' => $packing,
-            'totalStok' => $totalStok,
+            'grandtotal' => $grandtotal,
         ]);
     }
 
@@ -72,7 +69,7 @@ class ProdukMasukController extends Controller
             'stok_masuk' => $request->stok_masuk,
         ]);
 
-        return redirect()->route('produk-masuk.index')->with('success', 'Produk Masuk berhasil ditambahkan.');
+        return redirect()->route('stok-cs.index')->with('success', 'Produk Masuk berhasil ditambahkan.');
     }
 
     /**
@@ -103,7 +100,7 @@ class ProdukMasukController extends Controller
 
         $produkMasuk->update($data);
 
-        return redirect()->route('produk-masuk.index')->with('success', 'Produk Masuk berhasil diperbarui.');
+        return redirect()->route('stok-cs.index')->with('success', 'Produk Masuk berhasil diperbarui.');
     }
 
     /**
@@ -114,6 +111,6 @@ class ProdukMasukController extends Controller
         $produkMasuk = produk_masuk::findOrFail($id);
         $produkMasuk->delete();
 
-        return redirect()->route('produk-masuk.index')->with('success', 'Produk Masuk berhasil dihapus.');
+        return redirect()->route('stok-cs.index')->with('success', 'Produk Masuk berhasil dihapus.');
     }
 }

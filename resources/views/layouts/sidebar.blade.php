@@ -148,8 +148,8 @@
 
                         </li>
 
-                        <li class="submenu-item {{ Request::is('produk-masuk') ? 'active' : '' }} ">
-                            <a href="/produk-masuk" class="submenu-link">Produk Masuk</a>
+                        <li class="submenu-item {{ Request::is('stok-cs') ? 'active' : '' }} ">
+                            <a href="/stok-cs" class="submenu-link">Stok CS</a>
                         </li>
 
                         <li class="submenu-item {{ Request::is('produk-keluar') ? 'active' : '' }} ">

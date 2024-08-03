@@ -119,7 +119,7 @@ Route::resource('no_batch', NoBatchController::class)->middleware('auth');
 Route::resource('kode_trace', KodeTraceController::class)->middleware('auth');
 Route::resource('service', ServiceController::class)->middleware('auth');
 Route::resource('packing', PackingController::class)->middleware('auth');
-Route::resource('produk-masuk', ProdukMasukController::class)->middleware('auth');
+Route::resource('stok-cs', ProdukMasukController::class)->middleware('auth');
 Route::resource('produk-keluar', ProdukKeluarController::class)->middleware('auth');
 
 Route::get('/login', [LoginController::class, 'index'])->name('login');

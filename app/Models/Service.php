@@ -33,4 +33,14 @@ class Service extends Model
     {
         return $this->hasMany(Packing::class, 'kode_trace_id', 'id');
     }
+
+    public function stok_cs()
+    {
+        return $this->hasMany(StokCS::class, 'kode_trace_id', 'id');
+    }
+
+    public function produk_keluar()
+    {
+        return $this->hasMany(produk_keluar::class, 'kode_trace_id', 'id');
+    }
 }
