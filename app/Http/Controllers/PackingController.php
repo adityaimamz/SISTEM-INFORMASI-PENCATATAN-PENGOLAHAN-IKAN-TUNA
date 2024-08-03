@@ -35,9 +35,10 @@ class PackingController extends Controller
     public function store(Request $request)
     {
         Packing::create([
-            'no_box' => $request->no_box, // Menambahkan no_box
-            'kode_trace' => $request->kode_trace,
-            'tgl_packing' => $request->tgl_packing,
+            'no_box' => $request->no_box, 
+            'kode_trace_id' => $request->kode_trace_id,
+            'buyer' => $request->buyer,
+            'berat' => $request->berat,
         ]);
     
         return redirect()->route('packing.index')->with('success', 'Packing berhasil ditambahkan.');
@@ -75,15 +76,12 @@ class PackingController extends Controller
      */
     public function update(Request $request, $no_box)
     {
-        $request->validate([
-            'kode_lot' => 'required|exists:services,id',
-            'tgl_packing' => 'required|date',
-        ]);
-
         $packing = Packing::findOrFail($no_box);
         $packing->update([
-            'kode_lot' => $request->kode_lot,
-            'tgl_packing' => $request->tgl_packing,
+            'no_box' => $request->no_box, 
+            'kode_trace_id' => $request->kode_trace_id,
+            'buyer' => $request->buyer,
+            'berat' => $request->berat,
         ]);
 
         return redirect()->route('packing.index')->with('success', 'Packing berhasil diperbarui.');

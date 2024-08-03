@@ -10,8 +10,6 @@ class Packing extends Model
     use HasFactory;
 
     protected $guarded = ['id']; // Menggunakan no_box sebagai primary key
-    public $incrementing = false; // Menonaktifkan auto increment
-    protected $keyType = 'string'; // Mengatur tipe primary key menjadi string
 
     public function service()
     {
