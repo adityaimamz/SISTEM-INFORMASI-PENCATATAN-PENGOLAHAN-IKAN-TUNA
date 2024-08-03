@@ -20,9 +20,9 @@ class Service extends Model
 
     public function ikan()
     {
-        return $this->belongsTo(Kategori_ikan::class, 'id_ikan');
+        return $this->belongsTo(Kategori_ikan::class, 'id_ikan', 'id');
     }
-    
+
 
     public function kode_trace()
     {
@@ -31,6 +31,6 @@ class Service extends Model
 
     public function packing()
     {
-        return $this->hasMany(Packing::class, 'kode_lot');
+        return $this->hasMany(Packing::class, 'kode_trace_id', 'id');
     }
 }

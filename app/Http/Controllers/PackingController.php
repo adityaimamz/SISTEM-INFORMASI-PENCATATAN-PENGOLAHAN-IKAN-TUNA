@@ -18,7 +18,7 @@ class PackingController extends Controller
     {
         $data = Packing::all();
         $services = Service::all();
-        return view('admin.packing', ['data' => $data,  'services' => $services]);
+        return view('admin.transaksi.packing', ['data' => $data,  'services' => $services]);
     }
 
     /**
@@ -39,6 +39,7 @@ class PackingController extends Controller
             'kode_trace_id' => $request->kode_trace_id,
             'buyer' => $request->buyer,
             'berat' => $request->berat,
+            'tgl_packing' => $request->tgl_packing,
         ]);
     
         return redirect()->route('packing.index')->with('success', 'Packing berhasil ditambahkan.');
@@ -82,6 +83,7 @@ class PackingController extends Controller
             'kode_trace_id' => $request->kode_trace_id,
             'buyer' => $request->buyer,
             'berat' => $request->berat,
+            'tgl_packing' => $request->tgl_packing,
         ]);
 
         return redirect()->route('packing.index')->with('success', 'Packing berhasil diperbarui.');

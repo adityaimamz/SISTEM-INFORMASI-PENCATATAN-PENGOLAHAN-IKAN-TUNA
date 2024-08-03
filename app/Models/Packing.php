@@ -13,7 +13,7 @@ class Packing extends Model
 
     public function service()
     {
-        return $this->belongsTo(Service::class, 'kode_trace', 'kode_trace');
+        return $this->belongsTo(Service::class, 'kode_trace_id', 'id');
     }
 
     public function produk_masuk()

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('kode_trace_id')->constrained('services')->onDelete('cascade');
             $table->string('buyer');
             $table->string('berat');
+            $table->date('tgl_packing');
             $table->timestamps();
         });
     }

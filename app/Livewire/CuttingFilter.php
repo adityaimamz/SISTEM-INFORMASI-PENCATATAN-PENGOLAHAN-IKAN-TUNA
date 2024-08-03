@@ -15,6 +15,7 @@ class CuttingFilter extends Component
     public $tanggal_penerimaan;
     public $supplier;
     public $grade;
+    public $tgl_cutting;
 
     public function mount()
     {
@@ -33,7 +34,8 @@ class CuttingFilter extends Component
                 if ($penerimaanIkan) {
                     $this->tanggal_penerimaan = $penerimaanIkan->tgl_penerimaan;
                     $this->supplier = $penerimaanIkan->supplier->nama_supplier; // Assuming supplier has a name attribute
-                    $this->grade = $penerimaanIkan->grade->grade; // Assuming grade has a grade attribute
+                    $this->grade = $penerimaanIkan->grade->grade;
+                    $this->tgl_cutting = $cutting->tgl_cutting;
                 }
             }
         } else {
@@ -41,7 +43,7 @@ class CuttingFilter extends Component
             $this->tanggal_penerimaan = null;
             $this->supplier = null;
             $this->grade = null;
-        }
+            $this->tgl_cutting = null;}
     }
 
     public function delete($id)

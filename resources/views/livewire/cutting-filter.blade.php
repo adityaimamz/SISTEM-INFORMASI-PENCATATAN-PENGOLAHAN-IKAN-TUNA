@@ -14,6 +14,10 @@
             <input type="date" class="form-control" value="{{ $tanggal_penerimaan }}" readonly>
         </div>
         <div class="col-md-3">
+            <label for="tanggal_cutting">Tanggal Cutting</label>
+            <input type="date" class="form-control" value="{{ $tgl_cutting }}" readonly>
+        </div>
+        <div class="col-md-3">
             <label for="supplier">Supplier</label>
             <input type="text" class="form-control" value="{{ $supplier }}" readonly>
         </div>

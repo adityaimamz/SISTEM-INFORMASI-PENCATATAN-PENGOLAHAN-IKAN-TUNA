@@ -13,6 +13,6 @@ class KodeTrace extends Model
 
     public function services()
     {
-        return $this->hasMany(Service::class, 'kode_trace_id', 'id');
+        return $this->hasMany(Service::class, 'kode_trace_id');
     }
 }

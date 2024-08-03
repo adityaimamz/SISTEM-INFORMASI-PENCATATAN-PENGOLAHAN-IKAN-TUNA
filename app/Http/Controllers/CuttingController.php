@@ -65,6 +65,7 @@ class CuttingController extends Controller// Mengubah nama controller menjadi Cu
             'id_produk' => $request->id_produk,
             'berat_produk' => $request->berat_produk,
             'kategori_berat_id' => $request->kategori_berat_id,
+            'tgl_cutting' => $request->tgl_cutting,
         ]);
 
         return redirect()->route('cutting.index')->with('success', 'Cutting berhasil ditambahkan.');
@@ -79,6 +80,7 @@ class CuttingController extends Controller// Mengubah nama controller menjadi Cu
             'id_produk' => $request->id_produk,
             'kategori_berat_id' => $request->kategori_berat_id,
             'berat_produk' => $request->berat_produk,
+            'tgl_cutting' => $request->tgl_cutting,
         ];
 
         $cutting->update($data);

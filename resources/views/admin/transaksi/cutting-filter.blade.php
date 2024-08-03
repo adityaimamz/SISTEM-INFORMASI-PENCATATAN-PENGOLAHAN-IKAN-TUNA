@@ -90,6 +90,12 @@
                                                     @endforeach
                                                 </select>
                                             </div>
+                                            <div class="form-group">
+                                                <label for="tgl_cutting">Tgl Cutting</label>
+                                                <input type="date" name="tgl_cutting" class="form-control border-primary"
+                                                    required>
+                                            </div>
+
 
                                             <button type="submit" class="btn btn-primary ms-1">
                                                 <span class="d-none d-sm-block">Submit</span>

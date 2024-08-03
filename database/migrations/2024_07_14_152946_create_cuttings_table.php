@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('id_produk')->constrained('penerimaan_ikans')->onDelete('cascade');
             $table->foreignId('kategori_berat_id')->constrained('kategori_berat_cuttings')->onDelete('cascade');
             $table->float('berat_produk');
+            $table->date('tgl_cutting');
             $table->timestamps();
         });
         
