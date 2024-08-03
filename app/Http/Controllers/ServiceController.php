@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cutting;
-use App\Models\DetailProduk;
 use App\Models\Service;
+use App\Models\Kategori_ikan;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
@@ -17,21 +17,10 @@ class ServiceController extends Controller
     {
         $data = Service::with(['cutting', 'detail'])->get();
         $cuttings = Cutting::all();
-        $detailproduk = DetailProduk::all();
-
-        $totalBeratPerGrade = Service::selectRaw('kategori_ikans.grade, SUM(services.berat_produk) as total_berat')
-        ->join('cuttings', 'services.no_batch', '=', 'cuttings.no_batch')
-        ->join('penerimaan_ikans', 'cuttings.id_produk', '=', 'penerimaan_ikans.id')
-        ->join('kategori_ikans', 'penerimaan_ikans.ikan_id', '=', 'kategori_ikans.id')
-        ->groupBy('kategori_ikans.grade')
-        ->get();
     
-
-        return view('admin.service', [
+        return view('admin.transaksi.service', [
             'data' => $data,
             'cuttings' => $cuttings,
-            'detailproduk' => $detailproduk,
-            'totalBeratPerGrade' => $totalBeratPerGrade,
         ]);
     }
     /**
@@ -41,15 +30,6 @@ class ServiceController extends Controller
     {
         $data = Service::whereYear('created_at', $year)
             ->whereMonth('created_at', $month)
-            ->get();
-
-            $totalBeratPerGrade = Service::selectRaw('kategori_ikans.grade, SUM(services.berat_produk) as total_berat')
-            ->join('cuttings', 'services.no_batch', '=', 'cuttings.no_batch')
-            ->join('penerimaan_ikans', 'cuttings.id_produk', '=', 'penerimaan_ikans.id')
-            ->join('kategori_ikans', 'penerimaan_ikans.ikan_id', '=', 'kategori_ikans.id')
-            ->whereYear('services.created_at', $year)
-            ->whereMonth('services.created_at', $month)
-            ->groupBy('kategori_ikans.grade')
             ->get();
         
 

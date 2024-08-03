@@ -173,7 +173,7 @@
                     </div>
                 @endforeach
                 @php
-                    $dataCollection = collect($data); // Ensure $data is a collection
+                    $dataCollection = collect($data); 
 
                     $total_10up_ab = $dataCollection
                         ->where('grade.grade', 'AB')

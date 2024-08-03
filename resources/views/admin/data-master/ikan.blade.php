@@ -57,17 +57,6 @@
                                                 <input type="text" name="jenis_ikan" class="form-control border-primary"
                                                     required>
                                             </div>
-                                            <div class="form-group">
-                                                <label for="berat_ikan">Kategori</label>
-                                                <input type="string" name="kategori" class="form-control border-primary"
-                                                    required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="berat_ikan">Grade</label>
-                                                <input type="string" name="grade" class="form-control border-primary"
-                                                    required>
-                                            </div>
-
                                             <button type="submit" class="btn btn-primary ms-1">
                                                 <span class="d-none d-sm-block">Submit</span>
                                             </button>
@@ -86,8 +75,6 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Jenis Ikan</th>
-                                        <th>Kategori</th>
-                                        <th>Grade</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -96,8 +83,6 @@
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $item->jenis_ikan }}</td>
-                                            <td>{{ $item->kategori }}</td>
-                                            <td>{{ $item->grade }}</td>
                                             <td>
                                                 <button type="button" class="btn btn-outline-primary block"
                                                     data-bs-toggle="modal"
@@ -136,18 +121,6 @@
                                                                 <input type="text" name="jenis_ikan"
                                                                     class="form-control border-primary"
                                                                     value="{{ $item->jenis_ikan }}" required>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label for="kategori">Kategori</label>
-                                                                <input type="text" name="kategori"
-                                                                    class="form-control border-primary"
-                                                                    value="{{ $item->kategori }}" required>
-                                                            </div>
-                                                            <div class="form-group"></div>
-                                                                <label for="grade">Grade</label>
-                                                                <input type="text" name="grade"
-                                                                    class="form-control border-primary"
-                                                                    value="{{ $item->grade }}" required>
                                                             </div>
                                                             <button type="submit" class="btn btn-primary ms-1">
                                                                 <span class="d-none d-sm-block">Update</span>

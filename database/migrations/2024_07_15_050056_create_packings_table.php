@@ -13,8 +13,7 @@ return new class extends Migration
     {
         Schema::create('packings', function (Blueprint $table) {
             $table->string('no_box')->primary(); // Menjadikan no_box sebagai primary key
-            $table->string('kode_trace');
-            $table->foreign('kode_trace')->references('kode_trace')->on('services')->onDelete('cascade');
+            $table->foreignId('kode_trace')->constrained('services')->onDelete('cascade');
             $table->date('tgl_packing');
             $table->timestamps();
         });

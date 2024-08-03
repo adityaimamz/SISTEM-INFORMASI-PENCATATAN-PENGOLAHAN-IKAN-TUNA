@@ -18,9 +18,9 @@ class Service extends Model
         return $this->belongsTo(Cutting::class, 'no_batch', 'no_batch'); // Ensure both local and foreign keys match
     }
 
-    public function detail()
+    public function kode_trace()
     {
-        return $this->belongsTo(DetailProduk::class, 'id_detail');
+        return $this->belongsTo(KodeTrace::class, 'id_detail');
     }
 
     public function packing()

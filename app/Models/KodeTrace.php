@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class DetailProduk extends Model
+class KodeTrace extends Model
 {
     use HasFactory;
 
     protected $guarded = ['id'];
 
-    public function service()
+    public function services()
     {
-        return $this->hasMany(Service::class, 'services_id');
+        return $this->hasMany(Service::class);
     }
 }

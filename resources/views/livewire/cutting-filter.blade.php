@@ -5,7 +5,7 @@
             <select id="no_batch" wire:model="no_batch" wire:change="filterData" class="form-control">
                 <option value="">Pilih No Batch</option>
                 @foreach ($no_batches as $noBatch)
-                    <option value="{{ $noBatch->no_batch }}">{{ $noBatch->no_batch }}</option>
+                    <option value="{{ $noBatch->id }}">{{ $noBatch->no_batch }}</option>
                 @endforeach
             </select>
         </div>
@@ -114,6 +114,20 @@
                         </div>
                     </div>
                 @endforeach
+                @php
+                    $dataCollection = collect($cuttings);
+
+                    $total13 = $dataCollection->where('kategori_berat.kategori_berat', '1/3')->sum('berat_produk');
+                    $total15 = $dataCollection->where('kategori_berat.kategori_berat', '3/5')->sum('berat_produk');
+                    $total5 = $dataCollection->where('kategori_berat.kategori_berat', '5 UP')->sum('berat_produk');
+                @endphp
+
+                <tr></tr>
+                    <td colspan="1">Total</td>
+                    <td>{{ $total13 }}</td>
+                    <td>{{ $total15 }}</td>
+                    <td>{{ $total5 }}</td>
+                </tr>
             </tbody>
         </table>
     </div>
