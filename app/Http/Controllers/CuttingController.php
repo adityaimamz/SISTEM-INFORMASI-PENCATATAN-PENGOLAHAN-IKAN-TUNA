@@ -61,7 +61,7 @@ class CuttingController extends Controller// Mengubah nama controller menjadi Cu
     {
 
         Cutting::create([
-            'no_batch' => $request->no_batch, // Menambahkan no_batch
+            'no_batch_id' => $request->no_batch_id, // Menambahkan no_batch
             'id_produk' => $request->id_produk,
             'berat_produk' => $request->berat_produk,
             'kategori_berat_id' => $request->kategori_berat_id,
@@ -75,7 +75,7 @@ class CuttingController extends Controller// Mengubah nama controller menjadi Cu
 
         $cutting = Cutting::findOrFail($no_batch); // Mengubah model yang digunakan menjadi Cutting
         $data = [
-            'no_batch' => $request->no_batch,
+            'no_batch_id' => $request->no_batch_id,
             'id_produk' => $request->id_produk,
             'kategori_berat_id' => $request->kategori_berat_id,
             'berat_produk' => $request->berat_produk,

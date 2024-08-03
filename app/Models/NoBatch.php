@@ -13,6 +13,6 @@ class NoBatch extends Model
 
     public function cuttings()
     {
-        return $this->hasMany(Cutting::class);
+        return $this->hasMany(Cutting::class, 'no_batch');
     }
 }

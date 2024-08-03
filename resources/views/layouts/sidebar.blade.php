@@ -114,7 +114,7 @@
                         </li>
 
                         <li class="submenu-item {{ Request::is('ikan') ? 'active' : '' }} ">
-                            <a href="/ikan" class="submenu-link">Data Ikan</a>
+                            <a href="/ikan" class="submenu-link">Data Produk</a>
                         </li>
 
 

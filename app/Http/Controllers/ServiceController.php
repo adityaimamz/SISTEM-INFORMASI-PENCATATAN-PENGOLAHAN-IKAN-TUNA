@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cutting;
+use App\Models\KodeTrace;
 use App\Models\Service;
 use App\Models\Kategori_ikan;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -15,12 +16,16 @@ class ServiceController extends Controller
      */
     public function index()
     {
-        $data = Service::with(['cutting', 'detail'])->get();
+        $data = Service::all();
         $cuttings = Cutting::all();
-    
+        $kode_trace = KodeTrace::all();
+        $kategori_ikan = Kategori_ikan::all();
+
         return view('admin.transaksi.service', [
             'data' => $data,
             'cuttings' => $cuttings,
+            'kode_trace' => $kode_trace,
+            'kategori_ikan' => $kategori_ikan
         ]);
     }
     /**
@@ -31,7 +36,6 @@ class ServiceController extends Controller
         $data = Service::whereYear('created_at', $year)
             ->whereMonth('created_at', $month)
             ->get();
-        
 
         $pdf = Pdf::loadView('pdf.service', compact('data', 'month', 'year', 'totalBeratPerGrade'));
         return $pdf->download('service_report_' . $month . '_' . $year . '.pdf');
@@ -48,10 +52,12 @@ class ServiceController extends Controller
     public function store(Request $request)
     {
         Service::create([
-            'kode_trace' => $request->kode_trace, // Menambahkan kode_lot
-            'no_batch' => $request->no_batch,
-            'id_detail' => $request->id_detail,
-            'berat_produk' => $request->berat_produk,
+            'kode_trace_id' => $request->kode_trace_id, // Menambahkan kode_lot
+            'no_batch_id' => $request->no_batch_id,
+            'id_ikan' => $request->id_ikan,
+            'kg' => $request->kg,
+            'pcs' => $request->pcs,
+            'tgl_service' => $request->tgl_service,
         ]);
 
         return redirect()->route('service.index')->with('success', 'Service berhasil ditambahkan.');
@@ -84,10 +90,12 @@ class ServiceController extends Controller
 
         $service = Service::findOrFail($kode_trace);
         $service->update([
-            'kode_trace' => $request->kode_trace,
-            'no_batch' => $request->no_batch,
-            'id_detail' => $request->id_detail,
-            'berat_produk' => $request->berat_produk,
+            'kode_trace_id' => $request->kode_trace, // Menambahkan kode_lot
+            'no_batch_id' => $request->no_batch_id,
+            'id_ikan' => $request->id_ikan,
+            'kg' => $request->kg,
+            'pcs' => $request->pcs,
+            'tgl_service' => $request->tgl_service,
         ]);
 
         return redirect()->route('service.index')->with('success', 'Service berhasil diperbarui.');

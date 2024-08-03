@@ -12,8 +12,8 @@ class Kategori_ikan extends Model
     protected $guarded = ['id'];
 
 
-    public function penerimaan_ikan()
+    public function service()
     {
-        return $this->hasMany(Penerimaan_ikan::class);
+        return $this->hasMany(Service::class);
     }
 }

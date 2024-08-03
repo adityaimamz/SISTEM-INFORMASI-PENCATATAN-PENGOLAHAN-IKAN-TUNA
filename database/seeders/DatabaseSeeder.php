@@ -7,6 +7,7 @@ use App\Models\Grade;
 use App\Models\Supplier;
 use App\Models\KategoriBeratPenerimaan;
 use App\Models\KategoriBeratCutting;
+use App\Models\Kategori_ikan;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -73,6 +74,21 @@ class DatabaseSeeder extends Seeder
             'alamat' => 'Jl. A',
         ]);
 
+        Kategori_ikan::create([
+            'jenis_ikan' => 'Loin Center Cut (Loin CC)',
+        ]);
+        Kategori_ikan::create([
+            'jenis_ikan' => 'Cube Minhong (Cube MH)',
+        ]);
+        Kategori_ikan::create([
+            'jenis_ikan' => 'Strips Minhong (Strips MH)',
+        ]);
+        Kategori_ikan::create([
+            'jenis_ikan' => 'Groud Meat Minhong (Cube MH)',
+        ]);
+        Kategori_ikan::create([
+            'jenis_ikan' => 'Saku Premium Krimson (Saku KR)',
+        ]);
         
     }
 }

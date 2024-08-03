@@ -8,14 +8,7 @@ use App\Models\KodeTrace;
 
 class KodeTraceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        $kodeTrace = KodeTrace::all();
-        return view('admin.data-master.kode-trace', ['kodeTrace' => $kodeTrace]);
-    }
+
 
     /**
      * Show the form for creating a new resource.
@@ -30,23 +23,10 @@ class KodeTraceController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        KodeTrace::create([
+            'kode_trace' => $request->kode_trace,
+        ]);
+        return redirect()->route('service.index')->with('success', 'Kode trace berhasil ditambahkan');
     }
 
     /**
@@ -54,7 +34,11 @@ class KodeTraceController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $kodeTrace = KodeTrace::findOrFail($id);
+        $kodeTrace->update([
+            'kode_trace' => $request->kode_trace,
+        ]);
+        return redirect()->route('service.index')->with('success', 'Kode trace berhasil diperbarui');
     }
 
     /**
@@ -62,6 +46,8 @@ class KodeTraceController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $kodeTrace = KodeTrace::findOrFail($id);
+        $kodeTrace->delete();
+        return redirect()->route('service.index')->with('success', 'Kode trace berhasil dihapus');
     }
 }

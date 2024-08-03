@@ -25,7 +25,7 @@ class CuttingFilter extends Component
     public function filterData()
     {
         if ($this->no_batch) {
-            $this->cuttings = Cutting::where('no_batch', $this->no_batch)->get();
+            $this->cuttings = Cutting::where('no_batch_id', $this->no_batch)->get();
 
             $cutting = $this->cuttings->first(); 
             if ($cutting) {

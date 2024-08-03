@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CuttingController;
 use App\Http\Controllers\NoBatchController;
+use App\Http\Controllers\KodeTraceController;
 use App\Http\Controllers\IkanController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\LoginController;
@@ -115,6 +116,7 @@ Route::get('/stok-keluar-pdf/{month}/{year}', [ProdukKeluarController::class, 's
 Route::resource('penerimaan_ikan', PenerimaanIkanController::class)->middleware('auth');
 Route::resource('cutting', CuttingController::class)->middleware('auth');
 Route::resource('no_batch', NoBatchController::class)->middleware('auth');
+Route::resource('kode_trace', KodeTraceController::class)->middleware('auth');
 Route::resource('service', ServiceController::class)->middleware('auth');
 Route::resource('packing', PackingController::class)->middleware('auth');
 Route::resource('produk-masuk', ProdukMasukController::class)->middleware('auth');

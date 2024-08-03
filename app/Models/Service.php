@@ -15,12 +15,18 @@ class Service extends Model
 
     public function cutting()
     {
-        return $this->belongsTo(Cutting::class, 'no_batch', 'no_batch'); // Ensure both local and foreign keys match
+        return $this->belongsTo(Cutting::class, 'no_batch_id', 'id'); // corrected to use 'id'
     }
+
+    public function ikan()
+    {
+        return $this->belongsTo(Kategori_ikan::class, 'id_ikan');
+    }
+    
 
     public function kode_trace()
     {
-        return $this->belongsTo(KodeTrace::class, 'id_detail');
+        return $this->belongsTo(KodeTrace::class, 'kode_trace_id', 'id');
     }
 
     public function packing()

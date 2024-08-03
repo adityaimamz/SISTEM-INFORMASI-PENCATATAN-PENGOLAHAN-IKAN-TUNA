@@ -12,8 +12,8 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Data Kategori Ikan </h3>
-                        <p class="text-subtitle text-muted">Silahkan kelola data kategori ikan</p>
+                        <h3>Data Produk </h3>
+                        <p class="text-subtitle text-muted">Silahkan kelola data Produk</p>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -29,11 +29,11 @@
                 <div class="card">
                     <div class="card-header">
                         <h5 class="card-title">
-                            Tambah Kategori Ikan
+                            Tambah Produk
                         </h5>
                         <button type="button" class="btn btn-outline-primary block" data-bs-toggle="modal"
                             data-bs-target="#tambahIkanModal">
-                            Tambah Kategori Ikan
+                            Tambah Produk
                         </button>
 
                         <!-- Vertically Centered modal Modal -->
@@ -53,7 +53,7 @@
                                             enctype="multipart/form-data" class="mt-0">
                                             @csrf
                                             <div class="form-group">
-                                                <label for="jenis_ikan">Jenis Ikan</label>
+                                                <label for="jenis_ikan">Nama Produk</label>
                                                 <input type="text" name="jenis_ikan" class="form-control border-primary"
                                                     required>
                                             </div>
@@ -74,7 +74,7 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Jenis Ikan</th>
+                                        <th>Nama Produk</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -87,12 +87,12 @@
                                                 <button type="button" class="btn btn-outline-primary block"
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#editIkanModal{{ $item->id }}">
-                                                    Edit Ikan
+                                                    Edit Produk
                                                 </button>
                                                 <button type="button" class="btn btn-outline-danger block"
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#hapusIkanModal{{ $item->id }}">
-                                                    Hapus Ikan
+                                                    Hapus Produk
                                                 </button>
                                             </td>
                                         </tr>
@@ -117,7 +117,7 @@
                                                             @csrf
                                                             @method('PUT')
                                                             <div class="form-group">
-                                                                <label for="jenis_ikan">Jenis Ikan</label>
+                                                                <label for="jenis_ikan">Nama Produk</label>
                                                                 <input type="text" name="jenis_ikan"
                                                                     class="form-control border-primary"
                                                                     value="{{ $item->jenis_ikan }}" required>

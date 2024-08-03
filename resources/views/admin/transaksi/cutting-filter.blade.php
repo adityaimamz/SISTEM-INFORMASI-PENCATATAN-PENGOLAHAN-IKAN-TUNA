@@ -52,14 +52,14 @@
                                             enctype="multipart/form-data" class="mt-0">
                                             @csrf
                                             <div class="form-group">
-                                                <label for="no_batch">No Batch</label>
-                                                <select name="no_batch" id="no_batch" class="form-control border-primary">
+                                                <label for="no_batch_id">No Batch</label>
+                                                <select name="no_batch_id" id="no_batch_id" class="form-control border-primary">
                                                     <option value="" selected disabled>Pilih No Batch</option>
                                                     @foreach ($no_batch as $item)
                                                         <option value="{{ $item->id }}">{{ $item->no_batch }}</option>
                                                     @endforeach
                                                 </select>
-                                               
+
                                             </div>
                                             <div class="form-group">
                                                 <label for="berat_produk">Berat Produk</label>
@@ -114,13 +114,13 @@
                         data-bs-target="#tambahNoBatchModal">
                         Tambah No Batch
                     </button>
-    
+
                     <!-- Vertically Centered modal Modal -->
                     <div class="modal fade" id="tambahNoBatchModal" tabindex="-1" role="dialog"
                         aria-labelledby="tambahNoBatchModalTitle" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
                             <div class="modal-content">
-    
+
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="tambahNoBatchModalTitle">Tambah No Batch
                                     </h5>
@@ -145,8 +145,6 @@
                             </div>
                         </div>
                     </div>
-    
-    
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -212,7 +210,7 @@
                                             </div>
                                         </div>
                                     </div>
-    
+
                                     <!-- Modal Hapus No Batch -->
                                     <div class="modal fade" id="hapusNoBatchModal{{ $item->id }}" tabindex="-1"
                                         role="dialog" aria-labelledby="hapusNoBatchModalTitle{{ $item->id }}"
@@ -252,7 +250,7 @@
                                     </div>
                                 @endforeach
                             </tbody>
-    
+
                         </table>
                     </div>
                 </div>

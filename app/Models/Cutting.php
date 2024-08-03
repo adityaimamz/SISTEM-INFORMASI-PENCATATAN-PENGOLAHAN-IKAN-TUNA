@@ -18,13 +18,14 @@ class Cutting extends Model
 
     public function no_batch()
     {
-        return $this->belongsTo(NoBatch::class, 'no_batch');
+        return $this->belongsTo(NoBatch::class, 'no_batch_id', 'id'); // corrected to use 'id'
     }
-
+    
     public function services()
     {
-        return $this->hasMany(Service::class, 'no_batch', 'no_batch'); // Ensure both local and foreign keys match
+        return $this->hasMany(Service::class, 'no_batch_id', 'id'); // corrected to use 'id'
     }
+    
 
     public function kategori_berat()
     {
