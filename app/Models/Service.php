@@ -20,7 +20,7 @@ class Service extends Model
 
     public function ikan()
     {
-        return $this->belongsTo(Kategori_ikan::class, 'id_ikan', 'id');
+        return $this->belongsTo(Kategori_produk::class, 'id_ikan', 'id');
     }
 
 

@@ -25,13 +25,13 @@ class PackingController extends Controller
         $services = Service::all();
 
         // Calculate totals for each product
-        $productTotals = Packing::select('services.id as service_id', 'services.id_ikan', 'kategori_ikans.jenis_ikan', 
+        $productTotals = Packing::select('services.id as service_id', 'services.id_ikan', 'Kategori_produks.jenis_ikan', 
             DB::raw('SUM(packings.pcs) as total_pcs'),
             DB::raw('SUM(packings.berat) as total_kg')
         )
         ->join('services', 'services.id', '=', 'packings.kode_trace_id')
-        ->join('kategori_ikans', 'kategori_ikans.id', '=', 'services.id_ikan')
-        ->groupBy('services.id', 'services.id_ikan', 'kategori_ikans.jenis_ikan')
+        ->join('Kategori_produks', 'Kategori_produks.id', '=', 'services.id_ikan')
+        ->groupBy('services.id', 'services.id_ikan', 'Kategori_produks.jenis_ikan')
         ->get();
 
         // Calculate grand totals

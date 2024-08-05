@@ -17,7 +17,7 @@ use App\Http\Controllers\ProdukMasukController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SupplierController;
 use App\Models\Cutting;
-use App\Models\Kategori_ikan;
+use App\Models\Kategori_produk;
 use App\Models\Penerimaan_ikan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -90,7 +90,7 @@ Route::get('/laporan_stok_keluar', function () {
     return view('admin.laporan_stok_keluar');
 })->middleware('is_admin');
 
-Route::get('/get-grade/{ikan}', function (Kategori_ikan $ikan) {
+Route::get('/get-grade/{ikan}', function (Kategori_produk $ikan) {
     return response()->json(['grade' => $ikan->grade]);
 });
 

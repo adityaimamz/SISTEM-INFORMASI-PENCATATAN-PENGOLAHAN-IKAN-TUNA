@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Kategori_ikan;
+use App\Models\Kategori_produk;
 use App\Models\KodeTrace;
 use App\Models\NoBatch;
 use App\Models\Service;
@@ -19,13 +19,13 @@ class ServiceController extends Controller
         $data = Service::all();
         $no_batches = NoBatch::all();
         $kode_trace = KodeTrace::all();
-        $kategori_ikan = Kategori_ikan::all();
+        $Kategori_produk = Kategori_produk::all();
 
         return view('admin.transaksi.service', [
             'data' => $data,
             'no_batches' => $no_batches,
             'kode_trace' => $kode_trace,
-            'kategori_ikan' => $kategori_ikan,
+            'Kategori_produk' => $Kategori_produk,
         ]);
     }
     /**

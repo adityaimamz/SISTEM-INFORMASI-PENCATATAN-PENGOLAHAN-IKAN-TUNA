@@ -42,11 +42,11 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $item->supplier->nama_supplier }}</td>
-                        <td>{{ $item->kategori_ikan->jenis_ikan }}</td>
+                        <td>{{ $item->Kategori_produk->jenis_ikan }}</td>
                         <td>{{ $item->tgl_penerimaan }}</td>
                         <td>{{ $item->berat_ikan }}</td>
-                        <td>{{ $item->kategori_ikan->grade }}</td>
-                        <td>{{ $item->kategori_ikan->kategori }}</td>
+                        <td>{{ $item->Kategori_produk->grade }}</td>
+                        <td>{{ $item->Kategori_produk->kategori }}</td>
                     </tr>
                 @endforeach
             </tbody>

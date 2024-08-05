@@ -30,12 +30,12 @@ class FilterCutting extends Component
             ->whereMonth('created_at', $this->month)
             ->get();
 
-        $this->totalBeratPerGrade = Cutting::selectRaw('kategori_ikans.grade, SUM(cuttings.berat_produk) as total_berat')
+        $this->totalBeratPerGrade = Cutting::selectRaw('Kategori_produks.grade, SUM(cuttings.berat_produk) as total_berat')
             ->join('penerimaan_ikans', 'cuttings.id_produk', '=', 'penerimaan_ikans.id')
-            ->join('kategori_ikans', 'penerimaan_ikans.ikan_id', '=', 'kategori_ikans.id')
+            ->join('Kategori_produks', 'penerimaan_ikans.ikan_id', '=', 'Kategori_produks.id')
             ->whereYear('cuttings.created_at', $this->year)
             ->whereMonth('cuttings.created_at', $this->month)
-            ->groupBy('kategori_ikans.grade')
+            ->groupBy('Kategori_produks.grade')
             ->get();
 
     }

@@ -5,7 +5,7 @@ use Livewire\Component;
 use App\Models\Service;
 use App\Models\KodeTrace;
 use App\Models\Cutting;
-use App\Models\Kategori_ikan;
+use App\Models\Kategori_produk;
 
 class ServiceFilter extends Component
 {
@@ -13,13 +13,13 @@ class ServiceFilter extends Component
     public $services = [];
     public $kode_trace;
     public $cuttings;
-    public $kategori_ikan;
+    public $Kategori_produk;
 
     public function mount()
     {
         $this->kode_traces = KodeTrace::all();
         $this->cuttings = Cutting::all();
-        $this->kategori_ikan = Kategori_ikan::all();
+        $this->Kategori_produk = Kategori_produk::all();
         $this->services = collect();
     }
 
@@ -44,7 +44,7 @@ class ServiceFilter extends Component
             'services' => $this->services,
             'kode_traces' => $this->kode_traces,
             'cuttings' => $this->cuttings,
-            'kategori_ikan' => $this->kategori_ikan,
+            'Kategori_produk' => $this->Kategori_produk,
         ]);
     }
 }

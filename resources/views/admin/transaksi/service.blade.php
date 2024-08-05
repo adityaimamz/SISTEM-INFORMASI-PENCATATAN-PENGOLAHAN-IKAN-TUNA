@@ -77,7 +77,7 @@
                                                 <select name="id_ikan" id="id_ikan"
                                                     class="form-control border-primary" required>
                                                     <option value="" disabled selected>Pilih Produk</option>
-                                                    @foreach ($kategori_ikan as $ikan)
+                                                    @foreach ($Kategori_produk as $ikan)
                                                         <option value="{{ $ikan->id }}">{{ $ikan->jenis_ikan }}
                                                         </option>
                                                     @endforeach

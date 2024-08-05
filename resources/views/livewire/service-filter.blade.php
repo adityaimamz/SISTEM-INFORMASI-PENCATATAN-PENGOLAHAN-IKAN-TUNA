@@ -81,7 +81,7 @@
                                         <div class="form-group">
                                             <label for="id_ikan">Produk</label>
                                             <select name="id_ikan" class="form-control border-primary" required>
-                                                @foreach ($kategori_ikan as $ikan)
+                                                @foreach ($Kategori_produk as $ikan)
                                                     <option value="{{ $ikan->id }}" {{ $ikan->id == $item->id_ikan ? 'selected' : '' }}>
                                                         {{ $ikan->jenis_ikan }}</option>
                                                 @endforeach

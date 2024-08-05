@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Kategori_ikan;
+use App\Models\Kategori_produk;
 use App\Models\Penerimaan_Ikan;
 use App\Models\Supplier;
 use App\Models\Grade;
@@ -26,7 +26,7 @@ class PenerimaanIkanController extends Controller
 
     public function getIkan($id)
     {
-        $ikan = Kategori_ikan::find($id);
+        $ikan = Kategori_produk::find($id);
 
         return $ikan ? json_encode($ikan) : 'ikan tidak ditemukan';
     }

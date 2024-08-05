@@ -15,14 +15,6 @@ class PenerimaanIkan extends Component
     public $data = [];
     public $grades;
     public $kategori_berat;
-    public $editItem;
-    public $editForm = [
-        'supplier_id' => '',
-        'grade_id' => '',
-        'kategori_berat_id' => '',
-        'berat_ikan' => '',
-        'tgl_penerimaan' => ''
-    ];
 
     public function mount()
     {
@@ -47,24 +39,6 @@ class PenerimaanIkan extends Component
         $this->data = $query->get();
     }
 
-    public function edit($id)
-    {
-        $this->editItem = Penerimaan_Ikan::find($id);
-        $this->editForm = [
-            'supplier_id' => $this->editItem->supplier_id,
-            'grade_id' => $this->editItem->grade_id,
-            'kategori_berat_id' => $this->editItem->kategori_berat_id,
-            'berat_ikan' => $this->editItem->berat_ikan,
-            'tgl_penerimaan' => $this->editItem->tgl_penerimaan
-        ];
-    }
-
-    public function update()
-    {
-        $this->editItem->update($this->editForm);
-        $this->reset('editItem', 'editForm');
-        $this->filterData();
-    }
 
     public function delete($id)
     {
