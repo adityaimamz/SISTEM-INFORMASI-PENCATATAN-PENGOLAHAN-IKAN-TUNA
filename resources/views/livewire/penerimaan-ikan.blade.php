@@ -2,7 +2,7 @@
     <div class="row mb-3">
         <div class="col-md-6">
             <label for="date">Tanggal</label>
-            <input type="date" id="date" class="form-control" wire:model="date">
+            <input type="date" id="date" class="form-control" wire:model="date" wire:change="filterData">
         </div>
         <div class="col-md-6">
             <label for="supplier">Supplier</label>
