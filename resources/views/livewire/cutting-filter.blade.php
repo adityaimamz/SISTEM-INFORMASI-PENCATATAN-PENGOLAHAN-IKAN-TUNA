@@ -64,27 +64,27 @@
                         <td>{{ $item->kategori_berat->kategori_berat == '3/5' ? $item->berat_produk : '' }}</td>
                         <td>{{ $item->kategori_berat->kategori_berat == '5 UP' ? $item->berat_produk : '' }}</td>
                         <td>
-                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editCuttingModal{{ $item->no_batch }}">
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editCuttingModal{{ $item->id }}">
                                 Edit Cutting
                             </button>
-                            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#hapusCuttingModal{{ $item->no_batch }}">
+                            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#hapusCuttingModal{{ $item->id }}">
                                 Hapus Cutting
                             </button>
                         </td>
                     </tr>
 
                     <!-- Modal Edit Cutting -->
-                    <div class="modal fade" id="editCuttingModal{{ $item->no_batch }}" tabindex="-1" aria-labelledby="editCuttingModalTitle{{ $item->no_batch }}" aria-hidden="true">
+                    <div class="modal fade" id="editCuttingModal{{ $item->id }}" tabindex="-1" aria-labelledby="editCuttingModalTitle{{ $item->id }}" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="editCuttingModalTitle{{ $item->no_batch }}">Edit Cutting</h5>
+                                    <h5 class="modal-title" id="editCuttingModalTitle{{ $item->id }}">Edit Cutting</h5>
                                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                         <i data-feather="x"></i>
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <form method="POST" action="{{ route('cutting.update', $item->no_batch) }}">
+                                    <form method="POST" action="{{ route('cutting.update', $item->id) }}">
                                         @csrf
                                         @method('PUT')
                                         <div class="form-group">
@@ -109,11 +109,11 @@
                     </div>
 
                     <!-- Modal Hapus Cutting -->
-                    <div class="modal fade" id="hapusCuttingModal{{ $item->no_batch }}" tabindex="-1" aria-labelledby="hapusCuttingModalTitle{{ $item->no_batch }}" aria-hidden="true">
+                    <div class="modal fade" id="hapusCuttingModal{{ $item->id }}" tabindex="-1" aria-labelledby="hapusCuttingModalTitle{{ $item->id }}" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="hapusCuttingModalTitle{{ $item->no_batch }}">Hapus Cutting</h5>
+                                    <h5 class="modal-title" id="hapusCuttingModalTitle{{ $item->id }}">Hapus Cutting</h5>
                                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                         <i data-feather="x"></i>
                                     </button>

@@ -31,8 +31,16 @@ class FilterPacking extends Component
             ->get();
     }
 
+    public function delete($id)
+    {
+        Packing::destroy($id);
+        $this->filterData();
+    }
+
     public function render()
     {
-        return view('livewire.filter-packing');
+        return view('livewire.filter-packing', [
+            'data' => $this->data,
+        ]);
     }
 }

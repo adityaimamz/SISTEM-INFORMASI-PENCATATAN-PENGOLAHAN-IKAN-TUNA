@@ -42,27 +42,27 @@
                         <td>{{ $item->kg }}</td>
                         <td>{{ $item->pcs }}</td>
                         <td>
-                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editServiceModal{{ $item->kode_trace }}">
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editServiceModal{{ $item->id }}">
                                 Edit Service
                             </button>
-                            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#hapusServiceModal{{ $item->kode_trace }}">
+                            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#hapusServiceModal{{ $item->id }}">
                                 Hapus Service
                             </button>
                         </td>
                     </tr>
 
                     <!-- Modal Edit Service -->
-                    <div class="modal fade" id="editServiceModal{{ $item->kode_trace }}" tabindex="-1" role="dialog" aria-labelledby="editServiceModalTitle{{ $item->kode_trace }}" aria-hidden="true">
+                    <div class="modal fade" id="editServiceModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="editServiceModalTitle{{ $item->id }}" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="editServiceModalTitle{{ $item->kode_trace }}">Edit Service</h5>
+                                    <h5 class="modal-title" id="editServiceModalTitle{{ $item->id }}">Edit Service</h5>
                                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                         <i data-feather="x"></i>
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <form method="POST" action="{{ route('service.update', $item->kode_trace) }}">
+                                    <form method="POST" action="{{ route('service.update', $item->id) }}">
                                         @csrf
                                         @method('PUT')
                                         <div class="form-group">
@@ -109,11 +109,11 @@
                     </div>
 
                     <!-- Modal Hapus Service -->
-                    <div class="modal fade" id="hapusServiceModal{{ $item->kode_trace }}" tabindex="-1" role="dialog" aria-labelledby="hapusServiceModalTitle{{ $item->kode_trace }}" aria-hidden="true">
+                    <div class="modal fade" id="hapusServiceModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="hapusServiceModalTitle{{ $item->id }}" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="hapusServiceModalTitle{{ $item->kode_trace }}">Hapus Service</h5>
+                                    <h5 class="modal-title" id="hapusServiceModalTitle{{ $item->id }}">Hapus Service</h5>
                                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                         <i data-feather="x"></i>
                                     </button>
@@ -123,13 +123,9 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                    <form method="POST" action="{{ route('service.destroy', $item->kode_trace) }}" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger ms-1">
-                                            <span class="d-none d-sm-block">Hapus</span>
-                                        </button>
-                                    </form>
+                                    <button type="button" class="btn btn-danger"
+                                        wire:click="delete({{ $item->id }})"
+                                        data-bs-dismiss="modal">Hapus</button>
                                 </div>
                             </div>
                         </div>

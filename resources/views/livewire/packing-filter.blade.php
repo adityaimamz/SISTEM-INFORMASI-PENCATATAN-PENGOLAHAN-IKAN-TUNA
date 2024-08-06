@@ -119,15 +119,7 @@
                                         data-bs-dismiss="modal">
                                         <span class="d-none d-sm-block">Close</span>
                                     </button>
-                                    <form method="POST"
-                                        action="{{ route('packing.destroy', $item->id) }}"
-                                        class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger ms-1">
-                                            <span class="d-none d-sm-block">Hapus</span>
-                                        </button>
-                                    </form>
+                                    <button type="button" class="btn btn-danger" wire:click="delete({{ $item->id }})" data-bs-dismiss="modal">Hapus</button>
                                 </div>
                             </div>
                         </div>
