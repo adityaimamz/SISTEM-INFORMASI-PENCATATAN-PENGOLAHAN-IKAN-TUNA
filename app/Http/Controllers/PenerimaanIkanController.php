@@ -64,11 +64,6 @@ class PenerimaanIkanController extends Controller
      */
     public function store(Request $request)
     {
-        // $request->validate([
-        //     'supplier_id' => 'required|exists:suppliers,id',
-        //     'ikan_id' => 'required|exists:ikans,id',
-        //     'tgl_penerimaan' => 'required|date',
-        // ]);
 
         Penerimaan_Ikan::create([
             'supplier_id' => $request->supplier_id,

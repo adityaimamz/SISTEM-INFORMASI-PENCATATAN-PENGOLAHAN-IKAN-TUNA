@@ -35,8 +35,8 @@
         <table class="table table-bordered" id="table">
             <tr>
                 <th rowspan="2">NO</th>
-                <th colspan="4">10 UP</th>
-                <th colspan="4">20 UP</th>
+                <th colspan="4">10-19</th>
+                <th colspan="4">20-29</th>
                 <th colspan="4">30 UP</th>
                 <th rowspan="2">Action</th>
             </tr>
@@ -59,21 +59,21 @@
                 @foreach ($data as $key => $item)
                     <tr>
                         <td>{{ $key + 1 }}</td>
-                        <td>{{ $item->grade->grade == 'AB' && $item->kategori_berat_penerimaan->kategori_berat == '10 UP' ? $item->berat_ikan : '' }}
+                        <td>{{ $item->grade->grade == 'AB' && $item->kategori_berat_penerimaan->kategori_berat == '10-19' ? $item->berat_ikan : '' }}
                         </td>
-                        <td>{{ $item->grade->grade == 'C' && $item->kategori_berat_penerimaan->kategori_berat == '10 UP' ? $item->berat_ikan : '' }}
+                        <td>{{ $item->grade->grade == 'C' && $item->kategori_berat_penerimaan->kategori_berat == '10-19' ? $item->berat_ikan : '' }}
                         </td>
-                        <td>{{ $item->grade->grade == 'ABC' && $item->kategori_berat_penerimaan->kategori_berat == '10 UP' ? $item->berat_ikan : '' }}
+                        <td>{{ $item->grade->grade == 'ABC' && $item->kategori_berat_penerimaan->kategori_berat == '10-19' ? $item->berat_ikan : '' }}
                         </td>
-                        <td>{{ $item->grade->grade == 'Lokal' && $item->kategori_berat_penerimaan->kategori_berat == '10 UP' ? $item->berat_ikan : '' }}
+                        <td>{{ $item->grade->grade == 'Lokal' && $item->kategori_berat_penerimaan->kategori_berat == '10-19' ? $item->berat_ikan : '' }}
                         </td>
-                        <td>{{ $item->grade->grade == 'AB' && $item->kategori_berat_penerimaan->kategori_berat == '20 UP' ? $item->berat_ikan : '' }}
+                        <td>{{ $item->grade->grade == 'AB' && $item->kategori_berat_penerimaan->kategori_berat == '20-29' ? $item->berat_ikan : '' }}
                         </td>
-                        <td>{{ $item->grade->grade == 'C' && $item->kategori_berat_penerimaan->kategori_berat == '20 UP' ? $item->berat_ikan : '' }}
+                        <td>{{ $item->grade->grade == 'C' && $item->kategori_berat_penerimaan->kategori_berat == '20-29' ? $item->berat_ikan : '' }}
                         </td>
-                        <td>{{ $item->grade->grade == 'ABC' && $item->kategori_berat_penerimaan->kategori_berat == '20 UP' ? $item->berat_ikan : '' }}
+                        <td>{{ $item->grade->grade == 'ABC' && $item->kategori_berat_penerimaan->kategori_berat == '20-29' ? $item->berat_ikan : '' }}
                         </td>
-                        <td>{{ $item->grade->grade == 'Lokal' && $item->kategori_berat_penerimaan->kategori_berat == '20 UP' ? $item->berat_ikan : '' }}
+                        <td>{{ $item->grade->grade == 'Lokal' && $item->kategori_berat_penerimaan->kategori_berat == '20-29' ? $item->berat_ikan : '' }}
                         </td>
                         <td>{{ $item->grade->grade == 'AB' && $item->kategori_berat_penerimaan->kategori_berat == '30 UP' ? $item->berat_ikan : '' }}
                         </td>
@@ -96,12 +96,12 @@
                     </tr>
 
                     <!-- Modal Edit -->
-                    {{-- <div wire:ignore.self class="modal fade" id="editModal{{ $edit_id }}" tabindex="-1"
-                        role="dialog" aria-labelledby="editModalLabel{{ $edit_id }}" aria-hidden="true">
+                    <div wire:ignore.self class="modal fade" id="editModal{{ $item->id }}" tabindex="-1"
+                        role="dialog" aria-labelledby="editModalLabel{{ $item->id }}" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="editModalLabel{{ $edit_id }}">Edit Penerimaan Ikan
+                                    <h5 class="modal-title" id="editModalLabel{{ $item->id }}">Edit Penerimaan Ikan
                                     </h5>
                                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                         <i data-feather="x"></i>
@@ -158,7 +158,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div> --}}
+                    </div>
 
 
                     <!-- Modal Delete -->
@@ -192,35 +192,35 @@
 
                     $total_10up_ab = $dataCollection
                         ->where('grade.grade', 'AB')
-                        ->where('kategori_berat_penerimaan.kategori_berat', '10 UP')
+                        ->where('kategori_berat_penerimaan.kategori_berat', '10-19')
                         ->sum('berat_ikan');
                     $total_10up_c = $dataCollection
                         ->where('grade.grade', 'C')
-                        ->where('kategori_berat_penerimaan.kategori_berat', '10 UP')
+                        ->where('kategori_berat_penerimaan.kategori_berat', '10-19')
                         ->sum('berat_ikan');
                     $total_10up_abc = $dataCollection
                         ->where('grade.grade', 'ABC')
-                        ->where('kategori_berat_penerimaan.kategori_berat', '10 UP')
+                        ->where('kategori_berat_penerimaan.kategori_berat', '10-19')
                         ->sum('berat_ikan');
                     $total_10up_lokal = $dataCollection
                         ->where('grade.grade', 'Lokal')
-                        ->where('kategori_berat_penerimaan.kategori_berat', '10 UP')
+                        ->where('kategori_berat_penerimaan.kategori_berat', '10-19')
                         ->sum('berat_ikan');
                     $total_20up_ab = $dataCollection
                         ->where('grade.grade', 'AB')
-                        ->where('kategori_berat_penerimaan.kategori_berat', '20 UP')
+                        ->where('kategori_berat_penerimaan.kategori_berat', '20-29')
                         ->sum('berat_ikan');
                     $total_20up_c = $dataCollection
                         ->where('grade.grade', 'C')
-                        ->where('kategori_berat_penerimaan.kategori_berat', '20 UP')
+                        ->where('kategori_berat_penerimaan.kategori_berat', '20-29')
                         ->sum('berat_ikan');
                     $total_20up_abc = $dataCollection
                         ->where('grade.grade', 'ABC')
-                        ->where('kategori_berat_penerimaan.kategori_berat', '20 UP')
+                        ->where('kategori_berat_penerimaan.kategori_berat', '20-29')
                         ->sum('berat_ikan');
                     $total_20up_lokal = $dataCollection
                         ->where('grade.grade', 'Lokal')
-                        ->where('kategori_berat_penerimaan.kategori_berat', '20 UP')
+                        ->where('kategori_berat_penerimaan.kategori_berat', '20-29')
                         ->sum('berat_ikan');
                     $total_30up_ab = $dataCollection
                         ->where('grade.grade', 'AB')

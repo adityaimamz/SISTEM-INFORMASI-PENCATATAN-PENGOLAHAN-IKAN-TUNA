@@ -48,10 +48,10 @@ class DatabaseSeeder extends Seeder
         ]);
 
         KategoriBeratPenerimaan::create([
-            'kategori_berat' => '10 UP',
+            'kategori_berat' => '10-19',
         ]);
         KategoriBeratPenerimaan::create([
-            'kategori_berat' => '20 UP',
+            'kategori_berat' => '20-29',
         ]);
         KategoriBeratPenerimaan::create([
             'kategori_berat' => '30 UP',
