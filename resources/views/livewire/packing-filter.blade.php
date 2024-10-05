@@ -14,6 +14,17 @@
         @endif
     </div>
 
+    <style>
+        #table {
+            border: 1.5px solid black;
+        }
+
+        #table th,
+        #table td {
+            border: 0.5px solid black;
+        }
+    </style>
+
     <div class="table-responsive">
         <table class="table" id="table1">
             <thead>

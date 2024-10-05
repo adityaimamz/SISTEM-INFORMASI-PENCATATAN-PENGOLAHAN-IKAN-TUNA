@@ -35,8 +35,8 @@
         <table class="table table-bordered" id="table">
             <tr>
                 <th rowspan="2">NO</th>
-                <th colspan="4">10-19</th>
-                <th colspan="4">20-29</th>
+                <th colspan="4">10/19</th>
+                <th colspan="4">20/29</th>
                 <th colspan="4">30 UP</th>
                 <th rowspan="2">Action</th>
             </tr>
