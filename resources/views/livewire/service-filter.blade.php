@@ -78,7 +78,7 @@
                                             <label for="edit_no_batch_id">No Batch</label>
                                             <select wire:model="edit_no_batch_id" class="form-control border-primary" required>
                                                 @foreach ($cuttings as $cutting)
-                                                    <option value="{{ $cutting->no_batch }}">{{ $cutting->no_batch }}</option>
+                                                    <option value="{{ $cutting->no_batch }}">{{ $cutting->no_batch->id }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
