@@ -28,7 +28,7 @@
     </div>
 
     <div class="mb-3">
-        @if($no_batch)
+        @if ($no_batch)
             <a href="{{ route('cutting.pdf', ['no_batch' => $no_batch]) }}" class="btn btn-primary">Export PDF</a>
         @else
             <button class="btn btn-primary" disabled>Export PDF</button>
@@ -40,7 +40,8 @@
             border: 1.5px solid black;
         }
 
-        #table th, #table td {
+        #table th,
+        #table td {
             border: 0.5px solid black;
         }
     </style>
@@ -64,43 +65,69 @@
                         <td>{{ $item->kategori_berat->kategori_berat == '3/5' ? $item->berat_produk : '' }}</td>
                         <td>{{ $item->kategori_berat->kategori_berat == '5 UP' ? $item->berat_produk : '' }}</td>
                         <td>
-                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editCuttingModal{{ $item->id }}">
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                                data-bs-target="#editCuttingModal" wire:click="loadCuttingForEdit({{ $item->id }})">
                                 Edit Cutting
                             </button>
-                            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#hapusCuttingModal{{ $item->id }}">
+                            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                                data-bs-target="#hapusCuttingModal{{ $item->id }}">
                                 Hapus Cutting
                             </button>
                         </td>
                     </tr>
 
-                    <!-- Modal Edit Cutting -->
-                    <div class="modal fade" id="editCuttingModal{{ $item->id }}" tabindex="-1" aria-labelledby="editCuttingModalTitle{{ $item->id }}" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                    <!-- Modal for Editing Cutting -->
+                    <div wire:ignore.self class="modal fade" id="editCuttingModal" tabindex="-1" role="dialog"
+                        aria-labelledby="editCuttingModalTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="editCuttingModalTitle{{ $item->id }}">Edit Cutting</h5>
+                                    <h5 class="modal-title" id="editCuttingModalTitle">Edit Cutting</h5>
                                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                         <i data-feather="x"></i>
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <form method="POST" action="{{ route('cutting.update', $item->id) }}">
-                                        @csrf
-                                        @method('PUT')
+                                    <form wire:submit.prevent="updateCutting">
                                         <div class="form-group">
-                                            <label for="no_batch">No Batch</label>
-                                            <input type="text" name="no_batch" class="form-control border-primary" value="{{ $item->no_batch }}" required>
+                                            <label for="edit_no_batch_id">No Batch</label>
+                                            <select class="form-control border-primary" wire:model="edit_no_batch" required>
+                                                @foreach ($no_batches as $batch)
+                                                    <option value="{{ $batch->id }}">{{ $batch->no_batch }}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
+                                    
                                         <div class="form-group">
-                                            <label for="id_produk">Id Produk</label>
-                                            <input type="text" name="id_produk" class="form-control border-primary" value="{{ $item->id_produk }}" required>
+                                            <label for="edit_berat_produk">Berat Produk</label>
+                                            <input type="number" class="form-control border-primary" wire:model="edit_berat_produk" step="0.01" required>
                                         </div>
+                                    
                                         <div class="form-group">
-                                            <label for="berat_produk">Berat Produk</label>
-                                            <input type="number" name="berat_produk" class="form-control border-primary" step="0.01" value="{{ $item->berat_produk }}" required>
+                                            <label for="edit_id_produk">Id Produk</label>
+                                            <select class="form-control border-primary" wire:model="edit_id_produk" required>
+                                                @foreach ($penerimaan_ikan as $ikan)
+                                                    <option value="{{ $ikan->id }}">tanggal: {{ $ikan->tgl_penerimaan }} berat: {{ $ikan->berat_ikan }} grade: {{ $ikan->grade->grade }} supplier: {{ $ikan->supplier->nama_supplier }}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
-                                        <button type="submit" class="btn btn-primary ms-1">
-                                            <span class="d-none d-sm-block">Update</span>
+                                    
+                                        <div class="form-group">
+                                            <label for="edit_kategori_berat_id">Kategori Berat</label>
+                                            <select class="form-control border-primary" wire:model="edit_kategori_berat_id" required>
+                                                @foreach ($kategori_berat_cuttings as $kategori)
+                                                    <option value="{{ $kategori->id }}">{{ $kategori->kategori_berat }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    
+                                        <div class="form-group">
+                                            <label for="edit_tgl_cutting">Tgl Cutting</label>
+                                            <input type="date" class="form-control border-primary" wire:model="edit_tgl_cutting" required>
+                                        </div>
+                                    
+                                        <button data-bs-dismiss="modal" wire:click="updateCutting({{ $item->id }})" type="submit" class="btn btn-primary ms-1">
+                                            Update
                                         </button>
                                     </form>
                                 </div>
@@ -109,7 +136,8 @@
                     </div>
 
                     <!-- Modal Hapus Cutting -->
-                    <div class="modal fade" id="hapusCuttingModal{{ $item->id }}" tabindex="-1" aria-labelledby="hapusCuttingModalTitle{{ $item->id }}" aria-hidden="true">
+                    <div class="modal fade" id="hapusCuttingModal{{ $item->id }}" tabindex="-1"
+                        aria-labelledby="hapusCuttingModalTitle{{ $item->id }}" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -123,15 +151,16 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                    <button type="button" class="btn btn-danger" wire:click="delete({{ $item->id }})" data-bs-dismiss="modal">Hapus</button>
+                                    <button type="button" class="btn btn-danger" wire:click="delete({{ $item->id }})"
+                                        data-bs-dismiss="modal">Hapus</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 @endforeach
+
                 @php
                     $dataCollection = collect($cuttings);
-
                     $total13 = $dataCollection->where('kategori_berat.kategori_berat', '1/3')->sum('berat_produk');
                     $total15 = $dataCollection->where('kategori_berat.kategori_berat', '3/5')->sum('berat_produk');
                     $total5 = $dataCollection->where('kategori_berat.kategori_berat', '5 UP')->sum('berat_produk');

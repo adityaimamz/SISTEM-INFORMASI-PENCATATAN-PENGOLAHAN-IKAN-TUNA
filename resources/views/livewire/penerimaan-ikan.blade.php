@@ -150,7 +150,7 @@
                                                 class="form-control border-primary" required>
                                         </div>
                                         <div class="form-group">
-                                            <button data-bs-dismiss="modal" type="submit" class="btn btn-primary ms-1">
+                                            <button data-bs-dismiss="modal" wire:click="update({{ $item->id }})" type="submit" class="btn btn-primary ms-1">
                                                 Update
                                             </button>
                                         </div>
