@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Packing;
 use App\Models\Service;
+use App\Models\StokCS;
 use Illuminate\Support\Carbon;
 
 class PackingFilter extends Component
@@ -75,11 +76,29 @@ class PackingFilter extends Component
             'tgl_packing' => $this->edit_tgl_packing,
         ]);
 
+        // Update the corresponding StokCS record
+        $stokCS = StokCS::where('id', $this->edit_id)->first();
+
+        if ($stokCS) {
+            // Update the StokCS record with the new 'pcs' value
+            $stokCS->update([
+                'pcs' => $this->edit_pcs,
+                'tipe_stok' => 'Stok Masuk',
+            ]);
+        } else {
+            // Create a new StokCS record if it doesn't exist
+            StokCS::create([
+                'kode_trace_id' => $this->edit_kode_trace_id,
+                'pcs' => $this->edit_pcs,
+                'tipe_stok' => 'Stok Masuk',
+            ]);
+        }
+
         // Refresh data after update
         $this->filterData();
 
         // Flash success message
-        session()->flash('message', 'Packing berhasil diperbarui.');
+        session()->flash('message', 'Packing dan stok berhasil diperbarui.');
     }
 
     public function delete($id)
