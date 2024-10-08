@@ -17,6 +17,8 @@ use App\Http\Controllers\ProdukMasukController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SupplierController;
 use App\Models\Cutting;
+use App\Models\Packing;
+use App\Models\StokCS;
 use App\Models\Kategori_produk;
 use App\Models\Penerimaan_ikan;
 use Illuminate\Support\Facades\DB;
@@ -27,17 +29,24 @@ Route::get('/reload-captcha', [LoginController::class, 'reloadCaptcha']);
 
 Route::middleware('is_admin')->group(function () {
     Route::get('/admin', function () {
-        // $totalMasuk = DB::table('produk_masuks')
-        //     ->sum('stok_masuk');
+        $stokCS = StokCS::all();
+        $packing = Packing::all();
 
-        // $totalKeluar = DB::table('produk_keluars')
-        //     ->sum('jumlah_produk');
+        $totalMasuk = DB::table('stok_c_s')
+            ->where('tipe_stok', 'Stok Masuk')
+            ->sum('pcs');
+
+        $totalKeluar = DB::table('stok_c_s')
+            ->where('tipe_stok', 'Stok Keluar')
+            ->sum('pcs');
+
+        $grandtotal = $totalMasuk - $totalKeluar;
 
         // $totalStok = $totalMasuk - $totalKeluar;
         return view('admin.dashboard', [
-            // 'totalStok' => $totalStok,
-            // 'totalMasuk' => $totalMasuk,
-            // 'totalKeluar' => $totalKeluar,
+            'totalStok' => $grandtotal,
+            'totalMasuk' => $totalMasuk,
+            'totalKeluar' => $totalKeluar,
         ]);
     });
     Route::resource('akun', AccountController::class);
@@ -51,17 +60,23 @@ Route::middleware('is_admin')->group(function () {
 
 Route::middleware('is_karyawan')->group(function () {
     Route::get('/karyawan', function () {
-        // $totalMasuk = DB::table('produk_masuks')
-        //     ->sum('stok_masuk');
+        $stokCS = StokCS::all();
+        $packing = Packing::all();
 
-        // $totalKeluar = DB::table('produk_keluars')
-        //     ->sum('jumlah_produk');
+        $totalMasuk = DB::table('stok_c_s')
+            ->where('tipe_stok', 'Stok Masuk')
+            ->sum('pcs');
 
-        // $totalStok = $totalMasuk - $totalKeluar;
+        $totalKeluar = DB::table('stok_c_s')
+            ->where('tipe_stok', 'Stok Keluar')
+            ->sum('pcs');
+
+        $grandtotal = $totalMasuk - $totalKeluar;
+
         return view('karyawan.dashboard', [
-            // 'totalStok' => $totalStok,
-            // 'totalMasuk' => $totalMasuk,
-            // 'totalKeluar' => $totalKeluar,
+            'totalStok' => $grandtotal,
+            'totalMasuk' => $totalMasuk,
+            'totalKeluar' => $totalKeluar,
         ]);
     });
 });
