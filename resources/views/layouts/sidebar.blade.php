@@ -80,6 +80,7 @@
                     </a>
                 </li>
                 @endif --}}
+                @if(Auth::user()->role_id == 1)               
 
                 <li class="sidebar-item  has-sub">
                     <a href="#" class='sidebar-link'>
@@ -116,10 +117,9 @@
                         <li class="submenu-item {{ Request::is('ikan') ? 'active' : '' }} ">
                             <a href="/ikan" class="submenu-link">Data Produk</a>
                         </li>
-
-
                     </ul>
                 </li>
+                @endif
                 <li class="sidebar-item  has-sub">
                     <a href="#" class='sidebar-link'>
                         <i class="bi bi-stack"></i>
