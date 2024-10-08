@@ -15,7 +15,7 @@
                     <h3>Data Penerimaan Ikan</h3>
                     <p class="text-subtitle text-muted">Silahkan kelola data penerimaan ikan</p>
                 </div>
-                
+
                 <div class="col-12 col-md-6 order-md-2 order-first">
                     <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                         <ol class="breadcrumb">
@@ -27,11 +27,10 @@
             </div>
         </div>
         <section class="section">
-
-            <button type="button" class="btn btn-outline-primary block" data-bs-toggle="modal"
+            {{-- <button type="button" class="btn btn-outline-primary block" data-bs-toggle="modal"
             data-bs-target="#tambahPenerimaanModal">
             Tambah Penerimaan
-        </button>
+        </button> --}}
         <!-- Vertically Centered modal Modal -->
         <div class="modal fade" id="tambahPenerimaanModal" tabindex="-1" role="dialog"
             aria-labelledby="tambahPenerimaanModalTitle" aria-hidden="true">
@@ -101,6 +100,10 @@
                     <h5 class="card-title">
                         Filter Penerimaan Ikan
                     </h5>
+                    <button type="button" class="btn btn-outline-primary block" data-bs-toggle="modal"
+            data-bs-target="#tambahPenerimaanModal">
+            Tambah Penerimaan
+        </button>
                 </div>
                 <div class="card-body">
                     @livewire('penerimaan-ikan')

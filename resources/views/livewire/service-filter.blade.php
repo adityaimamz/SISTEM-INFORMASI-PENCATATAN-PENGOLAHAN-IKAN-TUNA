@@ -11,6 +11,17 @@
         </div>
     </div>
 
+    <style>
+        #table {
+            border: 1.5px solid black;
+        }
+
+        #table th,
+        #table td {
+            border: 0.5px solid black;
+        }
+    </style>
+
     <div class="mb-3">
         @if ($kode_trace)
             <a href="{{ route('service.pdf', ['kode_trace' => $kode_trace]) }}" class="btn btn-primary">Export PDF</a>
@@ -78,7 +89,7 @@
                                             <label for="edit_no_batch_id">No Batch</label>
                                             <select wire:model="edit_no_batch_id" class="form-control border-primary" required>
                                                 @foreach ($cuttings as $cutting)
-                                                    <option value="{{ $cutting->no_batch }}">{{ $cutting->no_batch->id }}</option>
+                                                    <option value="{{ $cutting->no_batch }}">{{ $cutting->no_batch->no_batch }}</option>
                                                 @endforeach
                                             </select>
                                         </div>

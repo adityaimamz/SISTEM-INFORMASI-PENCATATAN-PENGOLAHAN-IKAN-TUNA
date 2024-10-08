@@ -18,6 +18,17 @@
         </div>
     </div>
 
+    <style>
+        #table {
+            border: 1.5px solid black;
+        }
+
+        #table th,
+        #table td {
+            border: 0.5px solid black;
+        }
+    </style>
+
     <div class="mb-3">
         <a href="{{ route('stok-keluar.pdf', ['month' => $month, 'year' => $year]) }}" class="btn btn-primary">Export PDF</a>
     </div>

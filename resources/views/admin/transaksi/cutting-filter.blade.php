@@ -67,7 +67,7 @@
                                                     class="form-control border-primary" step="0.01" required>
                                             </div>
                                             <div class="form-group">
-                                                <label for="id_produk">Id Produk</label>
+                                                <label for="id_produk">Data Penerimaan Ikan</label>
                                                 <select name="id_produk" id="id_produk" class="form-control border-primary"
                                                     required>
                                                     <option value="" selected disabled>Pilih Penerimaan Ikan</option>
