@@ -101,10 +101,10 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="form-group">
+                                        {{-- <div class="form-group">
                                             <label for="edit_kg">Berat Produk (KG)</label>
                                             <input type="number" wire:model="edit_kg" class="form-control border-primary" step="0.01" required>
-                                        </div>
+                                        </div> --}}
                                         <div class="form-group">
                                             <label for="edit_pcs">Pcs</label>
                                             <input type="number" wire:model="edit_pcs" class="form-control border-primary" required>

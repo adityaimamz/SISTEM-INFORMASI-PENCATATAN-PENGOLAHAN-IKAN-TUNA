@@ -84,12 +84,7 @@
                                                 </select>
                                             </div>
                                             <div class="form-group">
-                                                <label for="berat_produk">Berat Produk (KG)</label>
-                                                <input type="number" name="kg" class="form-control border-primary"
-                                                    step="0.01" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="supplier_id">Pcs</label>
+                                                <label for="pcs">Pcs</label>
                                                 <input type="number" name="pcs" id="pcs"
                                                     class="form-control border-primary" required>
                                             </div>

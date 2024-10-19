@@ -50,17 +50,31 @@ class ServiceController extends Controller
      */
     public function store(Request $request)
     {
-        Service::create([
-            'kode_trace_id' => $request->kode_trace_id, // Menambahkan kode_lot
-            'no_batch_id' => $request->no_batch_id,
-            'id_ikan' => $request->id_ikan,
-            'kg' => $request->kg,
-            'pcs' => $request->pcs,
-            'tgl_service' => $request->tgl_service,
+        // Validasi input
+        $validated = $request->validate([
+            'kode_trace_id' => 'required',
+            'no_batch_id' => 'required',
+            'id_ikan' => 'required',
+            'pcs' => 'required|integer|min:1',
+            'tgl_service' => 'required|date',
         ]);
-
+    
+        // Hitung otomatis kg berdasarkan jumlah pcs
+        $kg = $validated['pcs'] * 0.225; // 1 pcs = 225 gram atau 0.225 kg
+    
+        // Simpan data service
+        Service::create([
+            'kode_trace_id' => $validated['kode_trace_id'],
+            'no_batch_id' => $validated['no_batch_id'],
+            'id_ikan' => $validated['id_ikan'],
+            'pcs' => $validated['pcs'],
+            'kg' => $kg, // Berat otomatis terisi
+            'tgl_service' => $validated['tgl_service'],
+        ]);
+    
         return redirect()->route('service.index')->with('success', 'Service berhasil ditambahkan.');
     }
+    
 
     /**
      * Display the specified resource.

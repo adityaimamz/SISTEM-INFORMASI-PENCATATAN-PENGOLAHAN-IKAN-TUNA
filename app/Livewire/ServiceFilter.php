@@ -68,13 +68,16 @@ class ServiceFilter extends Component
             'edit_tgl_service' => 'required|date',
         ]);
 
+        $kg = $this->edit_pcs * 0.225; // 1 pcs = 225 gram atau 0.225 kg
+
+
         // Update the service record
         $service = Service::findOrFail($this->edit_id);
         $service->update([
             'kode_trace_id' => $this->edit_kode_trace,
             'no_batch_id' => $this->edit_no_batch_id,
             'id_ikan' => $this->edit_id_ikan,
-            'kg' => $this->edit_kg,
+            'kg' => $kg,
             'pcs' => $this->edit_pcs,
             'tgl_service' => $this->edit_tgl_service,
         ]);
