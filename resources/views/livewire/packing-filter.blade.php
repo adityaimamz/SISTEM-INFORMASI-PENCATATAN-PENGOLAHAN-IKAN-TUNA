@@ -34,7 +34,7 @@
                     <th>Buyer</th>
                     <th>Produk</th>
                     <th>pcs</th>
-                    <th>Berat</th>
+                    <th>Berat (Kg)</th>
                     <th>Kode Trace</th>
                     <th>Action</th>
                 </tr>
@@ -104,11 +104,11 @@
                                         </div>
 
                                         <!-- Berat -->
-                                        <div class="form-group">
+                                        {{-- <div class="form-group">
                                             <label for="edit_berat">Berat</label>
                                             <input type="number" wire:model="edit_berat"
                                                 class="form-control border-primary" step="0.01" required>
-                                        </div>
+                                        </div> --}}
 
                                         <!-- Pcs -->
                                         <div class="form-group">

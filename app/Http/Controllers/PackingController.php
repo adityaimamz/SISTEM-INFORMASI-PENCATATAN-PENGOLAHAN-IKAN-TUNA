@@ -72,7 +72,7 @@ class PackingController extends Controller
             'kode_trace_id' => $request->kode_trace_id,
             'buyer' => $request->buyer,
             'pcs' => $request->pcs,
-            'berat' => $request->berat,
+            'berat' => 10,
             'tgl_packing' => $request->tgl_packing,
         ]);
 

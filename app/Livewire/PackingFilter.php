@@ -61,7 +61,6 @@ class PackingFilter extends Component
             'edit_kode_trace_id' => 'required|exists:services,id',
             'edit_buyer' => 'required|string',
             'edit_pcs' => 'required|integer|min:1',
-            'edit_berat' => 'required|numeric|min:0.01',
             'edit_tgl_packing' => 'required|date',
         ]);
 
@@ -72,7 +71,7 @@ class PackingFilter extends Component
             'kode_trace_id' => $this->edit_kode_trace_id,
             'buyer' => $this->edit_buyer,
             'pcs' => $this->edit_pcs,
-            'berat' => $this->edit_berat,
+            'berat' => 10,
             'tgl_packing' => $this->edit_tgl_packing,
         ]);
 

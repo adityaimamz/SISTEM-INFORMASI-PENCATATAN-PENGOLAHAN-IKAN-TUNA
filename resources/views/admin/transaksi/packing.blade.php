@@ -70,11 +70,11 @@
                                                 <input type="text" name="buyer" class="form-control border-primary"
                                                     required>
                                             </div>
-                                            <div class="form-group">
+                                            {{-- <div class="form-group">
                                                 <label for="berat">Berat</label>
                                                 <input type="number" name="berat" class="form-control border-primary"
                                                     step="0.01" required>
-                                            </div>
+                                            </div> --}}
                                             <div class="form-group">
                                                 <label for="supplier_id">Pcs</label>
                                                 <input type="number" name="pcs" id="pcs"
