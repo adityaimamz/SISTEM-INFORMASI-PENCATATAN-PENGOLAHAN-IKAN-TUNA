@@ -78,62 +78,58 @@
 
                     <!-- Modal for Editing Cutting -->
                     <div wire:ignore.self class="modal fade" id="editCuttingModal" tabindex="-1" role="dialog"
-                        aria-labelledby="editCuttingModalTitle" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="editCuttingModalTitle">Edit Cutting</h5>
-                                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                        <i data-feather="x"></i>
+                    aria-labelledby="editCuttingModalTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editCuttingModalTitle">Edit Cutting</h5>
+                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                    <i data-feather="x"></i>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form wire:submit.prevent="updateCutting">
+                                    <div class="form-group">
+                                        <label for="edit_no_batch_id">No Batch</label>
+                                        <select class="form-control border-primary" wire:model="edit_no_batch" required>
+                                            @foreach ($no_batches as $batch)
+                                                <option value="{{ $batch->id }}">{{ $batch->no_batch }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                
+                                    <div class="form-group">
+                                        <label for="edit_berat_produk">Berat Produk</label>
+                                        <input type="number" class="form-control border-primary" 
+                                            wire:model="edit_berat_produk" step="0.01" required>
+                                    </div>
+                
+                                    <div class="form-group">
+                                        <label for="edit_id_produk">Id Produk</label>
+                                        <select class="form-control border-primary" wire:model="edit_id_produk" required>
+                                            @foreach ($penerimaan_ikan as $ikan)
+                                                <option value="{{ $ikan->id }}">tanggal: {{ $ikan->tgl_penerimaan }} - berat: 
+                                                    {{ $ikan->berat_ikan }} - grade: {{ $ikan->grade->grade }} - supplier: 
+                                                    {{ $ikan->supplier->nama_supplier }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                
+                                    <div class="form-group">
+                                        <label for="edit_tgl_cutting">Tgl Cutting</label>
+                                        <input type="date" class="form-control border-primary" wire:model="edit_tgl_cutting" required>
+                                    </div>
+                
+                                    <button data-bs-dismiss="modal" wire:click="updateCutting" type="submit" class="btn btn-primary ms-1">
+                                        Update
                                     </button>
-                                </div>
-                                <div class="modal-body">
-                                    <form wire:submit.prevent="updateCutting">
-                                        <div class="form-group">
-                                            <label for="edit_no_batch_id">No Batch</label>
-                                            <select class="form-control border-primary" wire:model="edit_no_batch" required>
-                                                @foreach ($no_batches as $batch)
-                                                    <option value="{{ $batch->id }}">{{ $batch->no_batch }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    
-                                        <div class="form-group">
-                                            <label for="edit_berat_produk">Berat Produk</label>
-                                            <input type="number" class="form-control border-primary" wire:model="edit_berat_produk" step="0.01" required>
-                                        </div>
-                                    
-                                        <div class="form-group">
-                                            <label for="edit_id_produk">Id Produk</label>
-                                            <select class="form-control border-primary" wire:model="edit_id_produk" required>
-                                                @foreach ($penerimaan_ikan as $ikan)
-                                                    <option value="{{ $ikan->id }}">tanggal: {{ $ikan->tgl_penerimaan }} berat: {{ $ikan->berat_ikan }} grade: {{ $ikan->grade->grade }} supplier: {{ $ikan->supplier->nama_supplier }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    
-                                        <div class="form-group">
-                                            <label for="edit_kategori_berat_id">Kategori Berat</label>
-                                            <select class="form-control border-primary" wire:model="edit_kategori_berat_id" required>
-                                                @foreach ($kategori_berat_cuttings as $kategori)
-                                                    <option value="{{ $kategori->id }}">{{ $kategori->kategori_berat }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    
-                                        <div class="form-group">
-                                            <label for="edit_tgl_cutting">Tgl Cutting</label>
-                                            <input type="date" class="form-control border-primary" wire:model="edit_tgl_cutting" required>
-                                        </div>
-                                    
-                                        <button data-bs-dismiss="modal" wire:click="updateCutting({{ $item->id }})" type="submit" class="btn btn-primary ms-1">
-                                            Update
-                                        </button>
-                                    </form>
-                                </div>
+                                </form>
                             </div>
                         </div>
                     </div>
+                </div>
+                
 
                     <!-- Modal Hapus Cutting -->
                     <div class="modal fade" id="hapusCuttingModal{{ $item->id }}" tabindex="-1"

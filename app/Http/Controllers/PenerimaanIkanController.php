@@ -64,17 +64,46 @@ class PenerimaanIkanController extends Controller
      */
     public function store(Request $request)
     {
-
-        Penerimaan_Ikan::create([
-            'supplier_id' => $request->supplier_id,
-            'grade_id' => $request->grade_id,
-            'kategori_berat_id' => $request->kategori_berat_id,
-            'berat_ikan' => $request->berat_ikan,
-            'tgl_penerimaan' => $request->tgl_penerimaan,
+        // Validasi input
+        $validated = $request->validate([
+            'supplier_id' => 'required|exists:suppliers,supplier_id',
+            'grade_id' => 'required|exists:grades,id',
+            'berat_ikan' => 'required|numeric|min:0',
+            'tgl_penerimaan' => 'required|date',
         ]);
-
+    
+        // Pemetaan kategori berat berdasarkan berat ikan
+        $kategoriBeratId = $this->getKategoriBeratId($validated['berat_ikan']);
+    
+        // Simpan data penerimaan ikan
+        Penerimaan_Ikan::create([
+            'supplier_id' => $validated['supplier_id'],
+            'grade_id' => $validated['grade_id'],
+            'kategori_berat_id' => $kategoriBeratId,
+            'berat_ikan' => $validated['berat_ikan'],
+            'tgl_penerimaan' => $validated['tgl_penerimaan'],
+        ]);
+    
         return redirect()->route('penerimaan_ikan.index')->with('success', 'Penerimaan Ikan berhasil ditambahkan.');
     }
+    
+    /**
+     * Mendapatkan ID kategori berat berdasarkan berat ikan.
+     */
+    private function getKategoriBeratId($berat)
+    {
+        if ($berat >= 10 && $berat <= 19) {
+            return KategoriBeratPenerimaan::where('kategori_berat', '10-19')->first()->id;
+        } elseif ($berat >= 20 && $berat <= 29) {
+            return KategoriBeratPenerimaan::where('kategori_berat', '20-29')->first()->id;
+        } elseif ($berat >= 30) {
+            return KategoriBeratPenerimaan::where('kategori_berat', '30 UP')->first()->id;
+        } 
+    
+        // Default handling jika tidak ada kategori cocok
+        return null;
+    }
+    
 
     /**
      * Display the specified resource.

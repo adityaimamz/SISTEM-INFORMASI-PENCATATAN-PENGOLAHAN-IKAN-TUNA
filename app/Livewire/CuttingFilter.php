@@ -75,31 +75,50 @@ class CuttingFilter extends Component
 
     public function updateCutting()
     {
-        // Add validation rules
+        // Validasi input
         $this->validate([
-            'edit_no_batch' => 'required|exists:no_batches,id',
-            'edit_id_produk' => 'required|exists:penerimaan_ikans,id',
+            'edit_no_batch' => 'required',
+            'edit_id_produk' => 'required',
             'edit_berat_produk' => 'required|numeric|min:0',
-            'edit_kategori_berat_id' => 'required|exists:kategori_berat_cuttings,id',
             'edit_tgl_cutting' => 'required|date',
         ]);
-
-        // Perform the update
+    
+        // Tentukan kategori berat otomatis berdasarkan berat produk
+        $kategoriBeratId = $this->getKategoriBeratId($this->edit_berat_produk);
+    
+        // Update data cutting
         $cutting = Cutting::findOrFail($this->cutting_id);
         $cutting->update([
             'no_batch_id' => $this->edit_no_batch,
             'id_produk' => $this->edit_id_produk,
             'berat_produk' => $this->edit_berat_produk,
-            'kategori_berat_id' => $this->edit_kategori_berat_id,
+            'kategori_berat_id' => $kategoriBeratId, // Otomatis diisi
             'tgl_cutting' => $this->edit_tgl_cutting,
         ]);
-
-        // Refresh data after updating
+    
+        // Refresh data setelah update
         $this->filterData();
-
-        // Flash success message
+    
+        // Tampilkan pesan sukses
         session()->flash('message', 'Cutting data updated successfully.');
     }
+    
+    /**
+     * Mendapatkan ID kategori berat berdasarkan berat produk.
+     */
+    private function getKategoriBeratId($berat)
+    {
+        if ($berat >= 1 && $berat <= 3) {
+            return KategoriBeratCutting::where('kategori_berat', '1/3')->first()->id;
+        } elseif ($berat > 3 && $berat <= 5) {
+            return KategoriBeratCutting::where('kategori_berat', '3/5')->first()->id;
+        } elseif ($berat > 5) {
+            return KategoriBeratCutting::where('kategori_berat', '5 UP')->first()->id;
+        }
+    
+        return null; // Default jika tidak ada kategori cocok
+    }
+    
 
     public function delete($id)
     {

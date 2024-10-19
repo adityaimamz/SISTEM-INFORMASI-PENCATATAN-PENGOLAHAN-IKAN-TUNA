@@ -129,7 +129,7 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="form-group">
+                                        {{-- <div class="form-group">
                                             <label for="edit_kategori_berat_id">Kategori Berat</label>
                                             <select wire:model="edit_kategori_berat_id"
                                                 class="form-control border-primary" required>
@@ -138,7 +138,7 @@
                                                         {{ $kategori->kategori_berat }}</option>
                                                 @endforeach
                                             </select>
-                                        </div>
+                                        </div> --}}
                                         <div class="form-group">
                                             <label for="edit_tgl_penerimaan">Tanggal Penerimaan</label>
                                             <input type="date" wire:model="edit_tgl_penerimaan"
@@ -147,7 +147,7 @@
                                         <div class="form-group">
                                             <label for="edit_berat_ikan">Berat Ikan</label>
                                             <input type="number" wire:model="edit_berat_ikan" step="0.01"
-                                                class="form-control border-primary" required>
+                                                class="form-control border-primary" min="10" required>
                                         </div>
                                         <div class="form-group">
                                             <button data-bs-dismiss="modal" wire:click="update({{ $item->id }})" type="submit" class="btn btn-primary ms-1">

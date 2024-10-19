@@ -35,19 +35,18 @@ class PenerimaanIkan extends Component
 
     public function filterData()
     {
-        $query = Penerimaan_ikan::query();
-
-        if ($this->date) {
-            $query->whereDate('tgl_penerimaan', $this->date);
+        // Reset data jika salah satu filter kosong
+        if (!$this->date || !$this->supplier) {
+            $this->data = [];
+            return;
         }
-
-        if ($this->supplier) {
-            $query->where('supplier_id', $this->supplier);
-        }
-
-        $this->data = $query->get();
+    
+        // Query hanya jika kedua filter terisi
+        $this->data = Penerimaan_ikan::whereDate('tgl_penerimaan', $this->date)
+            ->where('supplier_id', $this->supplier)
+            ->get();
     }
-
+    
     // Fungsi untuk mengisi properti edit
     public function edit($id)
     {
@@ -65,30 +64,49 @@ class PenerimaanIkan extends Component
     public function update()
     {
         $this->validate([
-            'edit_supplier_id' => 'required|exists:suppliers,id',
+            'edit_supplier_id' => 'required|exists:suppliers,supplier_id',
             'edit_grade_id' => 'required|exists:grades,id',
-            'edit_kategori_berat_id' => 'required|exists:kategori_berat_penerimaans,id',
+            'edit_berat_ikan' => 'required|numeric|min:10', // Validasi minimal 10
             'edit_tgl_penerimaan' => 'required|date',
-            'edit_berat_ikan' => 'required|numeric|min:0',
         ]);
-
+    
+        // Tentukan kategori berat otomatis berdasarkan berat ikan
+        $kategoriBeratId = $this->getKategoriBeratId($this->edit_berat_ikan);
+    
+        // Update data penerimaan ikan
         $ikan = Penerimaan_ikan::findOrFail($this->edit_id);
         $ikan->update([
             'supplier_id' => $this->edit_supplier_id,
             'grade_id' => $this->edit_grade_id,
-            'kategori_berat_id' => $this->edit_kategori_berat_id,
+            'kategori_berat_id' => $kategoriBeratId, // Otomatis terisi
             'tgl_penerimaan' => $this->edit_tgl_penerimaan,
             'berat_ikan' => $this->edit_berat_ikan,
         ]);
-
+    
         // Refresh data setelah update
         $this->filterData();
-
-        // Reset edit properties
+    
+        // Reset field setelah update
         $this->resetEditFields();
-
+    
         session()->flash('message', 'Penerimaan Ikan berhasil diperbarui.');
     }
+    
+    /**
+     * Mendapatkan ID kategori berat berdasarkan berat ikan.
+     */
+    private function getKategoriBeratId($berat)
+    {
+        if ($berat >= 10 && $berat <= 19) {
+            return KategoriBeratPenerimaan::where('kategori_berat', '10-19')->first()->id;
+        } elseif ($berat >= 20 && $berat <= 29) {
+            return KategoriBeratPenerimaan::where('kategori_berat', '20-29')->first()->id;
+        } elseif ($berat >= 30) {
+            return KategoriBeratPenerimaan::where('kategori_berat', '30 UP')->first()->id;
+        }
+    
+        return null; // Jika tidak ada kategori yang cocok
+    }    
 
     // Fungsi untuk mereset field edit setelah update
     public function resetEditFields()

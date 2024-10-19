@@ -66,7 +66,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="form-group">
+                            {{-- <div class="form-group">
                                 <label for="kategori_berat_id">Kategori Berat</label>
                                 <select name="kategori_berat_id" class="form-control border-primary"
                                     required>
@@ -76,12 +76,12 @@
                                             {{ $kategori_berat->kategori_berat }}</option>
                                     @endforeach
                                 </select>
-                            </div>
+                            </div> --}}
                             <div class="form-group">
                                 <label for="berat_ikan">Berat Ikan</label>
-                                <input type="number" name="berat_ikan" id="berat_ikan" step="0.01"
+                                <input type="number" name="berat_ikan" id="berat_ikan" step="0.01" min="10"
                                     class="form-control border-primary" required>
-                            </div>
+                            </div>                                                        
                             <div class="form-group">
                                 <label for="tgl_penerimaan">Tanggal Penerimaan</label>
                                 <input type="date" name="tgl_penerimaan"

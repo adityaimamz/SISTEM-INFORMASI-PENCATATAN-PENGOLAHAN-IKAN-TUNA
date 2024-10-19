@@ -48,17 +48,45 @@ class CuttingController extends Controller// Mengubah nama controller menjadi Cu
      */
     public function store(Request $request)
     {
-
-        Cutting::create([
-            'no_batch_id' => $request->no_batch_id, // Menambahkan no_batch
-            'id_produk' => $request->id_produk,
-            'berat_produk' => $request->berat_produk,
-            'kategori_berat_id' => $request->kategori_berat_id,
-            'tgl_cutting' => $request->tgl_cutting,
+        // Validasi input
+        $validated = $request->validate([
+            'no_batch_id' => 'required',
+            'id_produk' => 'required',
+            'berat_produk' => 'required|numeric|min:1',
+            'tgl_cutting' => 'required|date',
         ]);
-
+    
+        // Tentukan kategori berat otomatis berdasarkan berat produk
+        $kategoriBeratId = $this->getKategoriBeratId($validated['berat_produk']);
+    
+        // Simpan data cutting
+        Cutting::create([
+            'no_batch_id' => $validated['no_batch_id'],
+            'id_produk' => $validated['id_produk'],
+            'berat_produk' => $validated['berat_produk'],
+            'kategori_berat_id' => $kategoriBeratId, // Terisi otomatis
+            'tgl_cutting' => $validated['tgl_cutting'],
+        ]);
+    
         return redirect()->route('cutting.index')->with('success', 'Cutting berhasil ditambahkan.');
     }
+    
+    /**
+     * Mendapatkan ID kategori berat berdasarkan berat produk.
+     */
+    private function getKategoriBeratId($berat)
+    {
+        if ($berat >= 1 && $berat <= 3) {
+            return KategoriBeratCutting::where('kategori_berat', '1/3')->first()->id;
+        } elseif ($berat > 3 && $berat <= 5) {
+            return KategoriBeratCutting::where('kategori_berat', '3/5')->first()->id;
+        } elseif ($berat > 5) {
+            return KategoriBeratCutting::where('kategori_berat', '5 UP')->first()->id;
+        }
+    
+        return null; // Default jika tidak ada kategori yang cocok
+    }
+
   
     public function update(Request $request, $no_batch)
     {
