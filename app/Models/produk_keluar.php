@@ -15,4 +15,10 @@ class produk_keluar extends Model
     {
         return $this->belongsTo(Service::class, 'kode_trace_id', 'id');
     }
+
+
+    public function noContainer()
+    {
+        return $this->belongsTo(No_container::class, 'no_container_id', 'id');
+    }
 }

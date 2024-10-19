@@ -16,6 +16,7 @@ use App\Http\Controllers\ProdukKeluarController;
 use App\Http\Controllers\ProdukMasukController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\NoContainersController;
 use App\Models\Cutting;
 use App\Models\Packing;
 use App\Models\StokCS;
@@ -131,6 +132,7 @@ Route::get('/stok-keluar-pdf', [ProdukKeluarController::class, 'stokKeluarPdf'])
 Route::resource('penerimaan_ikan', PenerimaanIkanController::class)->middleware('auth');
 Route::resource('cutting', CuttingController::class)->middleware('auth');
 Route::resource('no_batch', NoBatchController::class)->middleware('auth');
+Route::resource('no_container', NoContainersController::class)->middleware('auth');
 Route::resource('kode_trace', KodeTraceController::class)->middleware('auth');
 Route::resource('service', ServiceController::class)->middleware('auth');
 Route::resource('packing', PackingController::class)->middleware('auth');

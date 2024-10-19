@@ -63,12 +63,12 @@
                                                 <input type="number" name="pcs" class="form-control border-primary" required>
                                             </div>
                                             <div class="form-group">
-                                                <label for="no_seal">No Seal</label>
-                                                <input type="number" name="no_seal" class="form-control border-primary" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="no_container">No Container</label>
-                                                <input type="number" name="no_container" class="form-control border-primary" required>
+                                                <label for="no_container_id">No Container</label>
+                                                <select name="no_container_id" class="form-control border-primary" required>
+                                                    @foreach ($noContainers as $noContainer)
+                                                        <option value="{{ $noContainer->id }}">{{ $noContainer->no_container }}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                             <div class="form-group">
                                                 <label for="tgl_keluar">Tanggal Keluar</label>
@@ -100,7 +100,6 @@
                                         <th>No</th>
                                         <th>Nama Produk</th>
                                         <th>Pcs</th>
-                                        <th>No Seal</th>
                                         <th>No Container</th>
                                         <th>Tanggal Keluar</th>
                                         <th>Tanggal Berangkat</th>
@@ -114,8 +113,7 @@
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $item->service->ikan->jenis_ikan }}</td>
                                             <td>{{ $item->pcs }}</td>
-                                            <td>{{ $item->no_seal }}</td>
-                                            <td>{{ $item->no_container }}</td>
+                                            <td>{{ $item->noContainer->no_container }}</td>
                                             <td>{{ $item->tgl_keluar }}</td>
                                             <td>{{ $item->tgl_berangkat }}</td>
                                             <td>{{ $item->tgl_tiba }}</td>
@@ -156,13 +154,13 @@
                                                                 <input type="number" name="pcs" class="form-control border-primary" value="{{ $item->pcs }}" required>
                                                             </div>
                                                             <div class="form-group">
-                                                                <label for="no_seal">No Seal</label>
-                                                                <input type="number" name="no_seal" class="form-control border-primary" value="{{ $item->no_seal }}" required>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label for="no_container">No Container</label>
-                                                                <input type="number" name="no_container" class="form-control border-primary" value="{{ $item->no_container }}" required>
-                                                            </div>
+                                                                <label for="no_container_id">No Container</label>
+                                                                <select name="no_container_id" class="form-control border-primary" required>
+                                                                    @foreach ($noContainers as $noContainer)
+                                                                        <option value="{{ $noContainer->id }}">{{ $noContainer->no_container }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>  
                                                             <div class="form-group">
                                                                 <label for="tgl_keluar">Tanggal Keluar</label>
                                                                 <input type="date" name="tgl_keluar" class="form-control border-primary" value="{{ $item->tgl_keluar }}" required>
@@ -171,6 +169,7 @@
                                                                 <label for="tgl_berangkat">Tanggal Berangkat</label>
                                                                 <input type="date" name="tgl_berangkat" class="form-control border-primary" value="{{ $item->tgl_berangkat }}" required>
                                                             </div>
+
                                                             <div class="form-group">
                                                                 <label for="tgl_tiba">Tanggal Tiba</label>
                                                                 <input type="date" name="tgl_tiba" class="form-control border-primary" value="{{ $item->tgl_tiba }}" required>
@@ -219,6 +218,156 @@
                     </div>
                 </div>
             </section>
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">
+                        Data No Container
+                    </h5>
+                    <button type="button" class="btn btn-outline-primary block" data-bs-toggle="modal"
+                        data-bs-target="#tambahNoContainerModal">
+                        Tambah No Container
+                    </button>
+
+                    <!-- Vertically Centered modal Modal -->
+                    <div class="modal fade" id="tambahNoContainerModal" tabindex="-1" role="dialog"
+                        aria-labelledby="tambahNoContainerModalTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="tambahNoContainerModalTitle">Tambah No Container
+                                    </h5>
+                                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                        <i class="bi bi-x"></i>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form method="POST" action="{{ route('no_container.store') }}"
+                                        enctype="multipart/form-data" class="mt-0">
+                                        @csrf
+                                        <div class="form-group">
+                                            <label for="no_container">No Container</label>
+                                            <input type="text" name="no_container" class="form-control border-primary"
+                                                required>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary ms-1">
+                                            <span class="d-none d-sm-block">Submit</span>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table" id="table1">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>No Container</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($noContainers as $item)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $item->no_container }}</td>
+                                        <td>
+                                            <button type="button" class="btn btn-outline-primary block"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#editNoContainerModal{{ $item->id }}">
+                                                Edit No Container
+                                            </button>
+                                            <button type="button" class="btn btn-outline-danger block"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#hapusNoContainerModal{{ $item->id }}">
+                                                Hapus No Container
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <!-- Modal Edit No Batch -->
+                                    <div class="modal fade" id="editNoContainerModal{{ $item->id }}" tabindex="-1"
+                                        role="dialog" aria-labelledby="editNoContainerModalTitle{{ $item->id }}"
+                                        aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+                                            role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title"
+                                                        id="editNoContainerModalTitle{{ $item->id }}">Edit No Container
+                                                    </h5>
+                                                    <button type="button" class="close" data-bs-dismiss="modal"
+                                                        aria-label="Close">
+                                                        <i class="bi bi-x"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form method="POST"
+                                                        action="{{ route('no_container.update', $item->id) }}"
+                                                        enctype="multipart/form-data" class="mt-0">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <div class="form-group">
+                                                            <label for="no_container">No Container</label>
+                                                                <input type="text" name="no_container"
+                                                                class="form-control border-primary"
+                                                                value="{{ $item->no_container }}" required>
+                                                        </div>
+                                                        <button type="submit" class="btn btn-primary ms-1">
+                                                            <span class="d-none d-sm-block">Update</span>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Modal Hapus No Batch -->
+                                    <div class="modal fade" id="hapusNoBatchModal{{ $item->id }}" tabindex="-1"
+                                        role="dialog" aria-labelledby="hapusNoBatchModalTitle{{ $item->id }}"
+                                        aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+                                            role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title"
+                                                        id="hapusNoBatchModalTitle{{ $item->id }}">Hapus No Container
+                                                    </h5>
+                                                    <button type="button" class="close" data-bs-dismiss="modal"
+                                                        aria-label="Close">
+                                                        <i class="bi bi-x"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>Apakah Anda yakin ingin menghapus no container ini?</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-light-secondary"
+                                                        data-bs-dismiss="modal">
+                                                        <span class="d-none d-sm-block">Close</span>
+                                                    </button>
+                                                    <form method="POST"
+                                                        action="{{ route('no_container.destroy', $item->id) }}"
+                                                        class="d-inline">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger ms-1">
+                                                            <span class="d-none d-sm-block">Hapus</span>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div> 
         </div>
     </div>
 @endsection

@@ -7,6 +7,7 @@ use App\Models\produk_keluar;
 use App\Models\produk_masuk;
 use App\Models\Packing;
 use App\Models\Service;
+use App\Models\No_container;
 use App\Models\StokCS;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
@@ -21,11 +22,12 @@ class ProdukKeluarController extends Controller
         $produkKeluar = produk_keluar::all();
         $packing = Packing::all();
         $services = Service::all();
-
+        $noContainers = No_container::all();
         return view('admin.transaksi.stok_keluar', [
             'produkKeluar' => $produkKeluar,
             'services' => $services,
             'packing' => $packing,
+            'noContainers' => $noContainers,
         ]);
     }
 
@@ -54,8 +56,7 @@ class ProdukKeluarController extends Controller
         produk_keluar::create([
             'kode_trace_id' => $request->kode_trace_id,
             'pcs' => $request->pcs,
-            'no_seal' => $request->no_seal,
-            'no_container' => $request->no_container,
+            'no_container_id' => $request->no_container_id,
             'tgl_keluar' => $request->tgl_keluar,
             'tgl_berangkat' => $request->tgl_berangkat,
             'tgl_tiba' => $request->tgl_tiba,
@@ -97,8 +98,7 @@ class ProdukKeluarController extends Controller
         $data = [
             'kode_trace_id' => $request->kode_trace_id,
             'pcs' => $request->pcs,
-            'no_seal' => $request->no_seal,
-            'no_container' => $request->no_container,
+            'no_container_id' => $request->no_container_id,
             'tgl_keluar' => $request->tgl_keluar,
             'tgl_berangkat' => $request->tgl_berangkat,
             'tgl_tiba' => $request->tgl_tiba,

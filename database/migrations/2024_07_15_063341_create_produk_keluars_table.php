@@ -15,8 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('kode_trace_id')->constrained('services')->onDelete('cascade');
             $table->integer('pcs');
-            $table->integer('no_seal');
-            $table->integer('no_container');
+            $table->foreignId('no_container_id')->constrained('no_containers')->onDelete('cascade');
             $table->date('tgl_keluar');
             $table->date('tgl_berangkat');
             $table->date('tgl_tiba');
