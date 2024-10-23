@@ -30,7 +30,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h5 class="card-title">
-                            Tambah Cutting
+                            Cutting
                         </h5>
                         <button type="button" class="btn btn-outline-primary block" data-bs-toggle="modal"
                             data-bs-target="#tambahCuttingModal">
@@ -68,8 +68,8 @@
                                             <select name="id_produk" id="id_produk" class="form-control border-primary" required>
                                                 <option value="" selected disabled>Pilih Penerimaan Ikan</option>
                                                 @foreach ($penerimaan_ikan as $kan)
-                                                    <option value="{{ $kan->id }}">Tanggal: {{ $kan->tgl_penerimaan }} - Berat: 
-                                                        {{ $kan->berat_ikan }} - Grade: {{ $kan->grade->grade }} - Supplier: 
+                                                    <option value="{{ $kan->id }}">Tanggal: {{ $kan->tgl_penerimaan }} - Berat:
+                                                        {{ $kan->berat_ikan }} - Grade: {{ $kan->grade->grade }} - Supplier:
                                                         {{ $kan->supplier->nama_supplier }}
                                                     </option>
                                                 @endforeach
@@ -87,7 +87,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     </div>
                     <div class="card-body">
                         <livewire:cutting-filter />

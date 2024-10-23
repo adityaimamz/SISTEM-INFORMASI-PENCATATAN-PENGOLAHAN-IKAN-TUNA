@@ -30,7 +30,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h5 class="card-title">
-                            Tambah Produk Keluar
+                            Produk Keluar
                         </h5>
                         <button type="button" class="btn btn-outline-primary block" data-bs-toggle="modal"
                             data-bs-target="#tambahProdukKeluarModal">
@@ -160,7 +160,7 @@
                                                                         <option value="{{ $noContainer->id }}">{{ $noContainer->no_container }}</option>
                                                                     @endforeach
                                                                 </select>
-                                                            </div>  
+                                                            </div>
                                                             <div class="form-group">
                                                                 <label for="tgl_keluar">Tanggal Keluar</label>
                                                                 <input type="date" name="tgl_keluar" class="form-control border-primary" value="{{ $item->tgl_keluar }}" required>
@@ -367,7 +367,7 @@
                         </table>
                     </div>
                 </div>
-            </div> 
+            </div>
         </div>
     </div>
 @endsection

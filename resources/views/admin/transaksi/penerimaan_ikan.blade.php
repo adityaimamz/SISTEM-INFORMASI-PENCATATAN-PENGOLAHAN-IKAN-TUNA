@@ -81,7 +81,7 @@
                                 <label for="berat_ikan">Berat Ikan</label>
                                 <input type="number" name="berat_ikan" id="berat_ikan" step="0.01" min="10"
                                     class="form-control border-primary" required>
-                            </div>                                                        
+                            </div>
                             <div class="form-group">
                                 <label for="tgl_penerimaan">Tanggal Penerimaan</label>
                                 <input type="date" name="tgl_penerimaan"
@@ -98,7 +98,7 @@
             <div class="card">
                 <div class="card-header">
                     <h5 class="card-title">
-                        Filter Penerimaan Ikan
+                        Penerimaan Ikan
                     </h5>
                     <button type="button" class="btn btn-outline-primary block" data-bs-toggle="modal"
             data-bs-target="#tambahPenerimaanModal">

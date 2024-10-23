@@ -29,7 +29,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h5 class="card-title">
-                            Tambah Packing
+                            Packing
                         </h5>
                         <button type="button" class="btn btn-outline-primary block" data-bs-toggle="modal"
                             data-bs-target="#tambahPackingModal">
