@@ -5,14 +5,14 @@
             <input type="date" id="selectedDate" wire:model="selectedDate" wire:change="filterData" class="form-control">
         </div>
     </div>
-
+{{-- 
     <div class="mb-3">
         @if ($selectedDate)
             <a href="{{ route('packing.pdf', ['date' => $selectedDate]) }}" class="btn btn-primary">Export PDF</a>
         @else
             <button class="btn btn-primary" disabled>Export PDF</button>
         @endif
-    </div>
+    </div> --}}
 
     <style>
         #table {

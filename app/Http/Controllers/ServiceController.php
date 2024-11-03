@@ -6,6 +6,8 @@ use App\Models\Kategori_produk;
 use App\Models\KodeTrace;
 use App\Models\NoBatch;
 use App\Models\Service;
+use App\Models\Cutting;
+use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
@@ -18,6 +20,7 @@ class ServiceController extends Controller
     {
         $data = Service::all();
         $no_batches = NoBatch::all();
+        $cutting = Cutting::all();
         $kode_trace = KodeTrace::all();
         $Kategori_produk = Kategori_produk::all();
 
@@ -25,6 +28,7 @@ class ServiceController extends Controller
             'data' => $data,
             'no_batches' => $no_batches,
             'kode_trace' => $kode_trace,
+            'cutting' => $cutting,
             'Kategori_produk' => $Kategori_produk,
         ]);
     }
@@ -32,13 +36,24 @@ class ServiceController extends Controller
      * Show the form for creating a new resource.
      */
 // app/Http/Controllers/ServiceController.php
-    public function servicePdf($kode_trace)
-    {
-        $services = Service::where('kode_trace_id', $kode_trace)->get();
+public function servicePdf(Request $request)
+{
+    $filterMonth = $request->input('filterMonth');
 
-        $pdf = Pdf::loadView('pdf.service', compact('services', 'kode_trace'));
-        return $pdf->download('service_report_' . $kode_trace . '.pdf');
-    }
+    // Filter services by the specified month
+    $services = Service::whereMonth('tgl_service', Carbon::parse($filterMonth)->month)
+        ->whereYear('tgl_service', Carbon::parse($filterMonth)->year)
+        ->with(['ikan', 'cutting'])
+        ->get();
+
+    $pdf = Pdf::loadView('pdf.service', [
+        'services' => $services,
+        'filterMonth' => $filterMonth,
+    ]);
+
+    return $pdf->download('service_report_' . $filterMonth . '.pdf');
+}
+
 
     public function create()
     {

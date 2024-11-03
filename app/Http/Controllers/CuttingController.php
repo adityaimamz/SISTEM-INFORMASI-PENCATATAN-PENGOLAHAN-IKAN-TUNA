@@ -6,6 +6,7 @@ use App\Models\Cutting;
 use App\Models\Penerimaan_ikan;
 use App\Models\Supplier;
 use App\Models\NoBatch;
+use Carbon\Carbon;
 use App\Models\KategoriBeratCutting;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
@@ -35,13 +36,30 @@ class CuttingController extends Controller// Mengubah nama controller menjadi Cu
     }
 
 
-    public function cuttingPdf($no_batch)
+    public function cuttingPdf(Request $request)
     {
-        $cuttings = Cutting::where('no_batch_id', $no_batch)->get();
-
-        $pdf = Pdf::loadView('pdf.cutting', compact('cuttings', 'no_batch'));
-        return $pdf->download('cutting_report_' . $no_batch . '.pdf');
+        $filterMonth = $request->input('filterMonth');
+    
+        $cuttings = Cutting::whereMonth('tgl_cutting', Carbon::parse($filterMonth)->month)
+            ->whereYear('tgl_cutting', Carbon::parse($filterMonth)->year)
+            ->with(['kategori_berat', 'penerimaan_ikan.supplier', 'no_batch'])
+            ->get();
+    
+        $total13 = $cuttings->where('kategori_berat.kategori_berat', '1/3')->sum('berat_produk');
+        $total15 = $cuttings->where('kategori_berat.kategori_berat', '3/5')->sum('berat_produk');
+        $total5 = $cuttings->where('kategori_berat.kategori_berat', '5 UP')->sum('berat_produk');
+    
+        $pdf = Pdf::loadView('pdf.cutting', [
+            'cuttings' => $cuttings,
+            'total13' => $total13,
+            'total15' => $total15,
+            'total5' => $total5,
+            'filterMonth' => $filterMonth,
+        ]);
+    
+        return $pdf->download('cutting_report_' . $filterMonth . '.pdf');
     }
+    
 
     /**
      * Store a newly created resource in storage.

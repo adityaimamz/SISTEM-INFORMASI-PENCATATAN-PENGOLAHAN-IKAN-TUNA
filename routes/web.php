@@ -91,11 +91,11 @@ Route::get('/laporan_cutting', function () {
 })->middleware('is_admin');
 
 Route::get('/laporan_service', function () {
-    return view('admin.laporan_service');
+    return view('admin.laporan.laporan_service');
 })->middleware('is_admin');
 
 Route::get('/laporan_packing', function () {
-    return view('admin.laporan_packing');
+    return view('admin.laporan.laporan_packing');
 })->middleware('is_admin');
 
 Route::get('/laporan_stok_masuk', function () {
@@ -124,9 +124,9 @@ Route::get('/get-supplier-by-batch/{no_batch}', function ($no_batch) {
 });
 
 Route::get('/ikan-pdf', [PenerimaanIkanController::class, 'ikanPdf'])->name('ikan.pdf');
-Route::get('/cutting-pdf/{no_batch}', [CuttingController::class, 'cuttingPdf'])->name('cutting.pdf');
-Route::get('/service-pdf/{kode_trace}', [ServiceController::class, 'servicePdf'])->name('service.pdf');
-Route::get('/packing-pdf/{date}', [PackingController::class, 'packingPdf'])->name('packing.pdf');
+Route::get('/cutting-pdf/{filterMonth}', [CuttingController::class, 'cuttingPdf'])->name('cutting.pdf');
+Route::get('/service-pdf/{filterMonth}', [ServiceController::class, 'servicePdf'])->name('service.pdf');
+Route::get('/packing-pdf/{month}', [PackingController::class, 'packingPdf'])->name('packing.pdf');
 Route::get('/stok-masuk-pdf/{month}/{year}', [ProdukMasukController::class, 'stokMasukPdf'])->name('stok-masuk.pdf');
 Route::get('/stok-keluar-pdf', [ProdukKeluarController::class, 'stokKeluarPdf'])->name('stok-keluar.pdf');
 Route::resource('penerimaan_ikan', PenerimaanIkanController::class)->middleware('auth');

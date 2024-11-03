@@ -42,6 +42,7 @@ class PenerimaanIkanController extends Controller
     {
         $date = $request->get('date');
         $supplier = $request->get('supplier');
+        $supplier_name = Supplier::where('supplier_id', $supplier)->first()->nama_supplier;
     
         $query = Penerimaan_Ikan::query();
     
@@ -55,7 +56,7 @@ class PenerimaanIkanController extends Controller
     
         $data = $query->get();
     
-        $pdf = Pdf::loadView('pdf.ikan', compact('data'));
+        $pdf = Pdf::loadView('pdf.ikan', compact('data', 'date', 'supplier_name'));
         return $pdf->download('ikan_report_' . $date . '.pdf');
     }
     

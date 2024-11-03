@@ -85,13 +85,15 @@ class PackingController extends Controller
         return redirect()->route('packing.index')->with('success', 'Packing berhasil ditambahkan.');
     }
 
-    public function packingPdf($date)
+    public function packingPdf($month)
     {
-        $parsedDate = Carbon::parse($date);
-        $packings = Packing::whereDate('tgl_packing', $parsedDate)->get();
-
-        $pdf = Pdf::loadView('pdf.packing', compact('packings', 'date'));
-        return $pdf->download('packing_report_' . $parsedDate->format('Y-m-d') . '.pdf');
+        $parsedDate = Carbon::parse($month);
+        $packings = Packing::whereMonth('tgl_packing', $parsedDate->month)
+                           ->whereYear('tgl_packing', $parsedDate->year)
+                           ->get();
+    
+        $pdf = Pdf::loadView('pdf.packing', compact('packings', 'month'));
+        return $pdf->download('packing_report_' . $parsedDate->format('Y-m') . '.pdf');
     }
     
 

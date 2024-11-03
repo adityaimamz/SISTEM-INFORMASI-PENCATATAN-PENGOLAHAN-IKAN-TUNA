@@ -15,8 +15,14 @@
         </div>
     </div>
     <div class="mb-3">
-        <a href="{{ route('ikan.pdf', ['date' => $date, 'supplier' => $supplier]) }}" class="btn btn-primary">Export
+        <a href="{{ route('ikan.pdf', ['date' => $date, 'supplier' => $supplier]) }}" target="_blank" class="btn btn-primary"><i class="bi bi-printer"></i> Export
             PDF</a>
+    </div>
+
+    <div>
+        <p style="font-weight: bold;">
+            *10/19 , 20/29 , 30 UP adalah berat dan AB , C , ABC , Lokal adalah kategori berat
+        </p>
     </div>
 
     <style>

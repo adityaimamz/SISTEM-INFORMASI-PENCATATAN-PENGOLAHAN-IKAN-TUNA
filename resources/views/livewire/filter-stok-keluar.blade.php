@@ -30,7 +30,7 @@
     </style>
 
     <div class="mb-3">
-        <a href="{{ route('stok-keluar.pdf', ['month' => $month, 'year' => $year]) }}" class="btn btn-primary">Export PDF</a>
+        <a href="{{ route('stok-keluar.pdf', ['month' => $month, 'year' => $year]) }}" class="btn btn-primary"><i class="bi bi-printer"></i> Export PDF</a>
     </div>
 
     <div class="table-responsive">

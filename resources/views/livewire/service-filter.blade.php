@@ -22,13 +22,13 @@
         }
     </style>
 
-    <div class="mb-3">
+    {{-- <div class="mb-3">
         @if ($kode_trace)
             <a href="{{ route('service.pdf', ['kode_trace' => $kode_trace]) }}" class="btn btn-primary">Export PDF</a>
         @else
             <button class="btn btn-primary" disabled>Export PDF</button>
         @endif
-    </div>
+    </div> --}}
 
     <div class="table-responsive">
         <table class="table" id="table1">
@@ -48,7 +48,7 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $item->ikan->jenis_ikan }}</td>
-                        <td>{{ $item->no_batch->no_batch }}</td>
+                        <td>{{ $item->cutting->no_batch->no_batch }}</td>
                         <td>{{ $item->tgl_service }}</td>
                         <td>{{ $item->kg }}</td>
                         <td>{{ $item->pcs }}</td>

@@ -13,10 +13,10 @@
             <label for="tanggal_penerimaan">Tanggal Penerimaan</label>
             <input type="date" class="form-control" value="{{ $tanggal_penerimaan }}" readonly>
         </div>
-        <div class="col-md-3">
+        {{-- <div class="col-md-3">
             <label for="tanggal_cutting">Tanggal Cutting</label>
             <input type="date" class="form-control" value="{{ $tgl_cutting }}" readonly>
-        </div>
+        </div> --}}
         <div class="col-md-3">
             <label for="supplier">Supplier</label>
             <input type="text" class="form-control" value="{{ $supplier }}" readonly>
@@ -27,13 +27,13 @@
         </div>
     </div>
 
-    <div class="mb-3">
+    {{-- <div class="mb-3">
         @if ($no_batch)
             <a href="{{ route('cutting.pdf', ['no_batch' => $no_batch]) }}" class="btn btn-primary">Export PDF</a>
         @else
             <button class="btn btn-primary" disabled>Export PDF</button>
         @endif
-    </div>
+    </div> --}}
 
     <style>
         #table {
@@ -51,6 +51,7 @@
             <thead>
                 <tr>
                     <th rowspan="2">NO</th>
+                    <td rowspan="2">tanggal cutting</td>
                     <th colspan="1">1/3</th>
                     <th colspan="1">3/5</th>
                     <th colspan="1">5 UP</th>
@@ -61,6 +62,7 @@
                 @foreach ($cuttings as $key => $item)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
+                        <td>{{ $item->tgl_cutting }}</td>
                         <td>{{ $item->kategori_berat->kategori_berat == '1/3' ? $item->berat_produk : '' }}</td>
                         <td>{{ $item->kategori_berat->kategori_berat == '3/5' ? $item->berat_produk : '' }}</td>
                         <td>{{ $item->kategori_berat->kategori_berat == '5 UP' ? $item->berat_produk : '' }}</td>
@@ -164,6 +166,7 @@
 
                 <tr>
                     <td colspan="1">Total</td>
+                    <td></td>
                     <td>{{ $total13 }}</td>
                     <td>{{ $total15 }}</td>
                     <td>{{ $total5 }}</td>

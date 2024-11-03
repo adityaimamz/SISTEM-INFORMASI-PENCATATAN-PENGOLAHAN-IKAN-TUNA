@@ -6,9 +6,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Report</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .header {
+            text-align: center;
+        }
+
+        .header img {
+            width: 80px;
+            height: auto;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .header p {
+            margin: 2px 0;
+            font-size: 12px;
+        }
+
+        .info {
+            text-align: left;
+            margin-top: 20px;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 20px;
         }
 
         table,
@@ -26,7 +54,21 @@
 </head>
 
 <body>
-    <h1 style="text-align: center">Laporan Data Penerimaan Ikan Pt.Tirta Bitung Bahari</h1>
+    <!-- Header Section -->
+    <div class="header">
+        <img src="{{ public_path('img/logo-removebg.png') }}" alt="Logo">
+        <h1>PT. TIRTA BITUNG BAHARI</h1>
+        <p>KOMPLEK PELABUHAN PERIKANAN SAMUDERA BITUNG</p>
+        <p>JL. MADIDIHANG, KEL. AERTEMBAGA I, KEC. AERTEMBAGA</p>
+        <p>KOTA BITUNG, SULAWESI UTARA</p>
+    </div>
+
+    <!-- Date and Supplier Information -->
+    <h2>NOTA PEMBELIAN</h2>
+    <div class="info">
+        <p><strong>Tanggal</strong>: {{ $date }}</p>
+        <p><strong>Supplier</strong>: {{ $supplier_name }}</p>
+    </div>
 
     <table class="table table-bordered" id="table">
         <tr>
@@ -51,21 +93,34 @@
             <th>Lokal</th>
         </tr>
         <tbody>
+            {{-- @dd($data) --}}
             @foreach ($data as $key => $item)
                 <tr>
                     <td>{{ $key + 1 }}</td>
-                    <td>{{ $item->grade->grade == 'AB' && $item->kategori_berat_penerimaan->kategori_berat == '10-19' ? $item->berat_ikan : '' }}</td>
-                    <td>{{ $item->grade->grade == 'C' && $item->kategori_berat_penerimaan->kategori_berat == '10-19' ? $item->berat_ikan : '' }}</td>
-                    <td>{{ $item->grade->grade == 'ABC' && $item->kategori_berat_penerimaan->kategori_berat == '10-19' ? $item->berat_ikan : '' }}</td>
-                    <td>{{ $item->grade->grade == 'Lokal' && $item->kategori_berat_penerimaan->kategori_berat == '10-19' ? $item->berat_ikan : '' }}</td>
-                    <td>{{ $item->grade->grade == 'AB' && $item->kategori_berat_penerimaan->kategori_berat == '20-29' ? $item->berat_ikan : '' }}</td>
-                    <td>{{ $item->grade->grade == 'C' && $item->kategori_berat_penerimaan->kategori_berat == '20-29' ? $item->berat_ikan : '' }}</td>
-                    <td>{{ $item->grade->grade == 'ABC' && $item->kategori_berat_penerimaan->kategori_berat == '20-29' ? $item->berat_ikan : '' }}</td>
-                    <td>{{ $item->grade->grade == 'Lokal' && $item->kategori_berat_penerimaan->kategori_berat == '20-29' ? $item->berat_ikan : '' }}</td>
-                    <td>{{ $item->grade->grade == 'AB' && $item->kategori_berat_penerimaan->kategori_berat == '30 UP' ? $item->berat_ikan : '' }}</td>
-                    <td>{{ $item->grade->grade == 'C' && $item->kategori_berat_penerimaan->kategori_berat == '30 UP' ? $item->berat_ikan : '' }}</td>
-                    <td>{{ $item->grade->grade == 'ABC' && $item->kategori_berat_penerimaan->kategori_berat == '30 UP' ? $item->berat_ikan : '' }}</td>
-                    <td>{{ $item->grade->grade == 'Lokal' && $item->kategori_berat_penerimaan->kategori_berat == '30 UP' ? $item->berat_ikan : '' }}</td>
+                    <td>{{ $item->grade->grade == 'AB' && $item->kategori_berat_penerimaan->kategori_berat == '10-19' ? $item->berat_ikan : '' }}
+                    </td>
+                    <td>{{ $item->grade->grade == 'C' && $item->kategori_berat_penerimaan->kategori_berat == '10-19' ? $item->berat_ikan : '' }}
+                    </td>
+                    <td>{{ $item->grade->grade == 'ABC' && $item->kategori_berat_penerimaan->kategori_berat == '10-19' ? $item->berat_ikan : '' }}
+                    </td>
+                    <td>{{ $item->grade->grade == 'Lokal' && $item->kategori_berat_penerimaan->kategori_berat == '10-19' ? $item->berat_ikan : '' }}
+                    </td>
+                    <td>{{ $item->grade->grade == 'AB' && $item->kategori_berat_penerimaan->kategori_berat == '20-29' ? $item->berat_ikan : '' }}
+                    </td>
+                    <td>{{ $item->grade->grade == 'C' && $item->kategori_berat_penerimaan->kategori_berat == '20-29' ? $item->berat_ikan : '' }}
+                    </td>
+                    <td>{{ $item->grade->grade == 'ABC' && $item->kategori_berat_penerimaan->kategori_berat == '20-29' ? $item->berat_ikan : '' }}
+                    </td>
+                    <td>{{ $item->grade->grade == 'Lokal' && $item->kategori_berat_penerimaan->kategori_berat == '20-29' ? $item->berat_ikan : '' }}
+                    </td>
+                    <td>{{ $item->grade->grade == 'AB' && $item->kategori_berat_penerimaan->kategori_berat == '30 UP' ? $item->berat_ikan : '' }}
+                    </td>
+                    <td>{{ $item->grade->grade == 'C' && $item->kategori_berat_penerimaan->kategori_berat == '30 UP' ? $item->berat_ikan : '' }}
+                    </td>
+                    <td>{{ $item->grade->grade == 'ABC' && $item->kategori_berat_penerimaan->kategori_berat == '30 UP' ? $item->berat_ikan : '' }}
+                    </td>
+                    <td>{{ $item->grade->grade == 'Lokal' && $item->kategori_berat_penerimaan->kategori_berat == '30 UP' ? $item->berat_ikan : '' }}
+                    </td>
                 </tr>
             @endforeach
             @php

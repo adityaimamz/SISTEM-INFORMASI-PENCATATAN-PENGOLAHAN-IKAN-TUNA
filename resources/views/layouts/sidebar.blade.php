@@ -158,7 +158,7 @@
 
                     </ul>
                 </li>
-{{-- 
+
                 @if(Auth::user()->role_id == 1)
                 <li class="sidebar-item  has-sub">
                     <a href="#" class='sidebar-link'>
@@ -167,11 +167,11 @@
                     </a>
 
                     <ul class="submenu ">
-
+{{-- 
                         <li class="submenu-item  {{ Request::is('laporan_ikan_masuk') ? 'active' : '' }}">
                             <a href="/laporan_ikan_masuk" class="submenu-link">Laporan Ikan Masuk</a>
 
-                        </li>
+                        </li> --}}
 
                         <li class="submenu-item  {{ Request::is('laporan_cutting') ? 'active' : '' }}">
                             <a href="/laporan_cutting" class="submenu-link">Laporan Cutting</a>
@@ -188,7 +188,7 @@
 
                         </li>
 
-                        <li class="submenu-item  {{ Request::is('laporan_stok_masuk') ? 'active' : '' }}">
+                        {{-- <li class="submenu-item  {{ Request::is('laporan_stok_masuk') ? 'active' : '' }}">
                             <a href="/laporan_stok_masuk" class="submenu-link">Laporan Produk Masuk</a>
 
                         </li>
@@ -196,11 +196,11 @@
                         <li class="submenu-item  {{ Request::is('laporan_stok_keluar') ? 'active' : '' }}">
                             <a href="/laporan_stok_keluar" class="submenu-link">Laporan Produk Keluar</a>
 
-                        </li>
+                        </li> --}}
 
                     </ul>
                 </li>
-                @endif --}}
+                @endif
 
                 <li class="sidebar-item  ">
                     <a href="/logout" class='sidebar-link'>
