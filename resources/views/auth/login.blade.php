@@ -48,7 +48,7 @@
                         @csrf
                         <div class="form-group position-relative has-icon-left mb-4">
                             <input type="email" class="form-control form-control-xl" name="email"
-                                placeholder="Email" value="{{ old('email') }}" required>
+                                placeholder="e-mail" value="{{ old('email') }}" required>
                             <div class="form-control-icon">
                                 <i class="bi bi-person"></i>
                             </div>

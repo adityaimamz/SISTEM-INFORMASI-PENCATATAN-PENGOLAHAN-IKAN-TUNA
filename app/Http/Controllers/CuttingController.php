@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cutting;
-use App\Models\DetailProduk; // Mengubah model yang digunakan menjadi Cutting
 use App\Models\Penerimaan_ikan;
+use App\Models\Supplier;
+use App\Models\NoBatch;
+use Carbon\Carbon;
+use App\Models\KategoriBeratCutting;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
@@ -17,109 +20,108 @@ class CuttingController extends Controller// Mengubah nama controller menjadi Cu
     public function index()
     {
         $cutting = Cutting::all();
-        $detailproduk = DetailProduk::all();
+        $no_batch = NoBatch::all();
         $penerimaan_ikan = Penerimaan_ikan::all();
+        $suppliers = Supplier::all();
+        $kategori_berat_cuttings = KategoriBeratCutting::all();
 
-        $totalBeratPerGrade = Cutting::selectRaw('kategori_ikans.grade, SUM(cuttings.berat_produk) as total_berat')
-        ->join('penerimaan_ikans', 'cuttings.id_produk', '=', 'penerimaan_ikans.id')
-        ->join('kategori_ikans', 'penerimaan_ikans.ikan_id', '=', 'kategori_ikans.id')
-        ->groupBy('kategori_ikans.grade')
-        ->get();
-    
 
-        return view('admin.cutting', [
+        return view('admin.transaksi.cutting-filter', [
             'cutting' => $cutting,
-            'detailproduk' => $detailproduk,
             'penerimaan_ikan' => $penerimaan_ikan,
-            'totalBeratPerGrade' => $totalBeratPerGrade,
+            'suppliers' => $suppliers,
+            'kategori_berat_cuttings' => $kategori_berat_cuttings,
+            'no_batch' => $no_batch
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+
+    public function cuttingPdf(Request $request)
     {
-        //
-    }
-
-    public function cuttingPdf($month, $year)
-    {
-        $data = Cutting::whereYear('created_at', $year)
-            ->whereMonth('created_at', $month)
+        $filterMonth = $request->input('filterMonth');
+    
+        $cuttings = Cutting::whereMonth('tgl_cutting', Carbon::parse($filterMonth)->month)
+            ->whereYear('tgl_cutting', Carbon::parse($filterMonth)->year)
+            ->with(['kategori_berat', 'penerimaan_ikan.supplier', 'no_batch'])
             ->get();
-
-            $totalBeratPerGrade = Cutting::selectRaw('kategori_ikans.grade, SUM(cuttings.berat_produk) as total_berat')
-            ->join('penerimaan_ikans', 'cuttings.id_produk', '=', 'penerimaan_ikans.id')
-            ->join('kategori_ikans', 'penerimaan_ikans.ikan_id', '=', 'kategori_ikans.id')
-            ->whereYear('cuttings.created_at', $year)
-            ->whereMonth('cuttings.created_at', $month)
-            ->groupBy('kategori_ikans.grade')
-            ->get();
-        
-
-        $pdf = Pdf::loadView('pdf.cutting', compact('data', 'month', 'year', 'totalBeratPerGrade'));
-        return $pdf->download('cutting_report_' . $month . '_' . $year . '.pdf');
+    
+        $total13 = $cuttings->where('kategori_berat.kategori_berat', '1/3')->sum('berat_produk');
+        $total15 = $cuttings->where('kategori_berat.kategori_berat', '3/5')->sum('berat_produk');
+        $total5 = $cuttings->where('kategori_berat.kategori_berat', '5 UP')->sum('berat_produk');
+    
+        $pdf = Pdf::loadView('pdf.cutting', [
+            'cuttings' => $cuttings,
+            'total13' => $total13,
+            'total15' => $total15,
+            'total5' => $total5,
+            'filterMonth' => $filterMonth,
+        ]);
+    
+        return $pdf->download('cutting_report_' . $filterMonth . '.pdf');
     }
+    
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-
-        Cutting::create([
-            'no_batch' => $request->no_batch, // Menambahkan no_batch
-            'id_produk' => $request->id_produk,
-            'berat_produk' => $request->berat_produk,
-            'nama_produk' => $request->nama_produk,
+        // Validasi input
+        $validated = $request->validate([
+            'no_batch_id' => 'required',
+            'id_produk' => 'required',
+            'berat_produk' => 'required|numeric|min:1',
+            'tgl_cutting' => 'required|date',
         ]);
-
+    
+        // Tentukan kategori berat otomatis berdasarkan berat produk
+        $kategoriBeratId = $this->getKategoriBeratId($validated['berat_produk']);
+    
+        // Simpan data cutting
+        Cutting::create([
+            'no_batch_id' => $validated['no_batch_id'],
+            'id_produk' => $validated['id_produk'],
+            'berat_produk' => $validated['berat_produk'],
+            'kategori_berat_id' => $kategoriBeratId, // Terisi otomatis
+            'tgl_cutting' => $validated['tgl_cutting'],
+        ]);
+    
         return redirect()->route('cutting.index')->with('success', 'Cutting berhasil ditambahkan.');
     }
-
+    
     /**
-     * Display the specified resource.
+     * Mendapatkan ID kategori berat berdasarkan berat produk.
      */
-    public function show(string $id)
+    private function getKategoriBeratId($berat)
     {
-        //
+        if ($berat >= 1 && $berat <= 3) {
+            return KategoriBeratCutting::where('kategori_berat', '1/3')->first()->id;
+        } elseif ($berat > 3 && $berat <= 5) {
+            return KategoriBeratCutting::where('kategori_berat', '3/5')->first()->id;
+        } elseif ($berat > 5) {
+            return KategoriBeratCutting::where('kategori_berat', '5 UP')->first()->id;
+        }
+    
+        return null; // Default jika tidak ada kategori yang cocok
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
+  
     public function update(Request $request, $no_batch)
     {
-        // $request->validate([
-        //     'jenis_ikan' => 'required|string|max:255',
-        //     'berat_ikan' => 'required|string|max:255',
-        //     'kategoris_id' => 'required|integer',
-        // ]);
 
         $cutting = Cutting::findOrFail($no_batch); // Mengubah model yang digunakan menjadi Cutting
         $data = [
+            'no_batch_id' => $request->no_batch_id,
             'id_produk' => $request->id_produk,
+            'kategori_berat_id' => $request->kategori_berat_id,
             'berat_produk' => $request->berat_produk,
-            'nama_produk' => $request->nama_produk,
+            'tgl_cutting' => $request->tgl_cutting,
         ];
 
         $cutting->update($data);
 
         return redirect()->route('cutting.index')->with('success', 'Cutting berhasil diperbarui.'); // Mengubah route redirect menjadi 'cutting.index'
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy($no_batch)
     {
         $cutting = Cutting::findOrFail($no_batch); // Mengubah model yang digunakan menjadi Cutting

@@ -2,18 +2,25 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CuttingController;
-use App\Http\Controllers\DetailProdukController;
+use App\Http\Controllers\NoBatchController;
+use App\Http\Controllers\KodeTraceController;
 use App\Http\Controllers\IkanController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\KategoriBeratPenerimaanController;
+use App\Http\Controllers\KategoriBeratCuttingController;
+use App\Http\Controllers\GradeController;
 use App\Http\Controllers\PackingController;
 use App\Http\Controllers\PenerimaanIkanController;
 use App\Http\Controllers\ProdukKeluarController;
 use App\Http\Controllers\ProdukMasukController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\NoContainersController;
 use App\Models\Cutting;
-use App\Models\Kategori_ikan;
+use App\Models\Packing;
+use App\Models\StokCS;
+use App\Models\Kategori_produk;
 use App\Models\Penerimaan_ikan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -23,15 +30,22 @@ Route::get('/reload-captcha', [LoginController::class, 'reloadCaptcha']);
 
 Route::middleware('is_admin')->group(function () {
     Route::get('/admin', function () {
-        $totalMasuk = DB::table('produk_masuks')
-            ->sum('stok_masuk');
+        $stokCS = StokCS::all();
+        $packing = Packing::all();
 
-        $totalKeluar = DB::table('produk_keluars')
-            ->sum('jumlah_produk');
+        $totalMasuk = DB::table('stok_c_s')
+            ->where('tipe_stok', 'Stok Masuk')
+            ->sum('pcs');
 
-        $totalStok = $totalMasuk - $totalKeluar;
+        $totalKeluar = DB::table('stok_c_s')
+            ->where('tipe_stok', 'Stok Keluar')
+            ->sum('pcs');
+
+        $grandtotal = $totalMasuk - $totalKeluar;
+
+        // $totalStok = $totalMasuk - $totalKeluar;
         return view('admin.dashboard', [
-            'totalStok' => $totalStok,
+            'totalStok' => $grandtotal,
             'totalMasuk' => $totalMasuk,
             'totalKeluar' => $totalKeluar,
         ]);
@@ -40,20 +54,28 @@ Route::middleware('is_admin')->group(function () {
     Route::resource('supplier', SupplierController::class);
     Route::resource('kategori', KategoriController::class);
     Route::resource('ikan', IkanController::class);
-
+    Route::resource('grade', GradeController::class);
+    Route::resource('kategori_berat_penerimaan', KategoriBeratPenerimaanController::class);
+    Route::resource('kategori_berat_cutting', KategoriBeratCuttingController::class);
 });
 
 Route::middleware('is_karyawan')->group(function () {
     Route::get('/karyawan', function () {
-        $totalMasuk = DB::table('produk_masuks')
-            ->sum('stok_masuk');
+        $stokCS = StokCS::all();
+        $packing = Packing::all();
 
-        $totalKeluar = DB::table('produk_keluars')
-            ->sum('jumlah_produk');
+        $totalMasuk = DB::table('stok_c_s')
+            ->where('tipe_stok', 'Stok Masuk')
+            ->sum('pcs');
 
-        $totalStok = $totalMasuk - $totalKeluar;
+        $totalKeluar = DB::table('stok_c_s')
+            ->where('tipe_stok', 'Stok Keluar')
+            ->sum('pcs');
+
+        $grandtotal = $totalMasuk - $totalKeluar;
+
         return view('karyawan.dashboard', [
-            'totalStok' => $totalStok,
+            'totalStok' => $grandtotal,
             'totalMasuk' => $totalMasuk,
             'totalKeluar' => $totalKeluar,
         ]);
@@ -65,15 +87,15 @@ Route::get('/laporan_ikan_masuk', function () {
 })->middleware('is_admin');
 
 Route::get('/laporan_cutting', function () {
-    return view('admin.laporan_cutting');
+    return view('admin.laporan.laporan_cutting');
 })->middleware('is_admin');
 
 Route::get('/laporan_service', function () {
-    return view('admin.laporan_service');
+    return view('admin.laporan.laporan_service');
 })->middleware('is_admin');
 
 Route::get('/laporan_packing', function () {
-    return view('admin.laporan_packing');
+    return view('admin.laporan.laporan_packing');
 })->middleware('is_admin');
 
 Route::get('/laporan_stok_masuk', function () {
@@ -84,7 +106,7 @@ Route::get('/laporan_stok_keluar', function () {
     return view('admin.laporan_stok_keluar');
 })->middleware('is_admin');
 
-Route::get('/get-grade/{ikan}', function (Kategori_ikan $ikan) {
+Route::get('/get-grade/{ikan}', function (Kategori_produk $ikan) {
     return response()->json(['grade' => $ikan->grade]);
 });
 
@@ -101,18 +123,20 @@ Route::get('/get-supplier-by-batch/{no_batch}', function ($no_batch) {
     return response()->json(['supplier_id' => ''], 404);
 });
 
-Route::get('/ikan-pdf/{month}/{year}', [PenerimaanIkanController::class, 'ikanPdf'])->name('ikan.pdf');
-Route::get('/cutting-pdf/{month}/{year}', [CuttingController::class, 'cuttingPdf'])->name('cutting.pdf');
-Route::get('/service-pdf/{month}/{year}', [ServiceController::class, 'servicePdf'])->name('service.pdf');
-Route::get('/packing-pdf/{month}/{year}', [PackingController::class, 'packingPdf'])->name('packing.pdf');
+Route::get('/ikan-pdf', [PenerimaanIkanController::class, 'ikanPdf'])->name('ikan.pdf');
+Route::get('/cutting-pdf/{filterMonth}', [CuttingController::class, 'cuttingPdf'])->name('cutting.pdf');
+Route::get('/service-pdf/{filterMonth}', [ServiceController::class, 'servicePdf'])->name('service.pdf');
+Route::get('/packing-pdf/{month}', [PackingController::class, 'packingPdf'])->name('packing.pdf');
 Route::get('/stok-masuk-pdf/{month}/{year}', [ProdukMasukController::class, 'stokMasukPdf'])->name('stok-masuk.pdf');
-Route::get('/stok-keluar-pdf/{month}/{year}', [ProdukKeluarController::class, 'stokKeluarPdf'])->name('stok-keluar.pdf');
+Route::get('/stok-keluar-pdf', [ProdukKeluarController::class, 'stokKeluarPdf'])->name('stok-keluar.pdf');
 Route::resource('penerimaan_ikan', PenerimaanIkanController::class)->middleware('auth');
 Route::resource('cutting', CuttingController::class)->middleware('auth');
-Route::resource('detailproduk', DetailProdukController::class)->middleware('auth');
+Route::resource('no_batch', NoBatchController::class)->middleware('auth');
+Route::resource('no_container', NoContainersController::class)->middleware('auth');
+Route::resource('kode_trace', KodeTraceController::class)->middleware('auth');
 Route::resource('service', ServiceController::class)->middleware('auth');
 Route::resource('packing', PackingController::class)->middleware('auth');
-Route::resource('produk-masuk', ProdukMasukController::class)->middleware('auth');
+Route::resource('stok-cs', ProdukMasukController::class)->middleware('auth');
 Route::resource('produk-keluar', ProdukKeluarController::class)->middleware('auth');
 
 Route::get('/login', [LoginController::class, 'index'])->name('login');

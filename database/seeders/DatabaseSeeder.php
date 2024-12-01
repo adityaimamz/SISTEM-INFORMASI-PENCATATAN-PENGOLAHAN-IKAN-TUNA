@@ -3,7 +3,12 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Grade;
+use App\Models\Supplier;
+use App\Models\KategoriBeratPenerimaan;
+use App\Models\KategoriBeratCutting;
+use App\Models\Kategori_produk;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -28,5 +33,62 @@ class DatabaseSeeder extends Seeder
             'role_id' => '3',
             'password' => Hash::make('superadmin'),
         ]);
+
+        Grade::create([
+            'grade' => 'AB',
+        ]);
+        Grade::create([
+            'grade' => 'ABC',
+        ]);
+        Grade::create([
+            'grade' => 'C',
+        ]);
+        Grade::create([
+            'grade' => 'Lokal',
+        ]);
+
+        KategoriBeratPenerimaan::create([
+            'kategori_berat' => '10-19',
+        ]);
+        KategoriBeratPenerimaan::create([
+            'kategori_berat' => '20-29',
+        ]);
+        KategoriBeratPenerimaan::create([
+            'kategori_berat' => '30 UP',
+        ]);
+
+        KategoriBeratCutting::create([
+            'kategori_berat' => '1/3',
+        ]);
+        KategoriBeratCutting::create([
+            'kategori_berat' => '3/5',
+        ]);
+        KategoriBeratCutting::create([
+            'kategori_berat' => '5 UP',
+        ]);
+
+        Supplier::create([
+            'supplier_id' => 001,
+            'nama_supplier' => 'Mansur',
+            'nama_kapal' => 'Kapal A',
+            'alamat' => 'Jl. A',
+        ]);
+
+        Kategori_produk::create([
+            'jenis_ikan' => 'Loin Center Cut (Loin CC)',
+        ]);
+        Kategori_produk::create([
+            'jenis_ikan' => 'Cube Minhong (Cube MH)',
+        ]);
+        Kategori_produk::create([
+            'jenis_ikan' => 'Strips Minhong (Strips MH)',
+        ]);
+        Kategori_produk::create([
+            'jenis_ikan' => 'Groud Meat Minhong (Cube MH)',
+        ]);
+        Kategori_produk::create([
+            'jenis_ikan' => 'Saku Premium Krimson (Saku KR)',
+        ]);
+        
     }
 }

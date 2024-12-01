@@ -13,13 +13,15 @@ return new class extends Migration
     {
         Schema::create('services', function (Blueprint $table) {
             $table->id();
-            $table->string('kode_trace')->unique();
-            $table->string('no_batch');
-            $table->foreign('no_batch')->references('no_batch')->on('cuttings')->onDelete('cascade');
-            $table->foreignId('id_detail')->constrained('detail_produks')->onDelete('cascade');
-            $table->float('berat_produk');
+            $table->foreignId('kode_trace_id')->constrained('kode_traces')->onDelete('cascade');
+            $table->foreignId('no_batch_id')->constrained('cuttings')->onDelete('cascade'); // corrected to use 'cuttings' table
+            $table->foreignId('id_ikan')->constrained('Kategori_produks')->onDelete('cascade');
+            $table->float('kg');
+            $table->integer('pcs');
+            $table->date('tgl_service');
             $table->timestamps();
         });
+        
     }
 
     /**

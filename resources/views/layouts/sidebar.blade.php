@@ -43,24 +43,24 @@
             <ul class="menu">
                
                 <li class="sidebar-title">Menu</li>
-                @if (Auth::user()->role_id == 1)
+                @if (Auth::user()->role_id == 1 || Auth::user()->role_id == 2)
                 <li class="sidebar-item {{ Request::is('admin') ? 'active' : '' }} ">
                     <a href="/admin" class='sidebar-link'>
                         <i class="bi bi-grid-fill"></i>
-                        <span>Dashboard Admin</span>
+                        <span>Dashboard</span>
                     </a>
                 </li>
                 @else
                 <li class="sidebar-item {{ Request::is('karyawan') ? 'active' : '' }} ">
                     <a href="/karyawan" class='sidebar-link'>
                         <i class="bi bi-grid-fill"></i>
-                        <span>Dashboard Karyawan</span>
+                        <span>Dashboard</span>
                     </a>
                 </li> 
                 @endif
            
 
-                @if(Auth::user()->role_id == 1)               
+                {{-- @if(Auth::user()->role_id == 1)               
                 <li class="sidebar-item {{ Request::is('akun') ? 'active' : '' }}">
                     <a href="/akun" class='sidebar-link'>
                         <i class="bi bi-people-fill"></i>
@@ -79,8 +79,47 @@
                         <span>Ikan</span>
                     </a>
                 </li>
-                @endif
+                @endif --}}
+                @if(Auth::user()->role_id == 1)               
 
+                <li class="sidebar-item  has-sub">
+                    <a href="#" class='sidebar-link'>
+                        <i class="bi bi-database-fill"></i>
+                        <span>Data Master</span>
+                    </a>
+
+                    <ul class="submenu ">
+
+                        <li class="submenu-item  {{ Request::is('akun') ? 'active' : '' }}">
+                            <a href="/akun" class="submenu-link">Data Akun</a>
+
+                        </li>
+
+                        <li class="submenu-item  {{ Request::is('supplier') ? 'active' : '' }}">
+                            <a href="/supplier" class="submenu-link">Data Supplier</a>
+
+                        </li>
+
+                        <li class="submenu-item {{ Request::is('grade') ? 'active' : '' }} ">
+                            <a href="/grade" class="submenu-link">Data Grade</a>
+                        </li>
+
+                        <li class="submenu-item {{ Request::is('kategori_berat_penerimaan') ? 'active' : '' }} ">
+                            <a href="/kategori_berat_penerimaan" class="submenu-link">Kategori Berat Penerimaan</a>
+
+                        </li>
+
+                        <li class="submenu-item {{ Request::is('kategori_berat_cutting') ? 'active' : '' }} ">
+                            <a href="/kategori_berat_cutting" class="submenu-link">Kategori Berat Cutting</a>
+
+                        </li>
+
+                        <li class="submenu-item {{ Request::is('ikan') ? 'active' : '' }} ">
+                            <a href="/ikan" class="submenu-link">Data Produk</a>
+                        </li>
+                    </ul>
+                </li>
+                @endif
                 <li class="sidebar-item  has-sub">
                     <a href="#" class='sidebar-link'>
                         <i class="bi bi-stack"></i>
@@ -109,8 +148,8 @@
 
                         </li>
 
-                        <li class="submenu-item {{ Request::is('produk-masuk') ? 'active' : '' }} ">
-                            <a href="/produk-masuk" class="submenu-link">Produk Masuk</a>
+                        <li class="submenu-item {{ Request::is('stok-cs') ? 'active' : '' }} ">
+                            <a href="/stok-cs" class="submenu-link">Stok CS</a>
                         </li>
 
                         <li class="submenu-item {{ Request::is('produk-keluar') ? 'active' : '' }} ">
@@ -128,11 +167,11 @@
                     </a>
 
                     <ul class="submenu ">
-
+{{-- 
                         <li class="submenu-item  {{ Request::is('laporan_ikan_masuk') ? 'active' : '' }}">
                             <a href="/laporan_ikan_masuk" class="submenu-link">Laporan Ikan Masuk</a>
 
-                        </li>
+                        </li> --}}
 
                         <li class="submenu-item  {{ Request::is('laporan_cutting') ? 'active' : '' }}">
                             <a href="/laporan_cutting" class="submenu-link">Laporan Cutting</a>
@@ -149,7 +188,7 @@
 
                         </li>
 
-                        <li class="submenu-item  {{ Request::is('laporan_stok_masuk') ? 'active' : '' }}">
+                        {{-- <li class="submenu-item  {{ Request::is('laporan_stok_masuk') ? 'active' : '' }}">
                             <a href="/laporan_stok_masuk" class="submenu-link">Laporan Produk Masuk</a>
 
                         </li>
@@ -157,7 +196,7 @@
                         <li class="submenu-item  {{ Request::is('laporan_stok_keluar') ? 'active' : '' }}">
                             <a href="/laporan_stok_keluar" class="submenu-link">Laporan Produk Keluar</a>
 
-                        </li>
+                        </li> --}}
 
                     </ul>
                 </li>

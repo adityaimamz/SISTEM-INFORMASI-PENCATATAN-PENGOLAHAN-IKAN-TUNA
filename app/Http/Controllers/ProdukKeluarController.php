@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\produk_keluar;
 use App\Models\produk_masuk;
 use App\Models\Packing;
+use App\Models\Service;
+use App\Models\No_container;
+use App\Models\StokCS;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 
@@ -18,19 +21,13 @@ class ProdukKeluarController extends Controller
     {
         $produkKeluar = produk_keluar::all();
         $packing = Packing::all();
-    
-        $totalMasuk = DB::table('produk_masuks')
-            ->sum('stok_masuk');
-
-        $totalKeluar = DB::table('produk_keluars')
-            ->sum('jumlah_produk');
-
-        $totalStok = $totalMasuk - $totalKeluar;
-
-        return view('admin.stok_keluar', [
+        $services = Service::all();
+        $noContainers = No_container::all();
+        return view('admin.transaksi.stok_keluar', [
             'produkKeluar' => $produkKeluar,
+            'services' => $services,
             'packing' => $packing,
-            'totalStok' => $totalStok
+            'noContainers' => $noContainers,
         ]);
     }
 
@@ -43,25 +40,12 @@ class ProdukKeluarController extends Controller
         //
     }
 
-    public function stokKeluarPdf($month, $year)
+    public function stokKeluarPdf()
     {
-        $data = produk_keluar::whereYear('created_at', $year)
-            ->whereMonth('created_at', $month)
-            ->get();
+        $produkKeluar = produk_keluar::all();
 
-        $totalKeluar = produk_keluar::whereYear('created_at', $year)
-            ->whereMonth('created_at', $month)
-            ->sum('jumlah_produk');
-
-        $totalMasuk = DB::table('produk_masuks')
-            ->whereYear('created_at', $year)
-            ->whereMonth('created_at', $month)
-            ->sum('stok_masuk');
-
-        $totalStok = $totalMasuk - $totalKeluar;
-
-        $pdf = Pdf::loadView('pdf.stok_keluar', compact('data', 'month', 'year', 'totalStok'));
-        return $pdf->download('stok_keluar_report_'.$month.'_'.$year.'.pdf');
+        $pdf = Pdf::loadView('pdf.stok_keluar', compact('produkKeluar'));
+        return $pdf->download('stok_keluar_report_'.'.pdf');
     }
 
     /**
@@ -70,14 +54,20 @@ class ProdukKeluarController extends Controller
     public function store(Request $request)
     {
         produk_keluar::create([
-            'no_box' => $request->no_box,
-            'jumlah_produk' => $request->jumlah_produk,
-            'no_seal' => $request->no_seal,
-            'no_container' => $request->no_container,
+            'kode_trace_id' => $request->kode_trace_id,
+            'pcs' => $request->pcs,
+            'no_container_id' => $request->no_container_id,
             'tgl_keluar' => $request->tgl_keluar,
             'tgl_berangkat' => $request->tgl_berangkat,
             'tgl_tiba' => $request->tgl_tiba,
         ]);
+
+        StokCS::create([
+            'kode_trace_id' => $request->kode_trace_id,
+            'pcs' => $request->pcs,
+            'tipe_stok' => 'Stok Keluar',
+        ]);
+
     
         return redirect()->route('produk-keluar.index')->with('success', 'Produk Keluar berhasil ditambahkan.');
     }
@@ -106,9 +96,9 @@ class ProdukKeluarController extends Controller
     {
         $produkKeluar = produk_keluar::findOrFail($id);
         $data = [
-            'jumlah_produk' => $request->jumlah_produk,
-            'no_seal' => $request->no_seal,
-            'no_container' => $request->no_container,
+            'kode_trace_id' => $request->kode_trace_id,
+            'pcs' => $request->pcs,
+            'no_container_id' => $request->no_container_id,
             'tgl_keluar' => $request->tgl_keluar,
             'tgl_berangkat' => $request->tgl_berangkat,
             'tgl_tiba' => $request->tgl_tiba,

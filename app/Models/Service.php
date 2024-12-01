@@ -15,16 +15,32 @@ class Service extends Model
 
     public function cutting()
     {
-        return $this->belongsTo(Cutting::class, 'no_batch', 'no_batch'); // Ensure both local and foreign keys match
+        return $this->belongsTo(Cutting::class, 'no_batch_id', 'id'); // corrected to use 'id'
     }
 
-    public function detail()
+    public function ikan()
     {
-        return $this->belongsTo(DetailProduk::class, 'id_detail');
+        return $this->belongsTo(Kategori_produk::class, 'id_ikan', 'id');
+    }
+
+
+    public function kode_trace()
+    {
+        return $this->belongsTo(KodeTrace::class, 'kode_trace_id', 'id');
     }
 
     public function packing()
     {
-        return $this->hasMany(Packing::class, 'kode_lot');
+        return $this->hasMany(Packing::class, 'kode_trace_id', 'id');
+    }
+
+    public function stok_cs()
+    {
+        return $this->hasMany(StokCS::class, 'kode_trace_id', 'id');
+    }
+
+    public function produk_keluar()
+    {
+        return $this->hasMany(produk_keluar::class, 'kode_trace_id', 'id');
     }
 }

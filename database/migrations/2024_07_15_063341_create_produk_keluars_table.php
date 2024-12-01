@@ -13,11 +13,9 @@ return new class extends Migration
     {
         Schema::create('produk_keluars', function (Blueprint $table) {
             $table->id();
-            $table->string('no_box');
-            $table->foreign('no_box')->references('no_box')->on('packings')->onDelete('cascade');
-            $table->integer('jumlah_produk');
-            $table->integer('no_seal');
-            $table->integer('no_container');
+            $table->foreignId('kode_trace_id')->constrained('services')->onDelete('cascade');
+            $table->integer('pcs');
+            $table->foreignId('no_container_id')->constrained('no_containers')->onDelete('cascade');
             $table->date('tgl_keluar');
             $table->date('tgl_berangkat');
             $table->date('tgl_tiba');

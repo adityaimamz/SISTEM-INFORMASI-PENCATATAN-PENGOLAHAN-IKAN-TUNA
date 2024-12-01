@@ -8,14 +8,16 @@ use App\Models\Supplier;
 
 class Ikan extends Component
 {
-    public $month;
-    public $year;
+    public $date;
+    public $supplier;
     public $data;
+    public $suppliers;
 
     public function mount()
     {
-        $this->month = now()->format('m');
-        $this->year = now()->format('Y');
+        $this->date = now()->format('Y-m-d');
+        $this->supplier = '';
+        $this->suppliers = Supplier::all(); // Load all suppliers
         $this->filterData();
     }
 
@@ -26,9 +28,17 @@ class Ikan extends Component
 
     public function filterData()
     {
-        $this->data = Penerimaan_Ikan::whereYear('tgl_penerimaan', $this->year)
-            ->whereMonth('tgl_penerimaan', $this->month)
-            ->get();
+        $query = Penerimaan_Ikan::query();
+
+        if ($this->date) {
+            $query->whereDate('tgl_penerimaan', $this->date);
+        }
+
+        if ($this->supplier) {
+            $query->where('supplier_id', $this->supplier);
+        }
+
+        $this->data = $query->get();
     }
 
     public function render()

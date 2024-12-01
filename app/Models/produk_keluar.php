@@ -11,8 +11,14 @@ class produk_keluar extends Model
 
     protected $guarded = ['id'];
 
-    public function packing()
+    public function service()
     {
-        return $this->belongsTo(Packing::class, 'no_box');
+        return $this->belongsTo(Service::class, 'kode_trace_id', 'id');
+    }
+
+
+    public function noContainer()
+    {
+        return $this->belongsTo(No_container::class, 'no_container_id', 'id');
     }
 }

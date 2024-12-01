@@ -20,7 +20,7 @@
     </div>
 
     <div class="mb-3">
-        <a href="{{ route('ikan.pdf', ['month' => $month, 'year' => $year]) }}" class="btn btn-primary">Export PDF</a>
+        <a href="{{ route('ikan.pdf', ['month' => $month, 'year' => $year]) }}" class="btn btn-primary"><i class="bi bi-printer"></i> Export PDF</a>
     </div>
 
     <div class="table-responsive">
@@ -42,11 +42,11 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $item->supplier->nama_supplier }}</td>
-                        <td>{{ $item->kategori_ikan->jenis_ikan }}</td>
+                        <td>{{ $item->Kategori_produk->jenis_ikan }}</td>
                         <td>{{ $item->tgl_penerimaan }}</td>
                         <td>{{ $item->berat_ikan }}</td>
-                        <td>{{ $item->kategori_ikan->grade }}</td>
-                        <td>{{ $item->kategori_ikan->kategori }}</td>
+                        <td>{{ $item->Kategori_produk->grade }}</td>
+                        <td>{{ $item->Kategori_produk->kategori }}</td>
                     </tr>
                 @endforeach
             </tbody>

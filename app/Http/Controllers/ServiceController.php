@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cutting;
-use App\Models\DetailProduk;
+use App\Models\Kategori_produk;
+use App\Models\KodeTrace;
+use App\Models\NoBatch;
 use App\Models\Service;
+use App\Models\Cutting;
+use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
@@ -15,47 +18,42 @@ class ServiceController extends Controller
      */
     public function index()
     {
-        $data = Service::with(['cutting', 'detail'])->get();
-        $cuttings = Cutting::all();
-        $detailproduk = DetailProduk::all();
+        $data = Service::all();
+        $no_batches = NoBatch::all();
+        $cutting = Cutting::all();
+        $kode_trace = KodeTrace::all();
+        $Kategori_produk = Kategori_produk::all();
 
-        $totalBeratPerGrade = Service::selectRaw('kategori_ikans.grade, SUM(services.berat_produk) as total_berat')
-        ->join('cuttings', 'services.no_batch', '=', 'cuttings.no_batch')
-        ->join('penerimaan_ikans', 'cuttings.id_produk', '=', 'penerimaan_ikans.id')
-        ->join('kategori_ikans', 'penerimaan_ikans.ikan_id', '=', 'kategori_ikans.id')
-        ->groupBy('kategori_ikans.grade')
-        ->get();
-    
-
-        return view('admin.service', [
+        return view('admin.transaksi.service', [
             'data' => $data,
-            'cuttings' => $cuttings,
-            'detailproduk' => $detailproduk,
-            'totalBeratPerGrade' => $totalBeratPerGrade,
+            'no_batches' => $no_batches,
+            'kode_trace' => $kode_trace,
+            'cutting' => $cutting,
+            'Kategori_produk' => $Kategori_produk,
         ]);
     }
     /**
      * Show the form for creating a new resource.
      */
-    public function servicePdf($month, $year)
-    {
-        $data = Service::whereYear('created_at', $year)
-            ->whereMonth('created_at', $month)
-            ->get();
+// app/Http/Controllers/ServiceController.php
+public function servicePdf(Request $request)
+{
+    $filterMonth = $request->input('filterMonth');
 
-            $totalBeratPerGrade = Service::selectRaw('kategori_ikans.grade, SUM(services.berat_produk) as total_berat')
-            ->join('cuttings', 'services.no_batch', '=', 'cuttings.no_batch')
-            ->join('penerimaan_ikans', 'cuttings.id_produk', '=', 'penerimaan_ikans.id')
-            ->join('kategori_ikans', 'penerimaan_ikans.ikan_id', '=', 'kategori_ikans.id')
-            ->whereYear('services.created_at', $year)
-            ->whereMonth('services.created_at', $month)
-            ->groupBy('kategori_ikans.grade')
-            ->get();
-        
+    // Filter services by the specified month
+    $services = Service::whereMonth('tgl_service', Carbon::parse($filterMonth)->month)
+        ->whereYear('tgl_service', Carbon::parse($filterMonth)->year)
+        ->with(['ikan', 'cutting'])
+        ->get();
 
-        $pdf = Pdf::loadView('pdf.service', compact('data', 'month', 'year', 'totalBeratPerGrade'));
-        return $pdf->download('service_report_' . $month . '_' . $year . '.pdf');
-    }
+    $pdf = Pdf::loadView('pdf.service', [
+        'services' => $services,
+        'filterMonth' => $filterMonth,
+    ]);
+
+    return $pdf->download('service_report_' . $filterMonth . '.pdf');
+}
+
 
     public function create()
     {
@@ -67,15 +65,31 @@ class ServiceController extends Controller
      */
     public function store(Request $request)
     {
-        Service::create([
-            'kode_trace' => $request->kode_trace, // Menambahkan kode_lot
-            'no_batch' => $request->no_batch,
-            'id_detail' => $request->id_detail,
-            'berat_produk' => $request->berat_produk,
+        // Validasi input
+        $validated = $request->validate([
+            'kode_trace_id' => 'required',
+            'no_batch_id' => 'required',
+            'id_ikan' => 'required',
+            'pcs' => 'required|integer|min:1',
+            'tgl_service' => 'required|date',
         ]);
-
+    
+        // Hitung otomatis kg berdasarkan jumlah pcs
+        $kg = $validated['pcs'] * 0.225; // 1 pcs = 225 gram atau 0.225 kg
+    
+        // Simpan data service
+        Service::create([
+            'kode_trace_id' => $validated['kode_trace_id'],
+            'no_batch_id' => $validated['no_batch_id'],
+            'id_ikan' => $validated['id_ikan'],
+            'pcs' => $validated['pcs'],
+            'kg' => $kg, // Berat otomatis terisi
+            'tgl_service' => $validated['tgl_service'],
+        ]);
+    
         return redirect()->route('service.index')->with('success', 'Service berhasil ditambahkan.');
     }
+    
 
     /**
      * Display the specified resource.
@@ -104,10 +118,12 @@ class ServiceController extends Controller
 
         $service = Service::findOrFail($kode_trace);
         $service->update([
-            'kode_trace' => $request->kode_trace,
-            'no_batch' => $request->no_batch,
-            'id_detail' => $request->id_detail,
-            'berat_produk' => $request->berat_produk,
+            'kode_trace_id' => $request->kode_trace, // Menambahkan kode_lot
+            'no_batch_id' => $request->no_batch_id,
+            'id_ikan' => $request->id_ikan,
+            'kg' => $request->kg,
+            'pcs' => $request->pcs,
+            'tgl_service' => $request->tgl_service,
         ]);
 
         return redirect()->route('service.index')->with('success', 'Service berhasil diperbarui.');

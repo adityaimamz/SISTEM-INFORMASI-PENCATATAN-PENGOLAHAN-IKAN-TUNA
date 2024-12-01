@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Kategori_ikan;
+use App\Models\Kategori_produk;
 use App\Models\Kategori;
 
 class IkanController extends Controller
@@ -13,8 +13,8 @@ class IkanController extends Controller
      */
     public function index()
     {
-        $ikan = Kategori_ikan::all();
-        return view('admin.ikan', ['ikan' => $ikan]);
+        $ikan = Kategori_produk::all();
+        return view('admin.data-master.ikan', ['ikan' => $ikan]);
     }
 
     /**
@@ -36,10 +36,8 @@ class IkanController extends Controller
         //     'kategoris_id' => 'required|integer',
         // ]);
 
-        Kategori_ikan::create([
+        Kategori_produk::create([
             'jenis_ikan' => $request->jenis_ikan,
-            'kategori' => $request->kategori,
-            'grade' => $request->grade,
         ]);
 
         return redirect()->route('ikan.index')->with('success', 'Ikan berhasil ditambahkan.');
@@ -72,11 +70,9 @@ class IkanController extends Controller
         //     'kategoris_id' => 'required|integer',
         // ]);
 
-        $ikan = Ikan::findOrFail($id);
+        $ikan = Kategori_produk::findOrFail($id);
         $data = [
             'jenis_ikan' => $request->jenis_ikan,
-            'kategori' => $request->kategori,
-            'grade' => $request->grade,
         ];
 
         $ikan->update($data);
@@ -89,7 +85,7 @@ class IkanController extends Controller
      */
     public function destroy($id)
     {
-        $ikan = Ikan::findOrFail($id);
+        $ikan = Kategori_produk::findOrFail($id);
         $ikan->delete();
 
         return redirect()->route('ikan.index')->with('success', 'Ikan berhasil dihapus.');

@@ -5,8 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Packing;
 use App\Models\Service;
+use App\Models\StokCS;
 use App\Models\ProdukMasuk;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+
 
 
 class PackingController extends Controller
@@ -16,9 +20,38 @@ class PackingController extends Controller
      */
     public function index()
     {
+        // Retrieve all packing data
         $data = Packing::all();
         $services = Service::all();
-        return view('admin.packing', ['data' => $data,  'services' => $services]);
+
+        // Calculate totals for each product
+        $productTotals = Packing::select('services.id as service_id', 'services.id_ikan', 'Kategori_produks.jenis_ikan', 
+            DB::raw('SUM(packings.pcs) as total_pcs'),
+            DB::raw('SUM(packings.berat) as total_kg')
+        )
+        ->join('services', 'services.id', '=', 'packings.kode_trace_id')
+        ->join('Kategori_produks', 'Kategori_produks.id', '=', 'services.id_ikan')
+        ->groupBy('services.id', 'services.id_ikan', 'Kategori_produks.jenis_ikan')
+        ->get();
+
+        // Calculate grand totals
+        $grandTotals = Packing::select(
+            DB::raw('SUM(pcs) as total_pcs'),
+            DB::raw('SUM(berat) as total_kg')
+        )->first();
+
+        // Prepare data for the view
+        $namaproduk = $productTotals->mapWithKeys(function ($item) {
+            return [$item->jenis_ikan => ['pcs' => $item->total_pcs, 'kg' => $item->total_kg]];
+        })->toArray();
+
+        return view('admin.transaksi.packing', [
+            'data' => $data,
+            'services' => $services,
+            'productTotals' => $productTotals,
+            'totalpcs' => $grandTotals->total_pcs,
+            'totalkg' => $grandTotals->total_kg,
+        ]);
     }
 
     /**
@@ -35,22 +68,32 @@ class PackingController extends Controller
     public function store(Request $request)
     {
         Packing::create([
-            'no_box' => $request->no_box, // Menambahkan no_box
-            'kode_trace' => $request->kode_trace,
+            'no_box' => $request->no_box, 
+            'kode_trace_id' => $request->kode_trace_id,
+            'buyer' => $request->buyer,
+            'pcs' => $request->pcs,
+            'berat' => 10,
             'tgl_packing' => $request->tgl_packing,
+        ]);
+
+        StokCS::create([
+            'kode_trace_id' => $request->kode_trace_id,
+            'pcs' => $request->pcs,
+            'tipe_stok' => 'Stok Masuk',
         ]);
     
         return redirect()->route('packing.index')->with('success', 'Packing berhasil ditambahkan.');
     }
 
-    public function packingPdf($month, $year)
+    public function packingPdf($month)
     {
-        $data = Packing::whereYear('created_at', $year)
-            ->whereMonth('created_at', $month)
-            ->get();
-
-        $pdf = Pdf::loadView('pdf.packing', compact('data', 'month', 'year'));
-        return $pdf->download('packing_report_' . $month . '_' . $year . '.pdf');
+        $parsedDate = Carbon::parse($month);
+        $packings = Packing::whereMonth('tgl_packing', $parsedDate->month)
+                           ->whereYear('tgl_packing', $parsedDate->year)
+                           ->get();
+    
+        $pdf = Pdf::loadView('pdf.packing', compact('packings', 'month'));
+        return $pdf->download('packing_report_' . $parsedDate->format('Y-m') . '.pdf');
     }
     
 
@@ -73,16 +116,15 @@ class PackingController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $no_box)
+    public function update(Request $request, $id)
     {
-        $request->validate([
-            'kode_lot' => 'required|exists:services,id',
-            'tgl_packing' => 'required|date',
-        ]);
-
-        $packing = Packing::findOrFail($no_box);
+        $packing = Packing::findOrFail($id);
         $packing->update([
-            'kode_lot' => $request->kode_lot,
+            'no_box' => $request->no_box, 
+            'kode_trace_id' => $request->kode_trace_id,
+            'buyer' => $request->buyer,
+            'pcs' => $request->pcs,
+            'berat' => $request->berat,
             'tgl_packing' => $request->tgl_packing,
         ]);
 
@@ -92,9 +134,9 @@ class PackingController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($no_box)
+    public function destroy($id)
     {
-        $packing = Packing::findOrFail($no_box);
+        $packing = Packing::findOrFail($id);
         $packing->delete();
 
         return redirect()->route('packing.index')->with('success', 'Packing berhasil dihapus.');
