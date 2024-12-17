@@ -39,7 +39,6 @@
                 <th>Berat Ikan (KG)</th>
                 <th>Grade</th>
                 <th>Kategori</th>
-                <th>Grade</th>
             </tr>
         </thead>
         <tbody>
