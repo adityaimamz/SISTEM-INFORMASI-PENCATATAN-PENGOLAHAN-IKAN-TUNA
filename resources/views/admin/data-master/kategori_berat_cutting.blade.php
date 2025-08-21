@@ -12,8 +12,8 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Data Master Kategori Berat Cutting</h3>
-                        <p class="text-subtitle text-muted">Silahkan kelola data kategori berat cutting</p>
+                        <h3>Data Master Grade/Size</h3>
+                        <p class="text-subtitle text-muted">Silahkan kelola data grade/size</p>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -29,11 +29,11 @@
                 <div class="card">
                     <div class="card-header">
                         <h5 class="card-title">
-                            Tambah Kategori Berat
+                            Tambah Grade/Size
                         </h5>
                         <button type="button" class="btn btn-outline-primary block" data-bs-toggle="modal"
                             data-bs-target="#tambahKategoriBeratModal">
-                            Tambah Kategori Berat
+                            Tambah Grade/Size
                         </button>
 
                         <!-- Vertically Centered modal Modal -->
@@ -43,7 +43,7 @@
                                 <div class="modal-content">
 
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="tambahKategoriBeratModalTitle">Tambah Kategori Berat Cutting</h5>
+                                        <h5 class="modal-title" id="tambahKategoriBeratModalTitle">Tambah Grade/Size</h5>
                                         <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                             <i data-feather="x"></i>
                                         </button>
@@ -74,7 +74,7 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Kategori Berat</th>
+                                        <th>Grade/Size</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -87,12 +87,12 @@
                                                 <button type="button" class="btn btn-outline-primary block"
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#editKategoriBeratModal{{ $item->id }}">
-                                                    Edit Kategori Berat
+                                                    Edit Grade/Size
                                                 </button>
                                                 <button type="button" class="btn btn-outline-danger block"
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#hapusKategoriBeratModal{{ $item->id }}">
-                                                    Hapus Kategori Berat
+                                                    Hapus Grade/Size
                                                 </button>
                                             </td>
                                         </tr>
@@ -105,7 +105,7 @@
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h5 class="modal-title" id="editKategoriBeratModalTitle{{ $item->id }}">
-                                                            Edit Kategori Berat</h5>
+                                                            Edit Grade/Size</h5>
                                                         <button type="button" class="close" data-bs-dismiss="modal"
                                                             aria-label="Close">
                                                             <i data-feather="x"></i>
@@ -117,7 +117,7 @@
                                                             @csrf
                                                             @method('PUT')
                                                             <div class="form-group">
-                                                                <label for="kategori_berat">Kategori Berat</label>
+                                                                <label for="kategori_berat">Grade/Size</label>
                                                                 <input type="text" name="kategori_berat"
                                                                     class="form-control border-primary"
                                                                     value="{{ $item->kategori_berat }}" required>
@@ -140,14 +140,14 @@
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h5 class="modal-title"
-                                                            id="hapusKategoriBeratModalTitle{{ $item->id }}">Hapus Kategori Berat</h5>
+                                                            id="hapusKategoriBeratModalTitle{{ $item->id }}">Hapus Grade/Size</h5>
                                                         <button type="button" class="close" data-bs-dismiss="modal"
                                                             aria-label="Close">
                                                             <i data-feather="x"></i>
                                                         </button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <p>Apakah Anda yakin ingin menghapus kategori berat ini?</p>
+                                                        <p>Apakah Anda yakin ingin menghapus grade/size ini?</p>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-light-secondary"

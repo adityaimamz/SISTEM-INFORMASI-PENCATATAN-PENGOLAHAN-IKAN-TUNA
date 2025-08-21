@@ -12,15 +12,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('penerimaan_ikans', function (Blueprint $table) {
-            $table->id();
             $table->string('supplier_id');
-            $table->foreign('supplier_id')->references('supplier_id')->on('suppliers')->onDelete('cascade');
             $table->foreignId('grade_id')->constrained('grades')->onDelete('cascade');
             $table->foreignId('kategori_berat_id')->constrained('kategori_berat_penerimaans')->onDelete('cascade');
             $table->float('berat_ikan');
-            $table->string('tgl_penerimaan');
+            $table->date('tgl_penerimaan');
             $table->timestamps();
         });
+
+        //relasi tabel
+            $table->foreign('supplier_id')
+            ->references('supplier_id')
+            ->on('suppliers')
+            ->onDelete('cascade');
     }
 
     /**

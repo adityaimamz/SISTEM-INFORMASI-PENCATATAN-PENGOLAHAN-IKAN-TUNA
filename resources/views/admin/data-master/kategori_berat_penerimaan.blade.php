@@ -12,8 +12,7 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Data Master Kategori Berat Penerimaan</h3>
-                        <p class="text-subtitle text-muted">Silahkan kelola data kategori berat penerimaan</p>
+                        <h3>Data Master Berat Penerimaan</h3>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -28,12 +27,10 @@
             <section class="section">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="card-title">
-                            Tambah Kategori Berat Penerimaan
-                        </h5>
-                        <button type="button" class="btn btn-outline-primary block" data-bs-toggle="modal"
-                            data-bs-target="#tambahKategoriBeratModal">
-                            Tambah Kategori Berat Penerimaan
+                       
+                        <button type="button" class="btn btn-outline-primary btn-sm rounded-pill px-4"
+                            data-bs-toggle="modal" data-bs-target="#tambahKategoriBeratModal">
+                            <i class="fas fa-plus"></i> Tambah
                         </button>
 
                         <!-- Vertically Centered modal Modal -->
@@ -43,21 +40,24 @@
                                 <div class="modal-content">
 
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="tambahKategoriBeratModalTitle">Tambah Kategori Berat Penerimaan</h5>
+                                        <h5 class="modal-title" id="tambahKategoriBeratModalTitle">Berat Penerimaan</h5>
                                         <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                             <i data-feather="x"></i>
                                         </button>
                                     </div>
                                     <div class="modal-body">
                                         <form method="POST" action="{{ route('kategori_berat_penerimaan.store') }}"
-                                            enctype="multipart/form-data" class="mt-0">
+                                            enctype="multipart/form-data" class="mt-0 needs-validation" novalidate>
                                             @csrf
-                                            <div class="form-group">
-                                                <label for="kategori_berat">Kategori Berat</label>
+                                            <div class="mb-3">
+                                                <label for="kategori_berat" class="form-label">Sizing</label>
                                                 <input type="text" name="kategori_berat" class="form-control border-primary"
                                                     required>
+                                                <div class="invalid-feedback">
+                                                    Silahkan isi kategori berat
+                                                </div>
                                             </div>
-                                            <button type="submit" class="btn btn-primary ms-1">
+                                            <button type="submit" class="btn btn-primary">
                                                 <span class="d-none d-sm-block">Submit</span>
                                             </button>
                                         </form>
@@ -65,13 +65,11 @@
                                 </div>
                             </div>
                         </div>
-
-
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table" id="table2">
-                                <thead>
+                            <table class="table table-hover table-borderless" id="table2">
+                                <thead class="table-light">
                                     <tr>
                                         <th>No</th>
                                         <th>Kategori Berat</th>
@@ -84,15 +82,15 @@
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $item->kategori_berat }}</td>
                                             <td>
-                                                <button type="button" class="btn btn-outline-primary block"
+                                                <button type="button" class="btn btn-primary btn-sm"
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#editKategoriBeratModal{{ $item->id }}">
-                                                    Edit Kategori Berat
+                                                    <i class="fas fa-edit"></i>
                                                 </button>
-                                                <button type="button" class="btn btn-outline-danger block"
+                                                <button type="button" class="btn btn-danger btn-sm"
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#hapusKategoriBeratModal{{ $item->id }}">
-                                                    Hapus Kategori Berat
+                                                    <i class="fas fa-trash-alt"></i>
                                                 </button>
                                             </td>
                                         </tr>
@@ -120,7 +118,7 @@
                                                                 <label for="kategori_berat">Kategori Berat</label>
                                                                 <input type="text" name="kategori_berat"
                                                                     class="form-control border-primary"
-                                                                    value="{{ $item->kategori_berat }}" required>
+                                                                    value="{{ $item->kategori_berat }}" required> 
                                                             </div>
                                                             <button type="submit" class="btn btn-primary ms-1">
                                                                 <span class="d-none d-sm-block">Update</span>

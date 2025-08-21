@@ -57,17 +57,20 @@
     <!-- Header Section -->
     <div class="header">
         <img src="{{ public_path('img/logo-removebg.png') }}" alt="Logo">
-        <h1>PT. TIRTA BITUNG BAHARI</h1>
+        <h1>PT BAHARI PRIMA MANUNGGAL</h1>
         <p>KOMPLEK PELABUHAN PERIKANAN SAMUDERA BITUNG</p>
-        <p>JL. MADIDIHANG, KEL. AERTEMBAGA I, KEC. AERTEMBAGA</p>
-        <p>KOTA BITUNG, SULAWESI UTARA</p>
+        <p>JL. Bakti Mulya 2 No. 58, Kel. Tegal Alur, Kec. Kalideres, Jakarta Barat</p>
     </div>
 
     <!-- Date and Supplier Information -->
-    <h2>NOTA PEMBELIAN</h2>
+    <h2>Laporan</h2>
     <div class="info">
-        <p><strong>Tanggal</strong>: {{ $date }}</p>
+        <p><strong>Tanggal Penerimaan</strong>: {{ $date ?? 'Semua Tanggal' }}</p>
+        @if(isset($tgl_bongkar) && $tgl_bongkar)
+            <p><strong>Tanggal Bongkar</strong>: {{ $tgl_bongkar }}</p>
+        @endif
         <p><strong>Supplier</strong>: {{ $supplier_name }}</p>
+        <p><strong>Jenis Penerimaan</strong>: {{ $jenis_penerimaan_display }}</p>
     </div>
 
     <table class="table table-bordered" id="table">

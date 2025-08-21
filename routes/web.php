@@ -51,12 +51,13 @@ Route::middleware('is_admin')->group(function () {
         ]);
     });
     Route::resource('akun', AccountController::class);
-    Route::resource('supplier', SupplierController::class);
     Route::resource('kategori', KategoriController::class);
     Route::resource('ikan', IkanController::class);
     Route::resource('grade', GradeController::class);
     Route::resource('kategori_berat_penerimaan', KategoriBeratPenerimaanController::class);
     Route::resource('kategori_berat_cutting', KategoriBeratCuttingController::class);
+    Route::resource('suppliers', SupplierController::class);
+    Route::resource('penerimaan_ikan', PenerimaanIkanController::class);
 });
 
 Route::middleware('is_karyawan')->group(function () {
@@ -138,6 +139,7 @@ Route::resource('service', ServiceController::class)->middleware('auth');
 Route::resource('packing', PackingController::class)->middleware('auth');
 Route::resource('stok-cs', ProdukMasukController::class)->middleware('auth');
 Route::resource('produk-keluar', ProdukKeluarController::class)->middleware('auth');
+Route::resource('suppliers', SupplierController::class)->middleware('auth');
 
 Route::get('/login', [LoginController::class, 'index'])->name('login');
 Route::post('/login', [LoginController::class, 'store'])->name('login.store');

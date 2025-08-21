@@ -12,8 +12,8 @@ class SupplierController extends Controller
      */
     public function index()
     {
-        $data = Supplier::all();
-        return view('admin.data-master.supplier', ['data' => $data]);
+        $suppliers = Supplier::all();
+        return view('admin.data-master.suppliers', ['suppliers' => $suppliers]);
     }
 
     /**
@@ -21,7 +21,7 @@ class SupplierController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.data-master.suppliers-create');
     }
 
     /**
@@ -29,70 +29,67 @@ class SupplierController extends Controller
      */
     public function store(Request $request)
     {
-        // $request->validate([
-        //     'nama_supplier' => 'required|string|max:255',
-        //     'nama_kapal' => 'required|string|max:255',
-        //     'alamat' => 'required|string|max:255',
-        // ]);
-
-        Supplier::create([
-            'supplier_id' => $request->supplier_id,
-            'nama_supplier' => $request->nama_supplier,
-            'nama_kapal' => $request->nama_kapal,
-            'alamat' => $request->alamat,
+        $request->validate([
+            'supplier_id' => 'require|unique:suppliers,supplier_id',
+            'nama_supplier' => 'required|string|max:255',
+            'alamat' => 'required|string|max:255',
         ]);
 
-        return redirect()->route('supplier.index')->with('success', 'Supplier berhasil ditambahkan.');
+        Supplier::create($request->all());
+
+        return redirect()->route('suppliers.index')->with('success', 'Supplier berhasil ditambahkan.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Supplier $supplier)
     {
-        //
+        $suppliers = Supplier::findOrFail($supplier);
+        return view('admin.data-master.suppliers-show', ['supplier' => $suppliers]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Supplier $supplier)
     {
-        //
+        $suppliers = Supplier::findOrFail($supplier);
+        return view('admin.data-master.suppliers-edit', ['supplier' => $suppliers]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Supplier $supplier)
     {
-        // $request->validate([
-        //     'nama_supplier' => 'required|string|max:255',
-        //     'nama_kapal' => 'required|string|max:255',
-        //     'alamat' => 'required|string|max:255',
-        // ]);
+        $request->validate([
+            'supplier_id' => 'required|string|max:255',
+            'nama_supplier' => 'required|string|max:255',
+            'alamat' => 'required|string|max:255',
+        ]);
 
-        $supplier = Supplier::findOrFail($id);
+        $suppliers = Supplier::findOrFail($supplier);
         $data = [
             'supplier_id' => $request->supplier_id,
             'nama_supplier' => $request->nama_supplier,
-            'nama_kapal' => $request->nama_kapal,
             'alamat' => $request->alamat,
+
         ];
 
-        $supplier->update($data);
+        $suppliers->update($request->all());
 
-        return redirect()->route('supplier.index')->with('success', 'Supplier berhasil diperbarui.');
+        return redirect()->route('suppliers.index')->with('success', 'Supplier berhasil diperbarui.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(Supplier $supplier)
     {
-        $supplier = Supplier::findOrFail($id);
-        $supplier->delete();
+        $suppliers = Supplier::findOrFail($supplier);
+        $suppliers->delete();
 
-        return redirect()->route('supplier.index')->with('success', 'Supplier berhasil dihapus.');
+        return redirect()->route('suppliers.index')->with('success', 'Supplier berhasil dihapus.');
     }
 }

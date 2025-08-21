@@ -22,9 +22,8 @@
                     <div class="auth-logo">
                         <a href="/login"><img src="{{ asset('img/logo.png') }}" alt="Logo"></a>
                     </div>
-                    <h1 class="auth-title">Masuk</h1>
-                    <p class="auth-subtitle mb-4">Masukan Email dan Password. Jika belum mempunyai akun silahkan hubungi
-                        Admin.</p>
+                    <h1 class="auth-title"> Login</h1>
+                    <p class="auth-subtitle mb-4">Masukan username dan password
 
                     <!-- Display validation errors -->
                     @if ($errors->any())

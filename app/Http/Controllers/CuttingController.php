@@ -10,6 +10,8 @@ use Carbon\Carbon;
 use App\Models\KategoriBeratCutting;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use App\Models\Grade;
+
 
 class CuttingController extends Controller// Mengubah nama controller menjadi CuttingController
 
@@ -24,14 +26,17 @@ class CuttingController extends Controller// Mengubah nama controller menjadi Cu
         $penerimaan_ikan = Penerimaan_ikan::all();
         $suppliers = Supplier::all();
         $kategori_berat_cuttings = KategoriBeratCutting::all();
-
+        $grades = Grade::all(); 
+        $selectedSupplier = null;
 
         return view('admin.transaksi.cutting-filter', [
             'cutting' => $cutting,
             'penerimaan_ikan' => $penerimaan_ikan,
             'suppliers' => $suppliers,
             'kategori_berat_cuttings' => $kategori_berat_cuttings,
-            'no_batch' => $no_batch
+            'no_batch' => $no_batch,
+            'grades' => $grades,
+            'selectedSupplier' => $selectedSupplier
         ]);
     }
 
@@ -72,6 +77,9 @@ class CuttingController extends Controller// Mengubah nama controller menjadi Cu
             'id_produk' => 'required',
             'berat_produk' => 'required|numeric|min:1',
             'tgl_cutting' => 'required|date',
+            'supplier_id' => 'required',
+            'grade_id' => 'required',
+            'selectedSupplier' => 'required',
         ]);
     
         // Tentukan kategori berat otomatis berdasarkan berat produk
@@ -84,6 +92,9 @@ class CuttingController extends Controller// Mengubah nama controller menjadi Cu
             'berat_produk' => $validated['berat_produk'],
             'kategori_berat_id' => $kategoriBeratId, // Terisi otomatis
             'tgl_cutting' => $validated['tgl_cutting'],
+            'supplier_id' => $validated['supplier_id'],
+            'grade_id' => $validated['grade_id'],
+            'selectedSupplier' => $validated['selectedSupplier'],
         ]);
     
         return redirect()->route('cutting.index')->with('success', 'Cutting berhasil ditambahkan.');
@@ -116,6 +127,9 @@ class CuttingController extends Controller// Mengubah nama controller menjadi Cu
             'kategori_berat_id' => $request->kategori_berat_id,
             'berat_produk' => $request->berat_produk,
             'tgl_cutting' => $request->tgl_cutting,
+            'supplier_id' => $request->supplier_id,
+            'grade_id' => $request->grade_id,
+            'selectedSupplier' => $request->selectedSupplier,
         ];
 
         $cutting->update($data);

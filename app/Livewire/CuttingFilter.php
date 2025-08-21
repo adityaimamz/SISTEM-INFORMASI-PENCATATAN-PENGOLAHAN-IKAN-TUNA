@@ -7,6 +7,8 @@ use App\Models\KategoriBeratCutting;
 use App\Models\NoBatch;
 use App\Models\Penerimaan_ikan;
 use Livewire\Component;
+use App\Models\Supplier;
+
 
 class CuttingFilter extends Component
 {
@@ -19,6 +21,8 @@ class CuttingFilter extends Component
     public $supplier;
     public $grade;
     public $tgl_cutting;
+    public $supplier_id;
+    public $tgl_injek_co;  
 
     // Properties for editing
     public $cutting_id;
@@ -27,6 +31,10 @@ class CuttingFilter extends Component
     public $edit_berat_produk;
     public $edit_kategori_berat_id;
     public $edit_tgl_cutting;
+    public $edit_supplier;
+    public $edit_grade;
+    public $edit_tgl_injek_co;
+    public $edit_supplier_id;
 
     public function mount()
     {
@@ -34,6 +42,21 @@ class CuttingFilter extends Component
         $this->penerimaan_ikan = Penerimaan_ikan::all();
         $this->kategori_berat_cuttings = KategoriBeratCutting::all();
         $this->cuttings = collect();
+        $this->tanggal_penerimaan = null;
+        $this->supplier = null;
+        $this->grade = null;
+        $this->tgl_cutting = null;
+        $this->cutting_id = null;
+        $this->edit_no_batch = null;
+        $this->edit_id_produk = null;
+        $this->edit_berat_produk = null;
+        $this->edit_kategori_berat_id = null;
+        $this->edit_tgl_cutting = null;
+        $this->edit_supplier = null;
+        $this->edit_grade = null;
+        $this->edit_tgl_injek_co = null;
+        $this->edit_supplier_id = null;
+        $this->selectedSupplier = null;
     }
 
     public function filterData()
@@ -49,6 +72,8 @@ class CuttingFilter extends Component
                     $this->supplier = $penerimaanIkan->supplier->nama_supplier;
                     $this->grade = $penerimaanIkan->grade->grade;
                     $this->tgl_cutting = $cutting->tgl_cutting;
+                    $this->supplier_id = $cutting->supplier_id;
+                    $this->tgl_injek_co = $cutting->tgl_injek_co;
                 }
             }
         } else {
@@ -57,6 +82,18 @@ class CuttingFilter extends Component
             $this->supplier = null;
             $this->grade = null;
             $this->tgl_cutting = null;
+            $this->tgl_injek_co = null;
+            $this->cutting_id = null;
+            $this->edit_no_batch = null;
+            $this->edit_id_produk = null;
+            $this->edit_berat_produk = null;
+            $this->edit_kategori_berat_id = null;
+            $this->edit_tgl_cutting = null;
+            $this->edit_supplier = null;
+            $this->edit_grade = null;
+            $this->edit_tgl_injek_co = null;
+            $this->edit_supplier_id = null;
+            $this->selectedSupplier = null;
         }
     }
 
@@ -70,6 +107,12 @@ class CuttingFilter extends Component
             $this->edit_berat_produk = $cutting->berat_produk;
             $this->edit_kategori_berat_id = $cutting->kategori_berat_id;
             $this->edit_tgl_cutting = $cutting->tgl_cutting;
+            $this->edit_supplier = $cutting->supplier->nama_supplier;
+            $this->edit_grade = $cutting->grade->grade;
+            $this->edit_tgl_injek_co = $cutting->tgl_injek_co;
+            $this->supplier_id = $cutting->supplier_id;
+            $this->edit_supplier_id = $cutting->supplier_id;
+            $this->selectedSupplier = $cutting->supplier_id;
         }
     }
 
@@ -81,6 +124,11 @@ class CuttingFilter extends Component
             'edit_id_produk' => 'required',
             'edit_berat_produk' => 'required|numeric|min:0',
             'edit_tgl_cutting' => 'required|date',
+            'edit_supplier' => 'required',
+            'edit_grade' => 'required',
+            'edit_tgl_injek_co' => 'required|date',
+            'edit_supplier_id' => 'required',
+            'selectedSupplier' => 'required',
         ]);
     
         // Tentukan kategori berat otomatis berdasarkan berat produk
@@ -94,6 +142,10 @@ class CuttingFilter extends Component
             'berat_produk' => $this->edit_berat_produk,
             'kategori_berat_id' => $kategoriBeratId, // Otomatis diisi
             'tgl_cutting' => $this->edit_tgl_cutting,
+            'supplier_id' => $this->supplier_id,
+            'grade_id' => $this->edit_grade,
+            'tgl_injek_co' => $this->edit_tgl_injek_co,
+            'supplier_id' => $this->edit_supplier_id,
         ]);
     
         // Refresh data setelah update
@@ -133,6 +185,23 @@ class CuttingFilter extends Component
             'no_batches' => $this->no_batches,
             'penerimaan_ikan' => $this->penerimaan_ikan,
             'kategori_berat_cuttings' => $this->kategori_berat_cuttings,
+            'tanggal_penerimaan' => $this->tanggal_penerimaan,
+            'supplier' => $this->supplier,
+            'grade' => $this->grade,
+            'tgl_cutting' => $this->tgl_cutting,
+            'supplier_id' => $this->supplier_id,
+            'tgl_injek_co' => $this->tgl_injek_co,
+            'cutting_id' => $this->cutting_id,
+            'edit_no_batch' => $this->edit_no_batch,
+            'edit_id_produk' => $this->edit_id_produk,
+            'edit_berat_produk' => $this->edit_berat_produk,
+            'edit_kategori_berat_id' => $this->edit_kategori_berat_id,
+            'edit_tgl_cutting' => $this->edit_tgl_cutting,
+            'edit_supplier' => $this->edit_supplier,
+            'edit_grade' => $this->edit_grade,
+            'edit_tgl_injek_co' => $this->edit_tgl_injek_co,
+            'edit_supplier_id' => $this->edit_supplier_id,
+            'selectedSupplier' => $this->selectedSupplier,
         ]);
-    }
+    }   
 }

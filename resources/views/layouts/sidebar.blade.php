@@ -95,9 +95,8 @@
 
                         </li>
 
-                        <li class="submenu-item  {{ Request::is('supplier') ? 'active' : '' }}">
+                        <li class="submenu-item  {{ Request::is('suppliers') ? 'active' : '' }}">
                             <a href="/supplier" class="submenu-link">Data Supplier</a>
-
                         </li>
 
                         <li class="submenu-item {{ Request::is('grade') ? 'active' : '' }} ">
