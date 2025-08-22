@@ -9,7 +9,7 @@ use App\Models\KategoriBeratPenerimaan;
 
 class PenerimaanIkan extends Component
 {
-    public $penerimaan_id;
+    public $session_penerimaan_id;
     public $date;
     public $supplier;
     public $suppliers;
@@ -33,6 +33,7 @@ class PenerimaanIkan extends Component
     public $grade_id;
     public $berat_ikan;
     public $suhu_ikan;
+    public $no_bak;
 
     // Properti untuk edit
     public $edit_penerimaan_id;
@@ -44,6 +45,11 @@ class PenerimaanIkan extends Component
     public $edit_tgl_bongkar;
     public $edit_berat_ikan;
     public $edit_suhu_ikan;
+    public $edit_no_bak;
+
+    // Add new properties for No. Bak functionality
+    public $selectedIds = [];
+    public $noBakValue = '';
 
     public function mount()
     {
@@ -127,6 +133,13 @@ class PenerimaanIkan extends Component
     // Fungsi untuk menyimpan data baru
     public function store()
     {
+        $this->validate([
+            'grade_id' => 'required|exists:grades,id',
+            'berat_ikan' => 'required|numeric|min:10',
+            'suhu_ikan' => 'required|numeric|min:-50|max:50',
+            'no_bak' => 'required|string|max:50',
+        ]);
+
         try {
             // Validasi session_date, session_tgl_bongkar, dan session_supplier terlebih dahulu
             if (!$this->session_date) {
@@ -149,13 +162,6 @@ class PenerimaanIkan extends Component
                 return;
             }
 
-            // Validasi form input
-            $this->validate([
-                'grade_id' => 'required|exists:grades,id',
-                'berat_ikan' => 'required|numeric|min:10', // Validasi minimal 10
-                'suhu_ikan' => 'required|numeric|min:-50|max:50',
-            ]);
-
             // Tentukan kategori_berat_id berdasarkan berat_ikan
             $kategori_berat_id = $this->getKategoriBeratId($this->berat_ikan);
             if (!$kategori_berat_id) {
@@ -174,6 +180,7 @@ class PenerimaanIkan extends Component
                 'berat_ikan' => $this->berat_ikan,
                 'suhu_ikan' => $this->suhu_ikan,
                 'jenis_penerimaan' => $this->session_jenis_penerimaan,
+                'no_bak' => $this->no_bak,
             ]);
 
             // Refresh data setelah create
@@ -205,23 +212,25 @@ class PenerimaanIkan extends Component
         $this->edit_berat_ikan = $ikan->berat_ikan;
         $this->edit_suhu_ikan = $ikan->suhu_ikan;
         $this->edit_jenis_penerimaan = $ikan->jenis_penerimaan;
+        $this->edit_no_bak = $ikan->no_bak;
     }
 
     // Fungsi untuk menyimpan perubahan
     public function update()
     {
-        try {
-            $this->validate([
-                'edit_penerimaan_id' => 'required|exists:penerimaan_ikans,penerimaan_id',
-                'edit_supplier_id' => 'required|exists:suppliers,supplier_id',
-                'edit_grade_id' => 'required|exists:grades,id',
-                'edit_berat_ikan' => 'required|numeric|min:10', // Validasi minimal 10
-                'edit_suhu_ikan' => 'required|numeric|min:-50|max:50',
-                'edit_tgl_penerimaan' => 'required|date',
-                'edit_jenis_penerimaan' => 'required',
-                'edit_tgl_bongkar' => 'required|date|after_or_equal:edit_tgl_penerimaan',
-            ]);
+        $this->validate([
+            'edit_penerimaan_id' => 'required|exists:penerimaan_ikans,penerimaan_id',
+            'edit_supplier_id' => 'required|exists:suppliers,supplier_id',
+            'edit_grade_id' => 'required|exists:grades,id',
+            'edit_berat_ikan' => 'required|numeric|min:10',
+            'edit_suhu_ikan' => 'required|numeric|min:-50|max:50',
+            'edit_tgl_penerimaan' => 'required|date',
+            'edit_jenis_penerimaan' => 'required',
+            'edit_tgl_bongkar' => 'required|date|after_or_equal:edit_tgl_penerimaan',
+            'edit_no_bak' => 'required|string|max:50',
+        ]);
 
+        try {
             // Tentukan kategori_berat_id berdasarkan berat_ikan
             $kategori_berat_id = $this->getKategoriBeratId($this->edit_berat_ikan);
             if (!$kategori_berat_id) {
@@ -240,6 +249,7 @@ class PenerimaanIkan extends Component
                 'berat_ikan' => $this->edit_berat_ikan,
                 'suhu_ikan' => $this->edit_suhu_ikan,
                 'jenis_penerimaan' => $this->edit_jenis_penerimaan,
+                'no_bak' => $this->edit_no_bak,
             ]);
 
             // Refresh data setelah update
@@ -266,6 +276,34 @@ class PenerimaanIkan extends Component
         }
     }
 
+    // Add this method to update No. Bak for selected items
+    public function updateNoBak()
+    {
+        try {
+            // Validate input
+            if (empty($this->selectedIds) || empty($this->noBakValue)) {
+                session()->flash('error', 'Pilih setidaknya satu data dan isi No. Bak');
+                return;
+            }
+
+            // Update No. Bak for selected items
+            Penerimaan_ikan::whereIn('penerimaan_id', $this->selectedIds)
+                ->update(['no_bak' => $this->noBakValue]);
+
+            // Refresh the data
+            $this->filterData();
+            
+            // Reset properties
+            $this->selectedIds = [];
+            $this->noBakValue = '';
+            
+            session()->flash('message', 'No. Bak berhasil diperbarui');
+        } catch (\Exception $e) {
+            \Log::error('Error updating No. Bak: ' . $e->getMessage());
+            session()->flash('error', 'Gagal memperbarui No. Bak: ' . $e->getMessage());
+        }
+    }
+
     /**
      * Mendapatkan ID kategori berat berdasarkan berat ikan.
      */
@@ -288,16 +326,16 @@ class PenerimaanIkan extends Component
     }
 
     // Fungsi untuk mereset field create setelah store
-    public function resetCreateForm()
+    private function resetCreateForm()
     {
         $this->grade_id = null;
         $this->berat_ikan = null;
         $this->suhu_ikan = null;
-        // session_date, session_tgl_bongkar, dan session_supplier tidak direset karena digunakan untuk multiple entries
+        $this->no_bak = null;
     }
 
     // Fungsi untuk mereset field edit setelah update
-    public function resetEditFields()
+    private function resetEditFields()
     {
         $this->edit_penerimaan_id = null;
         $this->edit_supplier_id = null;
@@ -308,6 +346,7 @@ class PenerimaanIkan extends Component
         $this->edit_berat_ikan = null;
         $this->edit_suhu_ikan = null;
         $this->edit_jenis_penerimaan = null;
+        $this->edit_no_bak = null;
     }
 
     public function render()

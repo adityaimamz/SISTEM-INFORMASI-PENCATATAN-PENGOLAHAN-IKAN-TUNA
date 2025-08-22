@@ -22,6 +22,7 @@ class Penerimaan_ikan extends Model
         'tgl_bongkar',
         'suhu_ikan',
         'jenis_penerimaan',
+        'no_bak',
     ];
 
     protected $dates = [

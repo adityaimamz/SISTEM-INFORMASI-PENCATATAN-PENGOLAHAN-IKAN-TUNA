@@ -24,4 +24,9 @@ class Supplier extends Model
         return $this->hasMany(Penerimaan_ikan::class, 'supplier_id', 'supplier_id')
         ->withTrashed();
     }
+
+    public function getRouteKeyName()
+    {
+        return 'supplier_id';
+    }
 }

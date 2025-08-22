@@ -338,7 +338,6 @@
         }
     </style>
 
-
     <div class="table-responsive">
         <table class="table table-bordered" id="table">
             <thead>

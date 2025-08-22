@@ -25,6 +25,8 @@ use App\Models\Penerimaan_ikan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
+Route::put('/suppliers/{supplier}', [SupplierController::class, 'update'])->name('suppliers.update');
+Route::get('/suppliers/{supplier}/edit', [SupplierController::class, 'edit'])->name('suppliers.edit');
 Route::get('/', [LoginController::class, 'index'])->name('login');
 Route::get('/reload-captcha', [LoginController::class, 'reloadCaptcha']);
 
