@@ -35,10 +35,10 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Grade::create([
-            'grade' => 'AB',
+            'grade' => 'B/C',
         ]);
         Grade::create([
-            'grade' => 'ABC',
+            'grade' => 'D',
         ]);
         Grade::create([
             'grade' => 'C',
@@ -48,10 +48,10 @@ class DatabaseSeeder extends Seeder
         ]);
 
         KategoriBeratPenerimaan::create([
-            'kategori_berat' => '10-19',
+            'kategori_berat' => '20 UP',
         ]);
         KategoriBeratPenerimaan::create([
-            'kategori_berat' => '20-29',
+            'kategori_berat' => '20 DOWN',
         ]);
         KategoriBeratPenerimaan::create([
             'kategori_berat' => '30 UP',
@@ -68,25 +68,25 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Supplier::create([
-            'supplier_id' => '001',
-            'nama_supplier' => 'Mansur',
-            'alamat' => 'Jl. A',
+            'supplier_id' => '00',
+            'nama_supplier' => 'TA',
+            'alamat' => 'TATA',
         ]);
 
         Kategori_produk::create([
-            'jenis_ikan' => 'Loin Center Cut (Loin CC)',
+            'jenis_ikan' => '',
         ]);
         Kategori_produk::create([
-            'jenis_ikan' => 'Cube Minhong (Cube MH)',
+            'jenis_ikan' => '',
         ]);
         Kategori_produk::create([
-            'jenis_ikan' => 'Strips Minhong (Strips MH)',
+            'jenis_ikan' => '',
         ]);
         Kategori_produk::create([
-            'jenis_ikan' => 'Groud Meat Minhong (Cube MH)',
+            'jenis_ikan' => '',
         ]);
         Kategori_produk::create([
-            'jenis_ikan' => 'Saku Premium Krimson (Saku KR)',
+            'jenis_ikan' => '',
         ]);
         
     }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Supplier;
+use Illuminate\Validation\Rule;
 
 class SupplierController extends Controller
 {
@@ -30,7 +31,7 @@ class SupplierController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'supplier_id' => 'require|unique:suppliers,supplier_id',
+            'supplier_id' => 'required|unique:suppliers,supplier_id',
             'nama_supplier' => 'required|string|max:255',
             'alamat' => 'required|string|max:255',
         ]);
@@ -45,8 +46,8 @@ class SupplierController extends Controller
      */
     public function show(Supplier $supplier)
     {
-        $suppliers = Supplier::findOrFail($supplier);
-        return view('admin.data-master.suppliers-show', ['supplier' => $suppliers]);
+        $supplier = Supplier::findOrFail($supplier);
+        return view('admin.data-master.suppliers-show', ['supplier' => $supplier]);
     }
 
     /**
@@ -54,8 +55,7 @@ class SupplierController extends Controller
      */
     public function edit(Supplier $supplier)
     {
-        $suppliers = Supplier::findOrFail($supplier);
-        return view('admin.data-master.suppliers-edit', ['supplier' => $suppliers]);
+        return view('admin.data-master.suppliers-edit', ['supplier' => $supplier]);
     }
 
     /**
@@ -64,20 +64,17 @@ class SupplierController extends Controller
     public function update(Request $request, Supplier $supplier)
     {
         $request->validate([
-            'supplier_id' => 'required|string|max:255',
+            'supplier_id' => [
+            'required',
+            'string',
+            'max:255',
+            Rule::unique('suppliers', 'supplier_id')->ignore($supplier->id),
+        ],
             'nama_supplier' => 'required|string|max:255',
             'alamat' => 'required|string|max:255',
         ]);
-
-        $suppliers = Supplier::findOrFail($supplier);
-        $data = [
-            'supplier_id' => $request->supplier_id,
-            'nama_supplier' => $request->nama_supplier,
-            'alamat' => $request->alamat,
-
-        ];
-
-        $suppliers->update($request->all());
+        // reqeust all database
+        $supplier->update($request->only('supplier_id', 'nama_supplier', 'alamat'));
 
         return redirect()->route('suppliers.index')->with('success', 'Supplier berhasil diperbarui.');
     }
@@ -87,8 +84,7 @@ class SupplierController extends Controller
      */
     public function destroy(Supplier $supplier)
     {
-        $suppliers = Supplier::findOrFail($supplier);
-        $suppliers->delete();
+        $supplier->delete();
 
         return redirect()->route('suppliers.index')->with('success', 'Supplier berhasil dihapus.');
     }
