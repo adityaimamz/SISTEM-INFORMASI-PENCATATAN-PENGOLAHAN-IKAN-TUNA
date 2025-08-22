@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('packings', function (Blueprint $table) {
-            $table->id();
-            $table->string('no_box')->unique(); // Menjadikan no_box sebagai primary key
-            $table->foreignId('kode_trace_id')->constrained('services')->onDelete('cascade');
+            $table->integer('packings_id');
+            $table->integer('services_id')->unsigned();
+            $table->string('no_box');
             $table->string('buyer');
             $table->integer('pcs');
             $table->float('berat');

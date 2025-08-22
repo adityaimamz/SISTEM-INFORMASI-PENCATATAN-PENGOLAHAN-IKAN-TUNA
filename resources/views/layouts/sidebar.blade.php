@@ -41,7 +41,7 @@
         </div>
         <div class="sidebar-menu">
             <ul class="menu">
-               
+
                 <li class="sidebar-title">Menu</li>
                 @if (Auth::user()->role_id == 1 || Auth::user()->role_id == 2)
                 <li class="sidebar-item {{ Request::is('admin') ? 'active' : '' }} ">
@@ -56,11 +56,11 @@
                         <i class="bi bi-grid-fill"></i>
                         <span>Dashboard</span>
                     </a>
-                </li> 
+                </li>
                 @endif
-           
 
-                {{-- @if(Auth::user()->role_id == 1)               
+
+                {{-- @if(Auth::user()->role_id == 1)
                 <li class="sidebar-item {{ Request::is('akun') ? 'active' : '' }}">
                     <a href="/akun" class='sidebar-link'>
                         <i class="bi bi-people-fill"></i>
@@ -80,7 +80,7 @@
                     </a>
                 </li>
                 @endif --}}
-                @if(Auth::user()->role_id == 1)               
+                @if(Auth::user()->role_id == 1)
 
                 <li class="sidebar-item  has-sub">
                     <a href="#" class='sidebar-link'>
@@ -96,7 +96,7 @@
                         </li>
 
                         <li class="submenu-item  {{ Request::is('suppliers') ? 'active' : '' }}">
-                            <a href="/supplier" class="submenu-link">Data Supplier</a>
+                            <a href="/suppliers" class="submenu-link">Data Supplier</a>
                         </li>
 
                         <li class="submenu-item {{ Request::is('grade') ? 'active' : '' }} ">
@@ -166,7 +166,7 @@
                     </a>
 
                     <ul class="submenu ">
-{{-- 
+{{--
                         <li class="submenu-item  {{ Request::is('laporan_ikan_masuk') ? 'active' : '' }}">
                             <a href="/laporan_ikan_masuk" class="submenu-link">Laporan Ikan Masuk</a>
 
