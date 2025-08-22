@@ -10,14 +10,16 @@ class Supplier extends Model
 {
     use HasFactory;
 
+    protected $table = 'suppliers'; // tabel
+    protected $primaryKey = 'supplier_id'; // pakai supplier_id
+    public $incrementing = true; // bukan auto increment
+    protected $keyType = 'int'; // kalau supplier_id berupa angka
+
     protected $fillable = [
         'supplier_id',
         'nama_supplier',
         'alamat',
     ];
-
-    protected $primaryKey = 'supplier_id';
-
 
     public function penerimaan_ikan()
     {

@@ -132,8 +132,8 @@
                         @php
                             $selectedSupplier = $suppliers->firstWhere('supplier_id', $session_supplier);
                         @endphp
-                        <div class="alert alert-success">
-                            <i class="bi bi-check-circle"></i> 
+                        <div class="alert alert-success" style="max-height: 50px; overflow-y: auto;">
+                            <i class="bi bi-check-circle my-1"></i> 
                             <strong>Sesi Aktif:</strong><br>
                             <strong>Tanggal:</strong> {{ \Carbon\Carbon::parse($session_date)->format('d F Y') }}<br>
                             <strong>Tanggal Bongkar:</strong> {{ \Carbon\Carbon::parse($session_tgl_bongkar)->format('d F Y') }}<br>
@@ -145,7 +145,7 @@
                     <form wire:submit.prevent="store" class="mt-0">
                         <div class="form-group">
                             <label for="grade_id">Grade</label>
-                            <select wire:model.live="grade_id" class="form-control border-primary" required>
+                            <select wire:model="grade_id" class="form-control border-primary" required>
                                 <option value="">Pilih Grade</option>
                                 @foreach ($grades as $grade)
                                     <option value="{{ $grade->id }}">{{ $grade->grade }}</option>

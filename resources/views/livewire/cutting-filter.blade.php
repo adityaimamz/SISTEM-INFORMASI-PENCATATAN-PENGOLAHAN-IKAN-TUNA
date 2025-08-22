@@ -21,9 +21,12 @@
             <select id="supplier_id" wire:model.defer="selectedSupplier" class="form-control border-primary"
                 @if(!$tgl_cutting || !$tgl_injek_co) disabled @endif required>
                 <option value="" selected disabled>Pilih Supplier</option>
-                @foreach($Penerimaan_ikan as $penerimaan_ikan)
-                    <option value="{{ $penerimaan_ikan->supplier_id }}">
-                        {{ $penerimaan_ikan->supplier->nama_supplier }}
+                @foreach($Penerimaan_ikan as $penerimaan)
+                    @php
+                        $selectedSupplierId = $selectedSupplier ? $selectedSupplier->supplier_id : null;
+                    @endphp
+                    <option value="{{ $penerimaan->supplier_id }}" {{ $selectedSupplierId === $penerimaan->supplier_id ? 'selected' : '' }}>
+                        {{ $penerimaan->supplier->nama_supplier }}
                     </option>
                 @endforeach
             </select>

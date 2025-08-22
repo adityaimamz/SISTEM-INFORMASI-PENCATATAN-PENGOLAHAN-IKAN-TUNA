@@ -61,19 +61,15 @@ class SupplierController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Supplier $supplier)
+    public function update(Request $request, $supplier_id)
     {
         $request->validate([
-            'supplier_id' => [
-            'required',
-            'string',
-            'max:255',
-            Rule::unique('suppliers', 'supplier_id')->ignore($supplier->id),
-        ],
+            'supplier_id' => 'required|string|max:255',
             'nama_supplier' => 'required|string|max:255',
             'alamat' => 'required|string|max:255',
         ]);
         // reqeust all database
+        $supplier   = Supplier::findOrFail($supplier_id);
         $supplier->update($request->only('supplier_id', 'nama_supplier', 'alamat'));
 
         return redirect()->route('suppliers.index')->with('success', 'Supplier berhasil diperbarui.');
@@ -86,6 +82,7 @@ class SupplierController extends Controller
     {
         $supplier->delete();
 
-        return redirect()->route('suppliers.index')->with('success', 'Supplier berhasil dihapus.');
+        return redirect()->route('suppliers.index')
+                         ->with('success', 'Supplier berhasil dihapus.');
     }
 }
