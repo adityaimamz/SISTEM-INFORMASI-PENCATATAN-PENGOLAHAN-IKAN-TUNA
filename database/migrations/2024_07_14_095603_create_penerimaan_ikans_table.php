@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('penerimaan_ikans', function (Blueprint $table) {
+        Schema::create('penerimaan_ikans', function (Blueprint $table): void {
             $table->bigIncrements('penerimaan_id');
             $table->unsignedBigInteger('supplier_id');
             $table->foreignId('grade_id')->constrained('grades')->onDelete('cascade');
@@ -20,17 +20,18 @@ return new class extends Migration
             $table->date('tgl_penerimaan');
             $table->date('tgl_bongkar');
             $table->float('suhu_ikan');
-            $table->string('jenis_penerimaan');
             $table->string('no_bak')->nullable();
             $table->timestamps();
 
             $table->foreign('supplier_id')
-                  ->references('supplier_id') ->on ('suppliers')
+                  ->references('supplier_id')
                   ->on('suppliers')
                   ->onDelete('cascade');
         });
 
-
+        Schema::table('penerimaan_ikans', function (Blueprint $table): void {
+            $table->string('jenis_penerimaan', 50)->nullable()->after('supplier_id')->comment('Fresh GG atau Frozen WR');
+        });
     }
 
     /**
@@ -38,6 +39,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('penerimaan_ikans', function (Blueprint $table): void {
+            $table->dropColumn('jenis_penerimaan');
+        });
+        
         Schema::dropIfExists('penerimaan_ikans');
     }
 };

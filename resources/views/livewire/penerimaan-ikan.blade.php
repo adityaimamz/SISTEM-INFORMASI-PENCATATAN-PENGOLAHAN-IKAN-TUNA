@@ -14,52 +14,84 @@
         </div>
     @endif
 
-    <!-- Session Setup Section -->
-    <div class="card mb-4">
+    {{-- Form Input Data --}}
+    <div class="card">
         <div class="card-header">
-            <h5 class="card-title mb-0">
-                <i class="bi bi-gear"></i> Input Data Penerimaan
-            </h5>
+            <h5 class="card-title mb-0">Form Input Penerimaan Ikan</h5>
         </div>
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
-                    <label for="session_date">Tanggal Penerimaan</label>
-                    <input type="date" id="session_date" wire:model.live="session_date" class="form-control border-primary" required>
-                    @error('session_date') <span class="text-danger">{{ $message }}</span> @enderror
+                    <div class="mb-3">
+                        <label for="session_date" class="form-label">Tanggal Penerimaan</label>
+                        <input type="date" id="session_date" 
+                               wire:model.live="session_date" 
+                               class="form-control @error('session_date') is-invalid @enderror" 
+                               required>
+                        @error('session_date')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
 
-                    <label for="session_tgl_bongkar" class="mt-2">Tanggal Bongkar</label>
-                    <input type="date" id="session_tgl_bongkar" wire:model.live="session_tgl_bongkar" class="form-control border-primary" 
-                        @if(!$session_date) disabled @endif required
-                        min="{{ $session_date }}">
-                    @error('session_tgl_bongkar') <span class="text-danger">{{ $message }}</span> @enderror
+                    <div class="mb-3">
+                        <label for="session_tgl_bongkar" class="form-label">Tanggal Bongkar</label>
+                        <input type="date" id="session_tgl_bongkar" 
+                               wire:model.live="session_tgl_bongkar" 
+                               class="form-control @error('session_tgl_bongkar') is-invalid @enderror"
+                               @if(!$session_date) disabled @endif 
+                               min="{{ $session_date }}"
+                               required>
+                        @error('session_tgl_bongkar')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
                 </div>
                 <div class="col-md-6">
-                    <label for="session_supplier">Supplier</label>
-                    <select id="session_supplier" wire:model.live="session_supplier" class="form-control border-primary" 
-                        @if(!$session_date || !$session_tgl_bongkar) disabled @endif required>
-                        <option value="">Pilih Supplier</option>
-                        @foreach ($suppliers as $supplier)
-                            <option value="{{ $supplier->supplier_id }}">
-                                {{ $supplier->nama_supplier }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('session_supplier') <span class="text-danger">{{ $message }}</span> @enderror
-                    @if(!$session_date || !$session_tgl_bongkar)
-                    @endif
-                    <label for="session_jenis_penerimaan" class="mt-2">Jenis Penerimaan</label>
-                    <select id="session_jenis_penerimaan" wire:model.live="session_jenis_penerimaan" class="form-control border-primary" 
-                        @if(!$session_date || !$session_tgl_bongkar || !$session_supplier) disabled @endif required>
-                        <option value="">Pilih Jenis Penerimaan</option>
-                        <option value="Fresh GG">Fresh GG</option>
-                        <option value="Frozen WR">Frozen WR</option>
-                    </select>
-                    @error('session_jenis_penerimaan') <span class="text-danger">{{ $message }}</span> @enderror
-                    @if(!$session_date || !$session_tgl_bongkar || !$session_supplier)
-                    @endif
+                    <div class="mb-3">
+                        <label for="session_supplier" class="form-label">Supplier</label>
+                        <select id="session_supplier" 
+                                wire:model.live="session_supplier" 
+                                class="form-select @error('session_supplier') is-invalid @enderror"
+                                @if(!$session_date || !$session_tgl_bongkar) disabled @endif 
+                                required>
+                            <option value="">Pilih Supplier</option>
+                            @foreach ($suppliers as $supplier)
+                                <option value="{{ $supplier->supplier_id }}">
+                                    {{ $supplier->nama_supplier }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('session_supplier')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="session_jenis_penerimaan" class="form-label">
+                            Jenis Penerimaan
+                            <span class="text-danger">*</span>
+                        </label>
+                        <select 
+                            id="session_jenis_penerimaan"
+                            wire:model.live="session_jenis_penerimaan"
+                            wire:loading.attr="disabled"
+                            wire:target="session_jenis_penerimaan"
+                            class="form-select @error('session_jenis_penerimaan') is-invalid @enderror"
+                            @if(!$session_date || !$session_tgl_bongkar || !$session_supplier) disabled @endif 
+                            required>
+                            <option value="" selected disabled>Pilih Jenis Penerimaan</option>
+                            <option value="Fresh GG">Fresh GG</option>
+                            <option value="Frozen WR">Frozen WR</option>
+                        </select>
+                        @error('session_jenis_penerimaan')
+                            <div class="invalid-feedback d-block">
+                                <i class="bi bi-exclamation-circle"></i> {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
                 </div>
             </div>
+
+            {{-- Status Sesi --}}
             <div class="row mt-3">
                 <div class="col-12">
                     @if($session_date && $session_tgl_bongkar && $session_supplier && $session_jenis_penerimaan)
@@ -72,23 +104,22 @@
                             <strong>Tanggal:</strong> {{ \Carbon\Carbon::parse($session_date)->format('d F Y') }}<br>
                             <strong>Tanggal Bongkar:</strong> {{ \Carbon\Carbon::parse($session_tgl_bongkar)->format('d F Y') }}<br>
                             <strong>Supplier:</strong> {{ $selectedSupplier ? $selectedSupplier->nama_supplier : 'Unknown' }}<br>
-                            <strong>Jenis Penerimaan:</strong> {{ $session_jenis_penerimaan }}<br>
+                            <strong>Jenis Penerimaan:</strong> {{ $session_jenis_penerimaan }}
                         </div>
-                    @elseif($session_date || $session_tgl_bongkar || $session_supplier || $session_jenis_penerimaan)
-                        <div class="alert alert-warning mb-0">
-                            <i class="bi bi-exclamation-triangle"></i> 
+                    @else
+                        <div class="alert alert-{{ $session_date || $session_tgl_bongkar || $session_supplier || $session_jenis_penerimaan ? 'warning' : 'info' }} mb-0">
+                            <i class="bi bi-{{ $session_date || $session_tgl_bongkar || $session_supplier || $session_jenis_penerimaan ? 'exclamation-triangle' : 'info-circle' }}"></i> 
                             @if(!$session_date)
                                 Pilih tanggal penerimaan terlebih dahulu.
                             @elseif(!$session_tgl_bongkar)
                                 Pilih tanggal bongkar terlebih dahulu.
-                            @else
+                            @elseif(!$session_supplier)
                                 Pilih supplier untuk melanjutkan input data.
+                            @elseif(!$session_jenis_penerimaan)
+                                Pilih jenis penerimaan untuk melanjutkan input data.
+                            @else
+                                Pilih tanggal penerimaan, tanggal bongkar, supplier, dan jenis penerimaan terlebih dahulu.
                             @endif
-                        </div>
-                    @else
-                        <div class="alert alert-info mb-0">
-                            <i class="bi bi-info-circle"></i> 
-                            Pilih tanggal penerimaan, tanggal bongkar, supplier, dan jenis penerimaan terlebih dahulu.
                         </div>
                     @endif
                 </div>
@@ -96,14 +127,19 @@
         </div>
     </div>
 
-    <!-- Add Data Button -->
+    {{-- Tombol Tambah Data --}}
     <div class="mb-3">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambahDataModal" 
-            @if(!$session_date || !$session_tgl_bongkar || !$session_supplier || !$session_jenis_penerimaan) disabled @endif>
+        <button type="button" 
+                class="btn btn-primary" 
+                data-bs-toggle="modal" 
+                data-bs-target="#tambahDataModal"
+                @if(!$session_date || !$session_tgl_bongkar || !$session_supplier || !$session_jenis_penerimaan) disabled @endif>
             <i class="bi bi-plus-circle"></i> Tambah
         </button>
         @if(!$session_date || !$session_tgl_bongkar || !$session_supplier || !$session_jenis_penerimaan)
-            <small class="text-muted d-block mt-1">Pilih tanggal penerimaan, tanggal bongkar, supplier, dan jenis penerimaan terlebih dahulu</small>
+            <div class="text-muted mt-1">
+                <small>Lengkapi form di atas untuk mengaktifkan tombol tambah data</small>
+            </div>
         @endif
     </div>
 
@@ -195,7 +231,7 @@
                     <strong>Tanggal Bongkar:</strong> {{ \Carbon\Carbon::parse($session_tgl_bongkar)->format('d F Y') }}<br>
                     <strong>Supplier:</strong> {{ $selectedSupplier ? $selectedSupplier->nama_supplier : 'Unknown' }}
                     @if($session_jenis_penerimaan)
-                        <br><strong>Jenis Penerimaan:</strong> {{ $session_jenis_penerimaan }}
+                    <br><strong>Jenis Penerimaan:</strong> {{ $session_jenis_penerimaan }}
                     @endif
                 </div>
             @elseif($session_date || $session_tgl_bongkar || $session_supplier || $session_jenis_penerimaan)

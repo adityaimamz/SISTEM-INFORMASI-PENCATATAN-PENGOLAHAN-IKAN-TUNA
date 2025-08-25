@@ -21,13 +21,13 @@ class PenerimaanIkan extends Component
     public $session_date;
     
     // Session tgl_bongkar - tanggal bongkar yang diinputkan sekali
-    public $session_tgl_bongkar;
+    public $session_tgl_bongkar= '';
     
     // Session supplier - supplier yang diinputkan sekali
-    public $session_supplier;
+    public $session_supplier= '';
 
     // Session jenis_penerimaan - jenis penerimaan yang diinputkan sekali
-    public $session_jenis_penerimaan;
+    public $session_jenis_penerimaan= '';
 
     // Properti untuk create/add new data
     public $grade_id;
@@ -71,6 +71,7 @@ class PenerimaanIkan extends Component
         // Reset session supplier when date changes
         $this->session_supplier = null;
         $this->session_tgl_bongkar = null;
+        $this->session_jenis_penerimaan = null;
         $this->filterData();
     }
 
@@ -89,7 +90,7 @@ class PenerimaanIkan extends Component
     }
 
     // Method untuk update data ketika session_jenis_penerimaan berubah
-    public function updatedSessionJenisPenerimaan()
+    public function updatedSessionJenisPenerimaan($value)
     {
         $this->filterData();
     }
@@ -225,7 +226,7 @@ class PenerimaanIkan extends Component
             'edit_berat_ikan' => 'required|numeric|min:10',
             'edit_suhu_ikan' => 'required|numeric|min:-50|max:50',
             'edit_tgl_penerimaan' => 'required|date',
-            'edit_jenis_penerimaan' => 'required',
+            'edit_jenis_penerimaan' => 'required|string|max:10',
             'edit_tgl_bongkar' => 'required|date|after_or_equal:edit_tgl_penerimaan',
             'edit_no_bak' => 'required|string|max:10',
         ]);
@@ -328,6 +329,10 @@ class PenerimaanIkan extends Component
             'suppliers' => $this->suppliers,
             'grades' => $this->grades,
             'kategori_berat' => $this->kategori_berat,
-        ]);
+            'session_date' => $this->session_date,
+            'session_tgl_bongkar' => $this->session_tgl_bongkar,
+            'session_supplier' => $this->session_supplier,
+            'session_jenis_penerimaan' => $this->session_jenis_penerimaan,
+        ])->layout('layouts.app');
     }
 }
