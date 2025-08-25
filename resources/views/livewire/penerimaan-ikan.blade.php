@@ -48,7 +48,6 @@
                     @error('session_supplier') <span class="text-danger">{{ $message }}</span> @enderror
                     @if(!$session_date || !$session_tgl_bongkar)
                     @endif
-
                     <label for="session_jenis_penerimaan" class="mt-2">Jenis Penerimaan</label>
                     <select id="session_jenis_penerimaan" wire:model.live="session_jenis_penerimaan" class="form-control border-primary" 
                         @if(!$session_date || !$session_tgl_bongkar || !$session_supplier) disabled @endif required>
@@ -58,7 +57,6 @@
                     </select>
                     @error('session_jenis_penerimaan') <span class="text-danger">{{ $message }}</span> @enderror
                     @if(!$session_date || !$session_tgl_bongkar || !$session_supplier)
-                        <small class="text-muted">Pilih tanggal penerimaan, tanggal bongkar, dan supplier terlebih dahulu</small>
                     @endif
                 </div>
             </div>
@@ -74,7 +72,7 @@
                             <strong>Tanggal:</strong> {{ \Carbon\Carbon::parse($session_date)->format('d F Y') }}<br>
                             <strong>Tanggal Bongkar:</strong> {{ \Carbon\Carbon::parse($session_tgl_bongkar)->format('d F Y') }}<br>
                             <strong>Supplier:</strong> {{ $selectedSupplier ? $selectedSupplier->nama_supplier : 'Unknown' }}<br>
-                            <strong>Jenis Penerimaan:</strong> {{ $session_jenis_penerimaan }}
+                            <strong>Jenis Penerimaan:</strong> {{ $session_jenis_penerimaan }}<br>
                         </div>
                     @elseif($session_date || $session_tgl_bongkar || $session_supplier || $session_jenis_penerimaan)
                         <div class="alert alert-warning mb-0">
@@ -141,7 +139,6 @@
                             <strong>Jenis Penerimaan:</strong> {{ $session_jenis_penerimaan }}<br>
                         </div>
                     @endif
-                    
                     <form wire:submit.prevent="store" class="mt-0">
                         <div class="form-group">
                             <label for="grade_id">Grade</label>
@@ -162,6 +159,13 @@
                             <label for="suhu_ikan">Suhu Ikan (°C)</label>
                             <input type="number" wire:model="suhu_ikan" step="0.1" min="-50" max="50" class="form-control border-primary" required>
                             @error('suhu_ikan') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="no_bak">No Bak</label>
+                            <div class="input-group">
+                                <input type="text" wire:model="no_bak" class="form-control border-primary" required>
+                            </div>
+                            @error('no_bak') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
@@ -210,7 +214,7 @@
                     @if($session_jenis_penerimaan)
                         <strong>Jenis Penerimaan:</strong> {{ $session_jenis_penerimaan }}<br>
                     @endif
-                    <em>Lengkapi pilihan untuk melihat data spesifik</em>
+                    <br><em>Lengkapi pilihan untuk melihat data spesifik</em>
                 </div>
             @else
                 <div class="alert alert-info">
@@ -225,7 +229,7 @@
             'date' => $session_date,
             'tgl_bongkar' => $session_tgl_bongkar,
             'supplier' => $session_supplier,
-            'jenis_penerimaan' => $session_jenis_penerimaan
+            'jenis_penerimaan' => $session_jenis_penerimaan,
         ]) }}" 
         target="_blank" 
         class="btn btn-primary"
@@ -318,6 +322,13 @@
             font-weight: bold;
         }
 
+        #table .no-bak-column {
+            width: 65px;
+            min-width: 65px;
+            max-width: 65px;
+            background-color: #f0f8ff;
+            font-weight: bold;
+        }
         /* Responsive adjustments */
         @media (max-width: 768px) {
             #table {
@@ -346,6 +357,7 @@
                     <th colspan="2" class="section-20up">20 UP</th>
                     <th colspan="2" class="section-20down">20 DOWN</th>
                     <th rowspan="2" class="suhu-column">Suhu (°C)</th>
+                    <th rowspan="2" class="no-bak-column">No Bak</th>
                     <th rowspan="2" class="action-column">Action</th>
                 </tr>
                 <tr>
@@ -367,6 +379,8 @@
                         <td class="section-20down">{{ $item->grade->grade == 'D' && $item->kategori_berat_penerimaan->kategori_berat == '20 DOWN' ? $item->berat_ikan : '' }}</td>
                         <!-- Suhu Column -->
                         <td class="suhu-column">{{ $item->suhu_ikan ?? '-' }}°C</td>
+                        <!-- No Bak Column -->
+                        <td class="no-bak-column">{{ $item->no_bak ?? '-' }}</td>
                         <td class="action-column">
                             <button type="button" class="btn btn-outline-primary action-btn" data-bs-toggle="modal"
                                 data-bs-target="#editModal{{ $item->penerimaan_id }}" wire:click="edit({{ $item->penerimaan_id }})" title="Edit {{ $item->supplier->nama_supplier }} - {{ $item->grade->grade }} ({{ $item->berat_ikan }}kg)">
