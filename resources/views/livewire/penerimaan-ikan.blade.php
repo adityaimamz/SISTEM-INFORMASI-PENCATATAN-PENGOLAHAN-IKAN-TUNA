@@ -26,8 +26,7 @@
                         <label for="session_date" class="form-label">Tanggal Penerimaan</label>
                         <input type="date" id="session_date" 
                                wire:model.live="session_date" 
-                               class="form-control @error('session_date') is-invalid @enderror" 
-                               required>
+                               class="form-control @error('session_date') is-invalid @enderror" required>
                         @error('session_date')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -81,6 +80,7 @@
                             <option value="" selected disabled>Pilih Jenis Penerimaan</option>
                             <option value="Fresh GG">Fresh GG</option>
                             <option value="Frozen WR">Frozen WR</option>
+                            <option value="Frozen GG">Frozen GG</option>
                         </select>
                         @error('session_jenis_penerimaan')
                             <div class="invalid-feedback d-block">
@@ -547,7 +547,7 @@
                 </div>
             </div>
 
-            <!-- Modal Delete -->
+            <!------------------------ Modal Delete ------------------------>
             <div class="modal fade" id="deleteModal{{ $item->penerimaan_id }}" tabindex="-1" role="dialog"
                 aria-labelledby="deleteModalLabel{{ $item->penerimaan_id }}" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">

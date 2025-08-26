@@ -91,12 +91,12 @@
                     <ul class="submenu ">
 
                         <li class="submenu-item  {{ Request::is('akun') ? 'active' : '' }}">
-                            <a href="/akun" class="submenu-link">Data Akun</a>
+                            <a href="/akun" class="submenu-link">Akun</a>
 
                         </li>
 
                         <li class="submenu-item  {{ Request::is('suppliers') ? 'active' : '' }}">
-                            <a href="/suppliers" class="submenu-link">Data Supplier</a>
+                            <a href="/suppliers" class="submenu-link">Supplier</a>
                         </li>
 
                         <li class="submenu-item {{ Request::is('grade') ? 'active' : '' }} ">

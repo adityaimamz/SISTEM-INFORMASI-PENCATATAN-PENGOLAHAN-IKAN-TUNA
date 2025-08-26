@@ -44,7 +44,7 @@ class PenerimaanIkanController extends Controller
     public function create()
     {
         $jenis_penerimaan = ['Fresh GG', 'Frozen WR'];
-        return view('admin.transaksi.create_penerimaan_ikan', compact('jenis_penerimaan'));
+        
     }
 
     public function ikanPdf(Request $request)
@@ -96,7 +96,6 @@ class PenerimaanIkanController extends Controller
                 'grade_id' => 'required|exists:grades,id',
                 'berat_ikan' => 'required|numeric|min:10',
                 'tgl_penerimaan' => 'required|date',
-                'jenis_penerimaan' => 'required|in:Fresh GG,Frozen WR',
             ]);
 
             $kategoriBeratId = $this->getKategoriBeratId($validated['berat_ikan']);
@@ -111,7 +110,6 @@ class PenerimaanIkanController extends Controller
                 'kategori_berat_id' => $kategoriBeratId,
                 'berat_ikan' => $validated['berat_ikan'],
                 'tgl_penerimaan' => $validated['tgl_penerimaan'],
-                'jenis_penerimaan' => $validated['jenis_penerimaan'],
             ]);
 
             return redirect()->route('penerimaan_ikan.index')->with('success', 'Penerimaan Ikan berhasil ditambahkan.');
@@ -164,7 +162,6 @@ class PenerimaanIkanController extends Controller
             'grade_id' => 'required|exists:grades,id',
             'berat_ikan' => 'required|numeric|min:10',
             'tgl_penerimaan' => 'required|date',
-            'jenis_penerimaan' => 'required|in:Fresh GG,Frozen WR',
         ]);
 
         $kategoriBeratId = $this->getKategoriBeratId($validated['berat_ikan']);
@@ -176,7 +173,6 @@ class PenerimaanIkanController extends Controller
             'kategori_berat_id' => $kategoriBeratId,
             'tgl_penerimaan' => $validated['tgl_penerimaan'],
             'berat_ikan' => $validated['berat_ikan'],
-            'jenis_penerimaan' => $validated['jenis_penerimaan'],
         ]);
 
         return redirect()->route('penerimaan_ikan.index')->with('success', 'Penerimaan Ikan berhasil diperbarui.');

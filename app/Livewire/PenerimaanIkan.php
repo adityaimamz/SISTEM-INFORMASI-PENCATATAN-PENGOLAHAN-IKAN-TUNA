@@ -16,6 +16,7 @@ class PenerimaanIkan extends Component
     public $data = [];
     public $grades;
     public $kategori_berat;
+    public $summary;
     
     // Session date - tanggal penerimaan yang diinputkan sekali
     public $session_date;
@@ -58,6 +59,7 @@ class PenerimaanIkan extends Component
         $this->suppliers = Supplier::all();
         $this->grades = Grade::all();
         $this->kategori_berat = KategoriBeratPenerimaan::all();
+        //$this->summary = all();
         
         // Filter data based on current date initially
         $this->filterData();
