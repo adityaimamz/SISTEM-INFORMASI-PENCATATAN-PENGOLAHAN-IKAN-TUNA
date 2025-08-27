@@ -17,7 +17,49 @@ class PenerimaanIkan extends Component
     public $grades;
     public $kategori_berat;
     public $summary;
+
+    // NEW MODEL LIVEWIRE PENERIMAAN IKAN
+    public $rows = [];
     
+    public function addRow()
+    {
+        $this->rows[] = ['berat_ikan' => '', 'suhu_ikan' => ''];
+    }
+    public function removeRow($index)
+    {
+        unset($this->rows[$index]);
+        $this->rows = array_values($this->rows);
+    }
+    public function updatedRows(){
+        $this->validate([
+            'rows.*.berat_ikan' => 'required|numeric',
+            'rows.*.suhu_ikan' => 'required|numeric',
+        ]);
+    }
+    public function destroyRow($index){
+        unset($this->rows[$index]);
+        $this->rows = array_values($this->rows);
+    }
+    public function saveAll(){
+        foreach($this->rows as $row){
+        \App\Models\PenerimaanIkan::create([
+            'tgl_penerimaan' => $this->session_date,
+            'tgl_bongkar' => $this->session_tgl_bongkar,
+            'supplier_id' => $this->session_supplier,
+            'jenis_penerimaan' => $this->session_jenis_penerimaan,
+            'no_bak' => $this->noBakValue,
+            'grade_id' => $this->grade_id,
+            'berat_ikan' => $row['berat_ikan'],
+            'suhu_ikan' => $row['suhu_ikan'],
+            'created_by' => auth()->user()->id,
+        ]);
+        }
+        $this->rows = [];
+        session()->flash('message', 'Data berhasil disimpan!');
+    }
+    // END NEW MODEL LIVEWIRE PENERIMAAN IKAN
+
+    // OLD MODEL LIVEWIRE PENERIMAAN IKAN
     // Session date - tanggal penerimaan yang diinputkan sekali
     public $session_date;
     
