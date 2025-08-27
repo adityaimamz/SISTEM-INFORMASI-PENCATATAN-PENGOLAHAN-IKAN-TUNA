@@ -33,6 +33,11 @@
             margin-top: 20px;
         }
 
+        .info2 {
+            text-align: right;
+            margin-top: 20px;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -63,137 +68,95 @@
     </div>
 
     <!-- Date and Supplier Information -->
-    <h2>Laporan</h2>
-    <div class="info">
-        <p><strong>Tanggal Penerimaan</strong>: {{ $date ?? 'Semua Tanggal' }}</p>
-        @if(isset($tgl_bongkar) && $tgl_bongkar)
-            <p><strong>Tanggal Bongkar</strong>: {{ $tgl_bongkar }}</p>
-        @endif
-        <p><strong>Supplier</strong>: {{ $supplier_name }}</p>
-        <p><strong>Jenis Penerimaan</strong>: {{ $jenis_penerimaan_display }}</p>
-    </div>
+    <table style="width: 100%; margin-top: 20px;">
+        <tr>
+            <!-- Kolom Kiri -->
+            <td style="text-align: left; vertical-align: top; width: 50%;">
+                <p><strong>Tanggal Penerimaan</strong>: {{ $date ?? 'Semua Tanggal' }}</p>
+                <p><strong>Tanggal Bongkar</strong>: {{ $tgl_bongkar ?? '-' }}</p>
+            </td>
 
+            <!-- Kolom Kanan -->
+            <td style="text-align: right; vertical-align: top; width: 50%;">
+                <p><strong>Supplier</strong>: {{ $supplier_name }}</p>
+                <p><strong>Jenis Penerimaan</strong>: {{ $jenis_penerimaan_display }}</p>
+            </td>
+        </tr>
+</table>                    A   aZa                                                             a       ASA A0  A0AS    .   <a href="">aS       
+    aA  
+    0
+            36L6
+                3   603,
     <table class="table table-bordered" id="table">
         <tr>
-            <th rowspan="2">NO</th>
-            {{-- <th rowspan="2">Total</th> --}}
-            <th colspan="4">10-19</th>
-            <th colspan="4">20-29</th>
-            <th colspan="4">30 UP</th>
+            <th rowspan="2" class="no-column" style="width: 5%;" text-align="center">NO</th>
+            <th colspan="2" class="section-20up">20 UP</th>
+            <th colspan="2" class="section-20down">20 DOWN</th>
+            <th rowspan="2" class="suhu-column">Suhu (°C)</th>
+            <th rowspan="2" class="no-bak-column">No Bak</th>
         </tr>
         <tr>
-            <th>AB</th>
-            <th>C</th>
-            <th>ABC</th>
-            <th>Lokal</th>
-            <th>AB</th>
-            <th>C</th>
-            <th>ABC</th>
-            <th>Lokal</th>
-            <th>AB</th>
-            <th>C</th>
-            <th>ABC</th>
-            <th>Lokal</th>
+            <th class="section-20up">B/C</th>
+            <th class="section-20up">D</th>
+            <th class="section-20down">B/C</th>
+            <th class="section-20down">D</th>
         </tr>
         <tbody>
             {{-- @dd($data) --}}
             @foreach ($data as $key => $item)
-                <tr>
-                    <td>{{ $key + 1 }}</td>
-                    <td>{{ $item->grade->grade == 'AB' && $item->kategori_berat_penerimaan->kategori_berat == '10-19' ? $item->berat_ikan : '' }}
-                    </td>
-                    <td>{{ $item->grade->grade == 'C' && $item->kategori_berat_penerimaan->kategori_berat == '10-19' ? $item->berat_ikan : '' }}
-                    </td>
-                    <td>{{ $item->grade->grade == 'ABC' && $item->kategori_berat_penerimaan->kategori_berat == '10-19' ? $item->berat_ikan : '' }}
-                    </td>
-                    <td>{{ $item->grade->grade == 'Lokal' && $item->kategori_berat_penerimaan->kategori_berat == '10-19' ? $item->berat_ikan : '' }}
-                    </td>
-                    <td>{{ $item->grade->grade == 'AB' && $item->kategori_berat_penerimaan->kategori_berat == '20-29' ? $item->berat_ikan : '' }}
-                    </td>
-                    <td>{{ $item->grade->grade == 'C' && $item->kategori_berat_penerimaan->kategori_berat == '20-29' ? $item->berat_ikan : '' }}
-                    </td>
-                    <td>{{ $item->grade->grade == 'ABC' && $item->kategori_berat_penerimaan->kategori_berat == '20-29' ? $item->berat_ikan : '' }}
-                    </td>
-                    <td>{{ $item->grade->grade == 'Lokal' && $item->kategori_berat_penerimaan->kategori_berat == '20-29' ? $item->berat_ikan : '' }}
-                    </td>
-                    <td>{{ $item->grade->grade == 'AB' && $item->kategori_berat_penerimaan->kategori_berat == '30 UP' ? $item->berat_ikan : '' }}
-                    </td>
-                    <td>{{ $item->grade->grade == 'C' && $item->kategori_berat_penerimaan->kategori_berat == '30 UP' ? $item->berat_ikan : '' }}
-                    </td>
-                    <td>{{ $item->grade->grade == 'ABC' && $item->kategori_berat_penerimaan->kategori_berat == '30 UP' ? $item->berat_ikan : '' }}
-                    </td>
-                    <td>{{ $item->grade->grade == 'Lokal' && $item->kategori_berat_penerimaan->kategori_berat == '30 UP' ? $item->berat_ikan : '' }}
-                    </td>
-                </tr>
-            @endforeach
-            @php
-                $dataCollection = collect($data);
+                    <tr>
+                        <td class="no-column">{{ $key + 1 }}</td>
+                        <!-- 20 UP Section -->
+                        <td class="section-20up">{{ $item->grade->grade == 'B/C' && $item->kategori_berat_penerimaan->kategori_berat == '20 UP' ? $item->berat_ikan : '' }}</td>
+                        <td class="section-20up">{{ $item->grade->grade == 'D' && $item->kategori_berat_penerimaan->kategori_berat == '20 UP' ? $item->berat_ikan : '' }}</td>
+                        <!-- 20 DOWN Section -->
+                        <td class="section-20down">{{ $item->grade->grade == 'B/C' && $item->kategori_berat_penerimaan->kategori_berat == '20 DOWN' ? $item->berat_ikan : '' }}</td>
+                        <td class="section-20down">{{ $item->grade->grade == 'D' && $item->kategori_berat_penerimaan->kategori_berat == '20 DOWN' ? $item->berat_ikan : '' }}</td>
+                        <!-- Suhu Column -->
+                        <td class="suhu-column">{{ $item->suhu_ikan ?? '-' }}°C</td>
+                            3   32000000000000000000000000000000000000000000000002<<                       <td class="no-bak-column">{{ $item->no_bak ?? '-' }}</td>
+                    </tr>
+                @endforeach
+                
+                @php
+                    $dataCollection = collect($data);
 
-                $total_10up_ab = $dataCollection
-                    ->where('grade.grade', 'AB')
-                    ->where('kategori_berat_penerimaan.kategori_berat', '10-19')
-                    ->sum('berat_ikan');
-                $total_10up_c = $dataCollection
-                    ->where('grade.grade', 'C')
-                    ->where('kategori_berat_penerimaan.kategori_berat', '10-19')
-                    ->sum('berat_ikan');
-                $total_10up_abc = $dataCollection
-                    ->where('grade.grade', 'ABC')
-                    ->where('kategori_berat_penerimaan.kategori_berat', '10-19')
-                    ->sum('berat_ikan');
-                $total_10up_lokal = $dataCollection
-                    ->where('grade.grade', 'Lokal')
-                    ->where('kategori_berat_penerimaan.kategori_berat', '10-19')
-                    ->sum('berat_ikan');
-                $total_20up_ab = $dataCollection
-                    ->where('grade.grade', 'AB')
-                    ->where('kategori_berat_penerimaan.kategori_berat', '20-29')
-                    ->sum('berat_ikan');
-                $total_20up_c = $dataCollection
-                    ->where('grade.grade', 'C')
-                    ->where('kategori_berat_penerimaan.kategori_berat', '20-29')
-                    ->sum('berat_ikan');
-                $total_20up_abc = $dataCollection
-                    ->where('grade.grade', 'ABC')
-                    ->where('kategori_berat_penerimaan.kategori_berat', '20-29')
-                    ->sum('berat_ikan');
-                $total_20up_lokal = $dataCollection
-                    ->where('grade.grade', 'Lokal')
-                    ->where('kategori_berat_penerimaan.kategori_berat', '20-29')
-                    ->sum('berat_ikan');
-                $total_30up_ab = $dataCollection
-                    ->where('grade.grade', 'AB')
-                    ->where('kategori_berat_penerimaan.kategori_berat', '30 UP')
-                    ->sum('berat_ikan');
-                $total_30up_c = $dataCollection
-                    ->where('grade.grade', 'C')
-                    ->where('kategori_berat_penerimaan.kategori_berat', '30 UP')
-                    ->sum('berat_ikan');
-                $total_30up_abc = $dataCollection
-                    ->where('grade.grade', 'ABC')
-                    ->where('kategori_berat_penerimaan.kategori_berat', '30 UP')
-                    ->sum('berat_ikan');
-                $total_30up_lokal = $dataCollection
-                    ->where('grade.grade', 'Lokal')
-                    ->where('kategori_berat_penerimaan.kategori_berat', '30 UP')
-                    ->sum('berat_ikan');
-            @endphp
-
+                    // 20 UP columns (≥20kg)
+                    $total_20up_bc = $dataCollection
+                        ->where('grade.grade', 'B/C')
+                        ->where('kategori_berat_penerimaan.kategori_berat', '20 UP')
+                        ->sum('berat_ikan');
+                    $total_20up_d = $dataCollection
+                        ->where('grade.grade', 'D')
+                        ->where('kategori_berat_penerimaan.kategori_berat', '20 UP')
+                        ->sum('berat_ikan');
+                    // 20 DOWN columns (10-19kg)
+                    $total_20down_bc = $dataCollection
+                        ->where('grade.grade', 'B/C')
+                        ->where('kategori_berat_penerimaan.kategori_berat', '20 DOWN')
+                        ->sum('berat_ikan');
+                    $total_20down_d = $dataCollection
+                        ->where('grade.grade', 'D')
+                        ->where('kategori_berat_penerimaan.kategori_berat', '20 DOWN')
+                        ->sum('berat_ikan');
+                @endphp
             <tr>
-                <td><strong>Total</strong></td>
-                {{-- <td><strong></strong></td> --}}
-                <td><strong>{{ $total_10up_ab }}</strong></td>
-                <td><strong>{{ $total_10up_c }}</strong></td>
-                <td><strong>{{ $total_10up_abc }}</strong></td>
-                <td><strong>{{ $total_10up_lokal }}</strong></td>
-                <td><strong>{{ $total_20up_ab }}</strong></td>
-                <td><strong>{{ $total_20up_c }}</strong></td>
-                <td><strong>{{ $total_20up_abc }}</strong></td>
-                <td><strong>{{ $total_20up_lokal }}</strong></td>
-                <td><strong>{{ $total_30up_ab }}</strong></td>
-                <td><strong>{{ $total_30up_c }}</strong></td>
-                <td><strong>{{ $total_30up_abc }}</strong></td>
-                <td><strong>{{ $total_30up_lokal }}</strong></td>
+                <td><strong>Total (kg)</strong></td>
+                <td class="section-20up"><strong>{{ $total_20up_bc }}</strong></td>
+                <td class="section-20up"><strong>{{ $total_20up_d }}</strong></td>
+                <td class="section-20down"><strong>{{ $total_20down_bc }}</strong></td>
+                <td class="section-20down"><strong>{{ $total_20down_d }}</strong></td>
+                <td class="suhu-column">-</td>
+                <td></td>
+            </tr>
+            <tr class="total-row">
+                <td><strong>Total (Ekor)</strong></td>
+                <td class="section-20up"><strong>{{ $data->where('grade.grade', 'B/C')->where('kategori_berat_penerimaan.kategori_berat', '20 UP')->count() }}</strong></td>
+                <td class="section-20up"><strong>{{ $data->where('grade.grade', 'D')->where('kategori_berat_penerimaan.kategori_berat', '20 UP')->count() }}</strong></td>
+                <td class="section-20down"><strong>{{ $data->where('grade.grade', 'B/C')->where('kategori_berat_penerimaan.kategori_berat', '20 DOWN')->count() }}</strong></td>
+                <td class="section-20down"><strong>{{ $data->where('grade.grade', 'D')->where('kategori_berat_penerimaan.kategori_berat', '20 DOWN')->count() }}</strong></td>
+                <td class="suhu-column">-</td>
+                <td></td>
             </tr>
         </tbody>
     </table>

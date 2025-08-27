@@ -30,11 +30,14 @@ class PenerimaanIkan extends Component
     // Session jenis_penerimaan - jenis penerimaan yang diinputkan sekali
     public $session_jenis_penerimaan= '';
 
+    // Session no_bak - no bak yang diinputkan sekali
+    public $session_no_bak= '';
+
     // Properti untuk create/add new data
     public $grade_id;
     public $berat_ikan;
     public $suhu_ikan;
-    public $no_bak;
+   
 
     // Properti untuk edit
     public $edit_penerimaan_id;
@@ -46,7 +49,7 @@ class PenerimaanIkan extends Component
     public $edit_tgl_bongkar;
     public $edit_berat_ikan;
     public $edit_suhu_ikan;
-    public $edit_no_bak;
+    
 
     // Add new properties for No. Bak functionality
     public $selectedIds = [];
@@ -74,6 +77,7 @@ class PenerimaanIkan extends Component
         $this->session_supplier = null;
         $this->session_tgl_bongkar = null;
         $this->session_jenis_penerimaan = null;
+        $this->session_no_bak = null;
         $this->filterData();
     }
 
@@ -123,6 +127,11 @@ class PenerimaanIkan extends Component
                 $query->where('jenis_penerimaan', $this->session_jenis_penerimaan);
             }
 
+            // Apply no_bak filter if set
+            if ($this->session_no_bak) {
+                $query->where('no_bak', $this->session_no_bak);
+               }
+
             // Get filtered data
             $this->data = $query->orderBy('created_at', 'asc')->get();
             
@@ -140,7 +149,6 @@ class PenerimaanIkan extends Component
             'grade_id' => 'required|exists:grades,id',
             'berat_ikan' => 'required|numeric|min:10',
             'suhu_ikan' => 'required|numeric|min:-50|max:50',
-            'no_bak' => 'required|string|max:10',
         ]);
 
         try {
@@ -183,7 +191,7 @@ class PenerimaanIkan extends Component
                 'berat_ikan' => $this->berat_ikan,
                 'suhu_ikan' => $this->suhu_ikan,
                 'jenis_penerimaan' => $this->session_jenis_penerimaan,
-                'no_bak' => $this->no_bak,
+                'no_bak' => $this->session_no_bak,
             ]);
 
             // Refresh data setelah create
@@ -306,7 +314,6 @@ class PenerimaanIkan extends Component
         $this->grade_id = null;
         $this->berat_ikan = null;
         $this->suhu_ikan = null;
-        $this->no_bak = null;
     }
 
     // Fungsi untuk mereset field edit setelah update
@@ -335,6 +342,8 @@ class PenerimaanIkan extends Component
             'session_tgl_bongkar' => $this->session_tgl_bongkar,
             'session_supplier' => $this->session_supplier,
             'session_jenis_penerimaan' => $this->session_jenis_penerimaan,
+            'session_no_bak' => $this->session_no_bak,
+            'records' => Penerimaan_ikan::all(),
         ])->layout('layouts.app');
     }
 }

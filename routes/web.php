@@ -133,6 +133,7 @@ Route::get('/packing-pdf/{month}', [PackingController::class, 'packingPdf'])->na
 Route::get('/stok-masuk-pdf/{month}/{year}', [ProdukMasukController::class, 'stokMasukPdf'])->name('stok-masuk.pdf');
 Route::get('/stok-keluar-pdf', [ProdukKeluarController::class, 'stokKeluarPdf'])->name('stok-keluar.pdf');
 Route::resource('penerimaan_ikan', PenerimaanIkanController::class)->middleware('auth');
+Route::get('/grading', \App\Livewire\GradingProses::class)->name('grading.index')->middleware('auth');
 Route::resource('cutting', CuttingController::class)->middleware('auth');
 Route::resource('no_batch', NoBatchController::class)->middleware('auth');
 Route::resource('no_container', NoContainersController::class)->middleware('auth');
