@@ -17,6 +17,7 @@ class PenerimaanIkanController extends Controller
      */
     public function index()
     {
+        
         $data = Penerimaan_Ikan::all();
         $totaldata = Penerimaan_Ikan::count();
         $suppliers = Supplier::all();
@@ -60,7 +61,7 @@ class PenerimaanIkanController extends Controller
             $supplier_name = $supplierModel ? $supplierModel->nama_supplier : 'Supplier Tidak Ditemukan';
         }
 
-        $query = Penerimaan_Ikan::with(['grade', 'kategori_berat_penerimaan', 'supplier']);
+        $query = Penerimaan_Ikan::with(['grade', 'kategoriBeratPenerimaan', 'supplier']);
 
         if ($date) {
             $query->whereDate('tgl_penerimaan', $date);

@@ -2,28 +2,28 @@
 namespace App\Livewire;
 
 use Livewire\Component;
-use App\Models\Penerimaan_ikan;
+use App\Models\Penerimaan_Ikan;
 use App\Models\Supplier;
 use App\Models\Grade;
 use App\Models\KategoriBeratPenerimaan;
 
 class PenerimaanIkan extends Component
 {
+    public $penerimaanIkans;
     public $session_penerimaan_id;
     public $date;
     public $supplier;
     public $suppliers;
     public $data = [];
-    public $grades;
     public $kategori_berat;
-    public $summary;
 
     // NEW MODEL LIVEWIRE PENERIMAAN IKAN
     public $rows = [];
+    public $grades;
     
     public function addRow()
     {
-        $this->rows[] = ['berat_ikan' => '', 'suhu_ikan' => ''];
+        $this->rows[] = ['berat_ikan' => '', 'suhu_ikan' => '', 'grade_id' =>''];
     }
     public function removeRow($index)
     {
@@ -42,23 +42,24 @@ class PenerimaanIkan extends Component
     }
     public function saveAll(){
         foreach($this->rows as $row){
-        \App\Models\PenerimaanIkan::create([
+        \App\Models\Penerimaan_Ikan::create([
             'tgl_penerimaan' => $this->session_date,
             'tgl_bongkar' => $this->session_tgl_bongkar,
             'supplier_id' => $this->session_supplier,
             'jenis_penerimaan' => $this->session_jenis_penerimaan,
-            'no_bak' => $this->noBakValue,
-            'grade_id' => $this->grade_id,
+            'no_bak' => $this->session_no_bak,
+            'created_by' => auth()->user()->id,
+            //row data
+            'grade_id' => $row['grade_id'],
             'berat_ikan' => $row['berat_ikan'],
             'suhu_ikan' => $row['suhu_ikan'],
-            'created_by' => auth()->user()->id,
         ]);
         }
         $this->rows = [];
         session()->flash('message', 'Data berhasil disimpan!');
     }
     // END NEW MODEL LIVEWIRE PENERIMAAN IKAN
-
+//--------------------------------------------------------------------------------------------------------//
     // OLD MODEL LIVEWIRE PENERIMAAN IKAN
     // Session date - tanggal penerimaan yang diinputkan sekali
     public $session_date;
@@ -76,7 +77,6 @@ class PenerimaanIkan extends Component
     public $session_no_bak= '';
 
     // Properti untuk create/add new data
-    public $grade_id;
     public $berat_ikan;
     public $suhu_ikan;
    
@@ -94,18 +94,19 @@ class PenerimaanIkan extends Component
     
 
     // Add new properties for No. Bak functionality
-    public $selectedIds = [];
-    public $noBakValue = '';
+    public $session_selectedIds = [];
+    public $session_noBakValue = '';
 
     public function mount()
     {
+        $this->penerimaanIkans = \App\Models\Penerimaan_Ikan::with(['grade', 'kategoriBeratPenerimaan'])->get();
         $this->date = now()->toDateString();
         $this->session_date = now()->toDateString(); // Set default session date
         $this->suppliers = Supplier::all();
-        $this->grades = Grade::all();
-        $this->kategori_berat = KategoriBeratPenerimaan::all();
-        //$this->summary = all();
-        
+
+        // Ambil grades sekaligus relasi kategori_berat
+        //$this->grades = \App\Models\Grade::with('kategoriBerat')->get();
+
         // Filter data based on current date initially
         $this->filterData();
     }
@@ -143,11 +144,17 @@ class PenerimaanIkan extends Component
         $this->filterData();
     }
 
+    // Method untuk update data ketika session_no_bak berubah
+    public function updatedSessionNoBak()
+    {
+        $this->filterData();
+    }
+
     // Fungsi untuk filter data berdasarkan tanggal, supplier, dan jenis_penerimaan
     public function filterData()
     {
         try {
-            $query = Penerimaan_ikan::with(['supplier', 'grade', 'kategori_berat_penerimaan']);
+            $query = \App\Models\Penerimaan_Ikan::query()->with(['grade', 'kategoriBeratPenerimaan']);
 
             // Apply date filter if set
             if ($this->session_date) {
@@ -194,7 +201,7 @@ class PenerimaanIkan extends Component
         ]);
 
         try {
-            // Validasi session_date, session_tgl_bongkar, dan session_supplier terlebih dahulu
+            // Validasi session_date, session_tgl_bongkar, session_supplier, dan session_no_bak terlebih dahulu,
             if (!$this->session_date) {
                 session()->flash('error', 'Pilih tanggal penerimaan terlebih dahulu.');
                 return;
@@ -215,6 +222,11 @@ class PenerimaanIkan extends Component
                 return;
             }
 
+            if (!$this->session_no_bak) {
+                session()->flash('error', 'Pilih no bak terlebih dahulu.');
+                return;
+            }
+
             // Tentukan kategori_berat_id berdasarkan berat_ikan
             $kategori_berat_id = $this->getKategoriBeratId($this->berat_ikan);
             if (!$kategori_berat_id) {
@@ -223,7 +235,7 @@ class PenerimaanIkan extends Component
             }
 
             // Simpan data baru
-            Penerimaan_ikan::create([
+            PenerimaanIkan::create([
                 'penerimaan_id' => $this->session_penerimaan_id,
                 'supplier_id' => $this->session_supplier,
                 'grade_id' => $this->grade_id,
@@ -254,7 +266,7 @@ class PenerimaanIkan extends Component
     // Fungsi untuk mengisi properti edit
     public function edit($penerimaan_id)
     {
-        $ikan = Penerimaan_ikan::findOrFail($penerimaan_id);
+        $ikan = PenerimaanIkan::findOrFail($penerimaan_id);
 
         $this->edit_penerimaan_id = $ikan->penerimaan_id;
         $this->edit_supplier_id = $ikan->supplier_id;
@@ -292,7 +304,7 @@ class PenerimaanIkan extends Component
             }
 
             // Update data
-            $ikan = Penerimaan_ikan::findOrFail($this->edit_penerimaan_id);
+            $ikan = PenerimaanIkan::findOrFail($this->edit_penerimaan_id);
             $ikan->update([
                 'supplier_id' => $this->edit_supplier_id,
                 'grade_id' => $this->edit_grade_id,
@@ -321,13 +333,14 @@ class PenerimaanIkan extends Component
     public function delete($penerimaan_id)
     {
         try {
-            Penerimaan_ikan::destroy($penerimaan_id);
+            PenerimaanIkan::destroy($penerimaan_id);
             $this->filterData();
             session()->flash('message', 'Data berhasil dihapus.');
         } catch (\Exception $e) {
             session()->flash('error', 'Gagal menghapus data: ' . $e->getMessage());
         }
     }
+
 
     /**
      * Mendapatkan ID kategori berat berdasarkan berat ikan.
@@ -385,7 +398,8 @@ class PenerimaanIkan extends Component
             'session_supplier' => $this->session_supplier,
             'session_jenis_penerimaan' => $this->session_jenis_penerimaan,
             'session_no_bak' => $this->session_no_bak,
-            'records' => Penerimaan_ikan::all(),
+            'records' => PenerimaanIkan::all(),
+            'penerimaanIkans' => $this->penerimaanIkans,
         ])->layout('layouts.app');
     }
 }

@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Penerimaan_ikan extends Model
+class Penerimaan_Ikan extends Model
 {
     use HasFactory;
 
-    protected $guarded = [''];
+    protected $table = 'penerimaan_ikans';
 
     protected $primaryKey = 'penerimaan_id';
 
@@ -37,7 +37,7 @@ class Penerimaan_ikan extends Model
         return $this->belongsTo(Grade::class, 'grade_id');
     }
 
-    public function kategori_berat_penerimaan()
+    public function kategoriBeratPenerimaan()
     {
         return $this->belongsTo(KategoriBeratPenerimaan::class, 'kategori_berat_id');
     }

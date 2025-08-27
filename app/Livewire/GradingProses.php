@@ -3,7 +3,7 @@
 namespace App\Livewire;
 
 use Livewire\Component;
-use App\Models\Penerimaan_ikan;
+use App\Models\penerimaanIkan;
 use App\Models\Grade;
 use Carbon\Carbon;
 

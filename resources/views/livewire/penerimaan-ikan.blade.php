@@ -113,7 +113,7 @@
             {{-- Status Sesi --}}
             <div class="row mt-3">
                 <div class="col-12">
-                    @if($session_date && $session_tgl_bongkar && $session_supplier && $session_jenis_penerimaan)
+                    @if($session_date && $session_tgl_bongkar && $session_supplier && $session_jenis_penerimaan && $session_no_bak)
                         @php    
                             $selectedSupplier = $suppliers->firstWhere('supplier_id', $session_supplier);
                         @endphp
@@ -153,84 +153,110 @@
     {{-- ======== TABEL INPUT DETAIL (berat & suhu) ======== --}}
     <div class="card" style="max-width: 450px;">
         <div class="card-header d-flex justify-content-between align-items-center py-1 px-2">
-            <span class="small fw-bold">Input Berat & Suhu</span>
+            <span class="small fw-bold">Tally Penerimaan Ikan Tuna</span>
             <button class="btn btn-sm btn-success py-0 px-1" wire:click="addRow" style="font-size: 0.7rem;">
                 <i class="bi bi-plus-circle"></i> <span class="small">Tambah</span>
             </button>
         </div>
         <div class="card-body p-1">
             <div class="table-responsive">
-                <table class="table table-sm table-bordered m-0" style="font-size: 0.7rem;">
-                    <thead class="table-light">
-                        <tr>
-                            <th class="text-center py-0 px-1" style="width: 15%;">No Bak</th>
-                            <th class="text-center py-0 px-1" style="width: 15%;">Berat (kg)</th>
-                            <th class="text-center py-0 px-1">Suhu (°C)</th>
-                            <th class="text-center py-0 px-1" style="width: 35px;">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @php
-                            $rowsCollection = collect($rows ?? []);
-                            $total_berat = $rowsCollection->sum(fn($row) => (float)($row['berat'] ?? 0));
-                            $total_ekor = $rowsCollection->count();
-                        @endphp
-                        @foreach($rowsCollection as $index => $row)
-                            <tr>
-                                {{-- No Bak --}}
-                                <td class="text-center py-0 px-1">
-                                    <div>{{ $session_no_bak }}</div>
-                                </td>
-                                {{-- Berat --}}
-                                <td class="text-center py-0 px-1">
-                                    <input type="number" step="0.1" wire:model="rows.{{ $index }}.berat" 
-                                        class="form-control form-control-sm py-0 px-1"
-                                        style="font-size: 0.7rem; height: 20px; width: 100%;">
-                                    @error("rows.$index.berat") 
-                                        <div class="text-danger" style="font-size: 0.6rem; line-height: 1;">{{ $message }}</div> 
-                                    @enderror
-                                </td>
-                                {{-- Suhu --}}
-                                <td class="text-center py-0 px-1">
-                                    <input type="number" step="0.1" wire:model="rows.{{ $index }}.suhu" 
-                                        class="form-control form-control-sm py-0 px-1"
-                                        style="font-size: 0.7rem; height: 20px; width: 100%;">
-                                    @error("rows.$index.suhu") 
-                                        <div class="text-danger" style="font-size: 0.6rem; line-height: 1;">{{ $message }}</div> 
-                                    @enderror
-                                </td>
-                                {{-- Aksi --}}
-                                <td class="text-center py-0 px-1">
-                                    <button class="btn btn-danger btn-sm py-0" 
-                                        wire:click="removeRow({{ $index }})"
-                                        style="font-size: 0.65rem; width: 20px; height: 20px; line-height: 1;">
-                                        <i class="bi bi-x"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                    @endforeach
+            <table class="table table-bordered table-sm text-center align-middle" style="font-size: .75rem;">
+            <table class="table table-bordered table-sm align-middle mb-0">
+            <thead class="table-light text-center align-middle">
+                <tr>
+                    {{-- No Bak dan Aksi menempel ke bawah --}}
+                    <th rowspan="2" style="width: 100px;">No. Bak</th>
 
-                    @if(count($rows) == 0)
-                        <tr>
-                            <td colspan="4" class="text-muted py-1 text-center" style="font-size: 0.6rem;">
-                                Klik "Tambah" untuk menambahkan data
-                            </td>
-                        </tr>
-                    @endif
+                    {{-- Grade di atas --}}
+                    <th colspan="2">
+                        <select wire:model="penerimaan_id" 
+                                class="form-control form-control-sm text-center" 
+                                style="font-size:.8rem; height:30px;">
+                            <option value="">-- Grade/Size --</option>
+                            @foreach($penerimaanIkans as $pi)
+                                <option value="{{ $pi->penerimaan_id }}">
+                                    {{ $pi->grade->grade }} {{ $pi->kategoriBeratPenerimaan->kategori_berat }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </th>
 
-                    {{-- Total --}}
-                    <tr class="table-secondary fw-bold">
-                        <td class="text-center">Total:</td>
-                        <td class="text-end">{{ number_format($total_berat, 2) }} kg </td>
-                        <td class="text-center">{{ $total_ekor }} ekor</td>
-                        <td></td>
+
+                    <th rowspan="2" style="width: 80px;">Aksi</th>
+                </tr>
+                <tr>
+                    <th style="width: 120px;">Berat (Kg)</th>
+                    <th style="width: 120px;">Suhu (°C)</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @php
+                    $rowsCollection = collect($rows ?? []);
+                    $total_berat = $rowsCollection->sum(fn($r) => (float)($r['berat'] ?? 0));
+                    $total_ekor  = $rowsCollection->count();
+                @endphp
+
+                @forelse($rows as $index => $row)
+                    <tr>
+                        {{-- No. Bak --}}
+                        <td class="text-center align-middle">{{ $session_no_bak }}</td>
+
+                        {{-- Berat --}}
+                        <td>
+                            <input type="number" step="0.01" 
+                                wire:model="rows.{{ $index }}.berat"
+                                class="form-control form-control-sm text-center"
+                                placeholder="Kg"
+                                style="font-size:.8rem; height:30px;">
+                            @error("rows.$index.berat")
+                                <div class="text-danger small">{{ $message }}</div>
+                            @enderror
+                        </td>
+
+                        {{-- Suhu --}}
+                        <td>
+                            <input type="number" step="0.1" 
+                                wire:model="rows.{{ $index }}.suhu"
+                                class="form-control form-control-sm text-center"
+                                placeholder="°C"
+                                style="font-size:.8rem; height:30px;">
+                            @error("rows.$index.suhu")
+                                <div class="text-danger small">{{ $message }}</div>
+                            @enderror
+                        </td>
+
+                        {{-- Aksi --}}
+                        <td class="text-center align-middle">
+                            <button class="btn btn-danger btn-sm py-0"
+                                    wire:click="removeRow({{ $index }})"
+                                    style="font-size:.7rem; height:30px; width:30px;">
+                                <i class="bi bi-x"></i>
+                            </button>
+                        </td>
                     </tr>
-                </tbody>
-            </table>
+                @empty
+                    <tr>
+                        <td colspan="4" class="text-muted text-center py-2">
+                            Klik <b>Tambah</b> untuk menambahkan data
+                        </td>
+                    </tr>
+                @endforelse
+
+                {{-- Total --}}
+                <tr class="table-secondary fw-bold text-center">
+                    <td>TOTAL</td>
+                    <td>{{ number_format($total_berat, 2) }} kg</td>
+                    <td>{{ $total_ekor }} ekor</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+
         </div>
         <div class="card-footer text-end py-1 px-2">
             <button class="btn btn-primary btn-sm py-0 px-2" wire:click="saveAll" 
-                style="font-size: 0.7rem; height: 24px;">
+                style="font-size: 0.7rem; height: 30px;">
                 <i class="bi bi-save"></i> Simpan
             </button>
         </div>

@@ -15,4 +15,9 @@ class Grade extends Model
     {
         return $this->hasMany(PenerimaanIkan::class);
     }
+
+    public function kategoriBerat()
+    {
+        return $this->belongsTo(KategoriBeratPenerimaan::class, 'kategori_berat_id');
+    }
 }
