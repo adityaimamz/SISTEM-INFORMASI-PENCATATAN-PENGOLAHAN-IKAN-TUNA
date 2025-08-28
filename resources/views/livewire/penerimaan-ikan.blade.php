@@ -173,14 +173,17 @@
                                 class="form-control form-control-sm text-center" 
                                 style="font-size:.8rem; height:30px;">
                             <option value="">-- Grade/Size --</option>
-                            @foreach($penerimaanIkans as $pi)
-                                <option value="{{ $pi->penerimaan_id }}">
-                                    {{ $pi->grade->grade }} {{ $pi->kategoriBeratPenerimaan->kategori_berat }}
-                                </option>
-                            @endforeach
+                            @if(!empty($combinations))
+                                @foreach($combinations as $combo)
+                                    <option value="{{ $combo['value'] }}">
+                                        {{ $combo['grade'] }} {{ $combo['kategori_berat'] }}
+                                    </option>
+                                @endforeach
+                            @else
+                                <option value="">-- Tidak ada Grade/Size --</option>
+                            @endif
                         </select>
                     </th>
-
 
                     <th rowspan="2" style="width: 80px;">Aksi</th>
                 </tr>
@@ -225,9 +228,7 @@
                                 <div class="text-danger small">{{ $message }}</div>
                             @enderror
                         </td>
-
-                        {{-- Aksi --}}
-                        <td class="text-center align-middle">
+                        <td>
                             <button class="btn btn-danger btn-sm py-0"
                                     wire:click="removeRow({{ $index }})"
                                     style="font-size:.7rem; height:30px; width:30px;">
@@ -252,6 +253,7 @@
                 </tr>
             </tbody>
         </table>
+      
 
         </div>
         <div class="card-footer text-end py-1 px-2">

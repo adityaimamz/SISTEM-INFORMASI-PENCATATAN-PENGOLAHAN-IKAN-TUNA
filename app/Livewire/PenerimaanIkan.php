@@ -9,17 +9,18 @@ use App\Models\KategoriBeratPenerimaan;
 
 class PenerimaanIkan extends Component
 {
-    public $penerimaanIkans;
+    public $penerimaanIkans = [];
+    public $combinations = [];
     public $session_penerimaan_id;
     public $date;
     public $supplier;
-    public $suppliers;
+    public $suppliers = [];
     public $data = [];
     public $kategori_berat;
 
     // NEW MODEL LIVEWIRE PENERIMAAN IKAN
     public $rows = [];
-    public $grades;
+    public $grades = [];
     
     public function addRow()
     {
@@ -42,6 +43,9 @@ class PenerimaanIkan extends Component
     }
     public function saveAll(){
         foreach($this->rows as $row){
+            if (!isset($row['penerimaan_id']) || !$row['penerimaan_id']) {
+                continue;
+            }
         \App\Models\Penerimaan_Ikan::create([
             'tgl_penerimaan' => $this->session_date,
             'tgl_bongkar' => $this->session_tgl_bongkar,
@@ -51,6 +55,7 @@ class PenerimaanIkan extends Component
             'created_by' => auth()->user()->id,
             //row data
             'grade_id' => $row['grade_id'],
+            'kategori_berat_id' => $row['kategori_berat_id'],
             'berat_ikan' => $row['berat_ikan'],
             'suhu_ikan' => $row['suhu_ikan'],
         ]);
@@ -59,8 +64,9 @@ class PenerimaanIkan extends Component
         session()->flash('message', 'Data berhasil disimpan!');
     }
     // END NEW MODEL LIVEWIRE PENERIMAAN IKAN
+
 //--------------------------------------------------------------------------------------------------------//
-    // OLD MODEL LIVEWIRE PENERIMAAN IKAN
+        // OLD MODEL LIVEWIRE SESSION PENERIMAAN IKAN
     // Session date - tanggal penerimaan yang diinputkan sekali
     public $session_date;
     
@@ -99,89 +105,90 @@ class PenerimaanIkan extends Component
 
     public function mount()
     {
-        $this->penerimaanIkans = \App\Models\Penerimaan_Ikan::with(['grade', 'kategoriBeratPenerimaan'])->get();
-        $this->date = now()->toDateString();
-        $this->session_date = now()->toDateString(); // Set default session date
-        $this->suppliers = Supplier::all();
+        $this->penerimaanIkans = \App\Models\Penerimaan_Ikan::with
+                                (['grade', 'kategoriBeratPenerimaan'])->get(); //Load data penerimaan ikan
+        $this->suppliers = Supplier::all(); //Load data supplier
+        $this->grades = Grade::all(); //Load data grade
+        $this->kategoriBerats = KategoriBeratPenerimaan::all(); //Load data kategori berat
+        $this->generateCombination(); //Generate kombinasi gradeXkategori berat
 
-        // Ambil grades sekaligus relasi kategori_berat
-        //$this->grades = \App\Models\Grade::with('kategoriBerat')->get();
-
-        // Filter data based on current date initially
+        $this->date = now()->toDateString(); //Load data tanggal
+        $this->session_date = now()->toDateString(); 
+        
         $this->filterData();
     }
+    // Method kombinasi grade dan kategori berat
+    public function generateCombination()
+    {
+        $grades = $this->grades;
+        $kategoriBerats = $this->kategoriBerats;
 
-    // Method untuk update data ketika session_date berubah
+        $this->combinations = [];
+
+        foreach ($grades as $grade) {
+            foreach ($kategoriBerats as $kategoriBerat) {
+                $this->combinations[] = [
+                    'grade' => $grade->grade,
+                    'kategori_berat' => $kategoriBerat->kategori_berat,
+                    'value' => $grade->grade_id . ' - ' . $kategoriBerat->kategori_berat_id,
+                ];
+            }
+        }
+    }
+
+                                        // AWAL METHOD SEMUA UPDATE DATA
     public function updatedSessionDate()
     {
-        // Update filter date to match session date
         $this->date = $this->session_date;
-        // Reset session supplier when date changes
         $this->session_supplier = null;
         $this->session_tgl_bongkar = null;
         $this->session_jenis_penerimaan = null;
         $this->session_no_bak = null;
         $this->filterData();
     }
-
-    // Method untuk update data ketika session_tgl_bongkar berubah
     public function updatedSessionTglBongkar()
     {
         $this->filterData();
     }
-
-    // Method untuk update data ketika session_supplier berubah
     public function updatedSessionSupplier()
     {
-        // Update filter supplier to match session supplier
         $this->supplier = $this->session_supplier;
         $this->filterData();
     }
-
-    // Method untuk update data ketika session_jenis_penerimaan berubah
     public function updatedSessionJenisPenerimaan($value)
     {
         $this->filterData();
     }
-
-    // Method untuk update data ketika session_no_bak berubah
     public function updatedSessionNoBak()
     {
         $this->filterData();
     }
+                                        // AKHIR METHOD SEMUA UPDATE DATA
 
-    // Fungsi untuk filter data berdasarkan tanggal, supplier, dan jenis_penerimaan
+
+
+                                        // AWAL METHOD FILTER SEMUA DATA
     public function filterData()
     {
         try {
-            $query = \App\Models\Penerimaan_Ikan::query()->with(['grade', 'kategoriBeratPenerimaan']);
+            $query = \App\Models\Penerimaan_Ikan::query()
+                                ->with(['grade', 'kategoriBeratPenerimaan']);
 
-            // Apply date filter if set
             if ($this->session_date) {
                 $query->whereDate('tgl_penerimaan', $this->session_date);
             }
-
-            // Apply tgl_bongkar filter if set
             if ($this->session_tgl_bongkar) {
                 $query->whereDate('tgl_bongkar', $this->session_tgl_bongkar);
             }
-
-            // Apply supplier filter if set
             if ($this->session_supplier) {
                 $query->where('supplier_id', $this->session_supplier);
             }
-
-            // Apply jenis_penerimaan filter if set
             if ($this->session_jenis_penerimaan) {
                 $query->where('jenis_penerimaan', $this->session_jenis_penerimaan);
             }
-
-            // Apply no_bak filter if set
             if ($this->session_no_bak) {
                 $query->where('no_bak', $this->session_no_bak);
                }
-
-            // Get filtered data
             $this->data = $query->orderBy('created_at', 'asc')->get();
             
         } catch (\Exception $e) {
@@ -190,10 +197,26 @@ class PenerimaanIkan extends Component
             session()->flash('error', 'Gagal memuat data: ' . $e->getMessage());
         }
     }
+                                        // AKHIR METHOD FILTER SEMUA DATA
 
-    // Fungsi untuk menyimpan data baru
+
+                                        // AWAL METHOD STORE SEMUA DATA
     public function store()
     {
+        // Methode simpan data baru
+        if(!$this->penerimaan_id){
+            $this->addError('penerimaan_id', 'Silahkan pilih grade/size');
+            return;
+        }
+        list($grade_id, $kategori_berat_id) = explode(' - ', $row['penerimaan_id']);
+
+        if(!$grade_id || !$kategori_berat_id){
+            $this->addError('penerimaan_id', 'Silahkan pilih grade/size');
+            return;
+        }
+        
+        
+        // Validasi data
         $this->validate([
             'grade_id' => 'required|exists:grades,id',
             'berat_ikan' => 'required|numeric|min:10',
@@ -201,7 +224,7 @@ class PenerimaanIkan extends Component
         ]);
 
         try {
-            // Validasi session_date, session_tgl_bongkar, session_supplier, dan session_no_bak terlebih dahulu,
+            // Validasi semua session
             if (!$this->session_date) {
                 session()->flash('error', 'Pilih tanggal penerimaan terlebih dahulu.');
                 return;
@@ -234,25 +257,27 @@ class PenerimaanIkan extends Component
                 return;
             }
 
-            // Simpan data baru
+            // Simpan data penerimaan ikan
             PenerimaanIkan::create([
-                'penerimaan_id' => $this->session_penerimaan_id,
-                'supplier_id' => $this->session_supplier,
-                'grade_id' => $this->grade_id,
+                'grade_id' => $grade_id,
                 'kategori_berat_id' => $kategori_berat_id,
                 'tgl_penerimaan' => $this->session_date,
                 'tgl_bongkar' => $this->session_tgl_bongkar,
-                'berat_ikan' => $this->berat_ikan,
-                'suhu_ikan' => $this->suhu_ikan,
+                'supplier_id' => $this->session_supplier,
                 'jenis_penerimaan' => $this->session_jenis_penerimaan,
                 'no_bak' => $this->session_no_bak,
+                'created_by' => auth()->user()->id,
+                'berat_ikan' => $this->berat_ikan,
+                'suhu_ikan' => $this->suhu_ikan,
             ]);
 
             // Refresh data setelah create
             $this->filterData();
+            $this->PenerimaanIkan = PenerimaanIkan::with(['grade', 'kategoriBeratPenerimaan'])->get();
 
             // Reset form fields
             $this->resetCreateForm();
+            $this->reset(['penerimaan_id', 'berat_ikan', 'suhu_ikan']);
 
             session()->flash('message', 'Data penerimaan ikan berhasil ditambahkan.');
             
@@ -263,7 +288,10 @@ class PenerimaanIkan extends Component
         }
     }
 
-    // Fungsi untuk mengisi properti edit
+                                            // AKHIR METHOD STORE SEMUA DATA
+
+
+                                            // AWAL METHOD EDIT DATA
     public function edit($penerimaan_id)
     {
         $ikan = PenerimaanIkan::findOrFail($penerimaan_id);
@@ -280,7 +308,10 @@ class PenerimaanIkan extends Component
         $this->edit_no_bak = $ikan->no_bak;
     }
 
-    // Fungsi untuk menyimpan perubahan
+                                            // AKHIR METHOD EDIT DATA
+
+
+                                            // AWAL METHOD UPDATE DATA
     public function update()
     {
         $this->validate([
@@ -329,7 +360,10 @@ class PenerimaanIkan extends Component
         }
     }
 
-    // Fungsi untuk menghapus data
+                                            // AKHIR METHOD UPDATE DATA
+
+                                            
+                                            // AWAL METHOD DELETE DATA
     public function delete($penerimaan_id)
     {
         try {
@@ -340,6 +374,8 @@ class PenerimaanIkan extends Component
             session()->flash('error', 'Gagal menghapus data: ' . $e->getMessage());
         }
     }
+
+                                            // AKHIR METHOD DELETE DATA
 
 
     /**
@@ -363,7 +399,7 @@ class PenerimaanIkan extends Component
         }
     }
 
-    // Fungsi untuk mereset field create setelah store
+                                            // AWAL METHOD RESET FORM
     private function resetCreateForm()
     {
         $this->grade_id = null;
@@ -371,7 +407,10 @@ class PenerimaanIkan extends Component
         $this->suhu_ikan = null;
     }
 
-    // Fungsi untuk mereset field edit setelah update
+                                            // AKHIR METHOD RESET FORM
+
+                                            
+                                            // AWAL METHOD RESET FORM EDIT
     private function resetEditFields()
     {
         $this->edit_penerimaan_id = null;
@@ -386,6 +425,10 @@ class PenerimaanIkan extends Component
         $this->edit_no_bak = null;
     }
 
+                                            // AKHIR METHOD RESET FORM EDIT
+
+
+                                            // AWAL METHOD RENDER
     public function render()
     {
         return view('livewire.penerimaan-ikan', [
