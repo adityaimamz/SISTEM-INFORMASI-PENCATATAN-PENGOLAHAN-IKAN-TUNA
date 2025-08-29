@@ -81,6 +81,7 @@ class PenerimaanIkan extends Component
     
     public function saveAll()
     {
+        \Log::info('Menyimpan Data');
         $this->validate([
             'session_date' => 'required|date',
             'session_tgl_bongkar' => 'required|date|after_or_equal:session_date',

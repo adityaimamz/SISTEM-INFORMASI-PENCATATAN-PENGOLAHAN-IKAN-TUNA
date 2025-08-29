@@ -175,7 +175,7 @@
                             @foreach($grades as $grade)
                                 @foreach($kategori_berat as $kategori)
                                     <option value="{{ $grade->grade_id }}_{{ $kategori->kategori_berat_id }}">
-                                        {{ $grade->grade }} {{ $kategori->kategori_berat }}
+                                        {{ $grade->grade }} - {{ $kategori->kategori_berat }}
                                     </option>
                                 @endforeach
                             @endforeach
