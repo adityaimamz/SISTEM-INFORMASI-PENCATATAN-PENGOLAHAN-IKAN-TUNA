@@ -16,17 +16,6 @@
 
     {{-- Form Input Data & Filter --}}
     <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="card-title mb-0">Filter & Input Data Penerimaan</h5>
-            <div>
-                <button type="button" wire:click="filterData" class="btn btn-primary btn-sm me-1">
-                    <i class="bi bi-funnel"></i> Terapkan Filter
-                </button>
-                <button type="button" wire:click="resetFilter" class="btn btn-secondary btn-sm">
-                    <i class="bi bi-arrow-counterclockwise"></i> Reset
-                </button>
-            </div>
-        </div>
         <div class="card-body">
             <div class="row g-3">
                 <div class="col-md-3">
@@ -76,7 +65,6 @@
                     <label for="session_jenis_penerimaan" class="form-label">Jenis Penerimaan</label>
                     <select id="session_jenis_penerimaan"
                             wire:model.live="session_jenis_penerimaan"
-                            wire:loading.attr="disabled"
                             class="form-select @error('session_jenis_penerimaan') is-invalid @enderror"
                             @if(!$session_date || !$session_tgl_bongkar || !$session_supplier) disabled @endif 
                             required>
@@ -169,12 +157,13 @@
                     {{-- Grade di atas --}}
                     <th colspan="2">
                         <select wire:model.live="selected_grade_id" 
-                                class="form-control form-control-sm text-center" 
-                                style="font-size:.8rem; height:30px;">
+                                class="form-select form-control-sm text-center @error('selected_grade_id') is-invalid @enderror" 
+                                @if(!$session_date || !$session_tgl_bongkar || !$session_supplier || !$session_jenis_penerimaan || !$session_no_bak) disabled @endif 
+                                required style="font-size:.8rem; height:30px;">
                             <option value="">-- Grade/Size --</option>
                             @foreach($grades as $grade)
                                 @foreach($kategori_berat as $kategori)
-                                    <option value="{{ $grade->grade_id }}_{{ $kategori->kategori_berat_id }}">
+                                    <option value="{{ $grade->id }}_{{ $kategori->id }}">
                                         {{ $grade->grade }} - {{ $kategori->kategori_berat }}
                                     </option>
                                 @endforeach
@@ -211,7 +200,7 @@
                                     class="form-control form-control-sm text-center"
                                     placeholder="Kg"
                                     required>
-                                @error('rows.'.$index.'.berat_ikan')
+                                @error('rows.{{ $index }}.berat_ikan')
                                     <div class="text-danger small">{{ $message }}</div>
                                 @enderror
                             </td>
@@ -223,14 +212,14 @@
                                     class="form-control form-control-sm text-center"
                                     placeholder="°C"
                                     required>
-                                @error('rows.'.$index.'.suhu_ikan')
+                                @error('rows.{{ $index }}.suhu_ikan')
                                     <div class="text-danger small">{{ $message }}</div>
                                 @enderror
                             </td>
                             <td>
                                 <button class="btn btn-danger btn-sm py-0"
                                         wire:click="removeRow({{ $index }})"
-                                        style="font-size:.7rem; height:30px; width:30px;">
+                                         style="font-size:.7rem; height:30px; width:30px;">
                                     <i class="bi bi-x"></i>
                                 </button>
                             </td>
@@ -248,13 +237,20 @@
                 @endif
             </tbody>
         </table>
-      
-
         </div>
         <div class="card-footer text-end py-1 px-2">
-            <button class="btn btn-primary btn-sm py-0 px-2" wire:click="saveAll" 
+            <button type="button" 
+                class="btn btn-primary btn-sm py-0 px-2" 
+                wire:click.prevent="saveAll" 
+                wire:loading.attr="disabled"
                 style="font-size: 0.7rem; height: 30px;">
-                <i class="bi bi-save"></i> Simpan
+                <span wire:loading.remove wire:target="saveAll">
+                    <i class="bi bi-save"></i> Simpan
+                </span>
+                <span wire:loading wire:target="saveAll">
+                    <span class="spinner-border spinner-border-sm" role="status"></span> 
+                    Menyimpan...
+                </span>
             </button>
         </div>
     </div>

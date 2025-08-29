@@ -15,13 +15,13 @@ class Penerimaan_Ikan extends Model
 
     protected $fillable = [
         'supplier_id',
+        'jenis_penerimaan',
         'grade_id',
         'kategori_berat_id',
         'berat_ikan',
         'tgl_penerimaan',
         'tgl_bongkar',
         'suhu_ikan',
-        'jenis_penerimaan',
         'no_bak',
     ];
 
