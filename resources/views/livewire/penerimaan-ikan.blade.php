@@ -147,17 +147,16 @@
         </div>
         <div class="card-body p-1">
             <div class="table-responsive">
-            <table class="table table-bordered table-sm text-center align-middle" style="font-size: .75rem;">
-            <table class="table table-bordered table-sm align-middle mb-0">
+            <table class="table table-bordered table-sm text-center excel-input align-middle" style="font-size: .75rem;">
             <thead class="table-light text-center align-middle">
                 <tr>
                     {{-- No Bak dan Aksi menempel ke bawah --}}
                     <th rowspan="2" style="width: 100px;">No. Bak</th>
 
                     {{-- Grade di atas --}}
-                    <th colspan="2">
+                    <th colspan="3">
                         <select wire:model.live="selected_grade_id" 
-                                class="form-select form-control-sm text-center @error('selected_grade_id') is-invalid @enderror" 
+                                class="form-select form-control-sm text-center excel-input @error('selected_grade_id') is-invalid @enderror" 
                                 @if(!$session_date || !$session_tgl_bongkar || !$session_supplier || !$session_jenis_penerimaan || !$session_no_bak) disabled @endif 
                                 required style="font-size:.8rem; height:30px;">
                             <option value="">-- Grade/Size --</option>
@@ -176,6 +175,7 @@
                 <tr>
                     <th style="width: 120px;">Berat (Kg)</th>
                     <th style="width: 120px;">Suhu (°C)</th>
+                    <th style="width: 120px;">No Ikan</th>
                 </tr>
             </thead>
 
@@ -197,7 +197,7 @@
                             <td>
                                 <input type="number" step="0.01" 
                                     wire:model="rows.{{ $index }}.berat_ikan"
-                                    class="form-control form-control-sm text-center"
+                                    class="form-control form-control-sm excel-input text-center"
                                     placeholder="Kg"
                                     required>
                                 @error('rows.{{ $index }}.berat_ikan')
@@ -209,10 +209,22 @@
                             <td>
                                 <input type="number" step="0.1" 
                                     wire:model="rows.{{ $index }}.suhu_ikan"
-                                    class="form-control form-control-sm text-center"
+                                    class="form-control form-control-sm excel-input text-center"
                                     placeholder="°C"
                                     required>
                                 @error('rows.{{ $index }}.suhu_ikan')
+                                    <div class="text-danger small">{{ $message }}</div>
+                                @enderror
+                            </td>
+
+                            {{-- No Ikan --}}
+                            <td>
+                                <input type="number" step="1" 
+                                    wire:model="rows.{{ $index }}.no_ikan"
+                                    class="form-control form-control-sm excel-input text-center"
+                                    placeholder="No Ikan"
+                                    required>
+                                @error('rows.{{ $index }}.no_ikan')
                                     <div class="text-danger small">{{ $message }}</div>
                                 @enderror
                             </td>
@@ -228,10 +240,11 @@
                 @endif
 
                 @if(isset($rows) && count($rows) > 0)
-                    <tr class="table-secondary fw-bold text-center">
+                    <tr class="table-secondary fw-bold excel-input text-center">
                         <td>Total</td>
                         <td>{{ number_format($total_berat, 2) }} kg</td>
                         <td>{{ $total_ekor }} ekor</td>
+                        <td></td>
                         <td></td>
                     </tr>
                 @endif
