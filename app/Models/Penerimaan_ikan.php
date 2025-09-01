@@ -14,15 +14,16 @@ class Penerimaan_Ikan extends Model
     protected $primaryKey = 'penerimaan_id';
 
     protected $fillable = [
+        'tgl_penerimaan',
+        'tgl_bongkar',
         'supplier_id',
         'jenis_penerimaan',
         'grade_id',
         'kategori_berat_id',
-        'berat_ikan',
-        'tgl_penerimaan',
-        'tgl_bongkar',
-        'suhu_ikan',
         'no_bak',
+        'berat_ikan',
+        'suhu_ikan',
+        'no_ikan',
     ];
 
     protected $dates = [

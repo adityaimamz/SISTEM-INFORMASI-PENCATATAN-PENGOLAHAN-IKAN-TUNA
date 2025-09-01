@@ -136,8 +136,46 @@
         </div>
     </div>
 
-    {{-- Tombol Tambah Data --}}
-    {{-- ======== TABEL INPUT DETAIL (berat & suhu) ======== --}}
+    {{-- Style Tabel CSS --}}
+    <style>
+        .excel-table {
+            font-size: 0.75rem;
+            border-collapse: collapse;
+            width: 100%;
+            table-layout: fixed;
+        }
+        .excel-table th, 
+        .excel-table td {
+            border: 1px solid hsl(201, 92.90%, 50.00%);
+            padding: 2px 4px;
+            vertical-align: middle;
+            text-align: center;
+            height: 28px;
+        }
+        .excel-input {
+            width: 100%;
+            height: 22px;
+            padding: 0 2px;
+            font-size: 0.75rem;
+            font-family: 'Arial Narrow', sans-serif;
+            border: 1px solid hsl(201, 92.90%, 50.00%);
+            border-radius: 3px;
+        }
+        .excel-table select {
+            height: 22px;
+            font-size: 0.75rem;
+            padding: 0 2px;
+            border-radius: 0;
+        }
+        .excel-table .btn-sm {
+            padding: 0 6px;
+            height: 22px;
+            font-size: 0.7rem;
+            line-height: 1;
+        }
+    </style>
+    
+    {{-- ======== TABEL INPUT DETAIL (berat & suhu) + Tombol Tambah & Simpan ======== --}}
     <div class="card" style="max-width: 450px;">
         <div class="card-header d-flex justify-content-between align-items-center py-1 px-2">
             <span class="small fw-bold">Tally Penerimaan Ikan Tuna</span>
@@ -147,7 +185,7 @@
         </div>
         <div class="card-body p-1">
             <div class="table-responsive">
-            <table class="table table-bordered table-sm text-center excel-input align-middle" style="font-size: .75rem;">
+            <table class="excel-table">
             <thead class="table-light text-center align-middle">
                 <tr>
                     {{-- No Bak dan Aksi menempel ke bawah --}}
@@ -156,7 +194,7 @@
                     {{-- Grade di atas --}}
                     <th colspan="3">
                         <select wire:model.live="selected_grade_id" 
-                                class="form-select form-control-sm text-center excel-input @error('selected_grade_id') is-invalid @enderror" 
+                                class="excel-input @error('selected_grade_id') is-invalid @enderror" 
                                 @if(!$session_date || !$session_tgl_bongkar || !$session_supplier || !$session_jenis_penerimaan || !$session_no_bak) disabled @endif 
                                 required style="font-size:.8rem; height:30px;">
                             <option value="">-- Grade/Size --</option>
@@ -197,7 +235,7 @@
                             <td>
                                 <input type="number" step="0.01" 
                                     wire:model="rows.{{ $index }}.berat_ikan"
-                                    class="form-control form-control-sm excel-input text-center"
+                                    class="excel-input text-center"
                                     placeholder="Kg"
                                     required>
                                 @error('rows.{{ $index }}.berat_ikan')
@@ -209,7 +247,7 @@
                             <td>
                                 <input type="number" step="0.1" 
                                     wire:model="rows.{{ $index }}.suhu_ikan"
-                                    class="form-control form-control-sm excel-input text-center"
+                                    class="excel-input text-center"
                                     placeholder="°C"
                                     required>
                                 @error('rows.{{ $index }}.suhu_ikan')
@@ -221,7 +259,7 @@
                             <td>
                                 <input type="number" step="1" 
                                     wire:model="rows.{{ $index }}.no_ikan"
-                                    class="form-control form-control-sm excel-input text-center"
+                                    class="excel-input text-center"
                                     placeholder="No Ikan"
                                     required>
                                 @error('rows.{{ $index }}.no_ikan')
@@ -232,7 +270,7 @@
                                 <button class="btn btn-danger btn-sm py-0"
                                         wire:click="removeRow({{ $index }})"
                                          style="font-size:.7rem; height:30px; width:30px;">
-                                    <i class="bi bi-x"></i>
+                                    <i class="bi bi-trash"></i>
                                 </button>
                             </td>
                         </tr>

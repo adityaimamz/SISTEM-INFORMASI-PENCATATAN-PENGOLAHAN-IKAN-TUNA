@@ -93,10 +93,10 @@ class PenerimaanIkanController extends Controller
     {
         try {
             $validated = $request->validate([
+                'tgl_penerimaan' => 'required|date',
                 'supplier_id' => 'required|exists:suppliers,supplier_id',
                 'grade_id' => 'required|exists:grades,id',
                 'berat_ikan' => 'required|numeric|min:10',
-                'tgl_penerimaan' => 'required|date',
             ]);
 
             $kategoriBeratId = $this->getKategoriBeratId($validated['berat_ikan']);
@@ -106,11 +106,11 @@ class PenerimaanIkanController extends Controller
             }
 
             Penerimaan_Ikan::create([
+                'tgl_penerimaan' => $validated['tgl_penerimaan'],
                 'supplier_id' => $validated['supplier_id'],
                 'grade_id' => $validated['grade_id'],
                 'kategori_berat_id' => $kategoriBeratId,
                 'berat_ikan' => $validated['berat_ikan'],
-                'tgl_penerimaan' => $validated['tgl_penerimaan'],
             ]);
 
             return redirect()->route('penerimaan_ikan.index')->with('success', 'Penerimaan Ikan berhasil ditambahkan.');
@@ -159,20 +159,20 @@ class PenerimaanIkanController extends Controller
     public function update(Request $request, $penerimaan_id)
     {
         $validated = $request->validate([
+            'tgl_penerimaan' => 'required|date',
             'supplier_id' => 'required|exists:suppliers,supplier_id',
             'grade_id' => 'required|exists:grades,id',
             'berat_ikan' => 'required|numeric|min:10',
-            'tgl_penerimaan' => 'required|date',
         ]);
 
         $kategoriBeratId = $this->getKategoriBeratId($validated['berat_ikan']);
 
         $penerimaanIkan = Penerimaan_Ikan::where('penerimaan_id', $penerimaan_id)->firstOrFail();
         $penerimaanIkan->update([
+            'tgl_penerimaan' => $validated['tgl_penerimaan'],
             'supplier_id' => $validated['supplier_id'],
             'grade_id' => $validated['grade_id'],
             'kategori_berat_id' => $kategoriBeratId,
-            'tgl_penerimaan' => $validated['tgl_penerimaan'],
             'berat_ikan' => $validated['berat_ikan'],
         ]);
 

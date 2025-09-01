@@ -21,6 +21,7 @@ class PenerimaanIkan extends Component
     public $suppliers = [];
     public $grades = [];
     public $kategoriBerats = [];
+    public $no_ikan = [];
     public $combinations = [];
     public $rows = [];
     public $data = []; // Menambahkan properti $data yang hilang
@@ -37,10 +38,11 @@ class PenerimaanIkan extends Component
     public function addRow()
     {
         $this->rows[] = [
-            'berat_ikan' => '',
-            'suhu_ikan' => '',
             'grade_id' =>'',
             'kategori_berat_id' => '',
+            'berat_ikan' => '',
+            'suhu_ikan' => '',
+            'no_ikan' => '',
         ];
     }
 
@@ -84,7 +86,7 @@ class PenerimaanIkan extends Component
         $this->rows = [];
         $this->addRow();
         $this->reset ([
-            'session_date', 
+            //'session_date', 
             'session_tgl_bongkar', 
             'session_supplier', 
             'session_jenis_penerimaan', 
@@ -112,9 +114,10 @@ class PenerimaanIkan extends Component
             'session_no_bak' => 'required|string|max:50',
             'selected_grade_id' => 'required|string',
             //'selected_kategori_berat_id' => 'required|string',
-            'rows' => 'required|array|min:1',
             'rows.*.berat_ikan' => 'required|numeric|min:0.1',
             'rows.*.suhu_ikan' => 'required|numeric',
+            'rows.*.no_ikan' => 'required|string|max:50',
+            'rows' => 'required|array|min:1',
         ]);
         if (strpos($this->selected_grade_id, '_') === false) {
             throw new \Exception('Grade/size tidak valid');
@@ -135,6 +138,7 @@ class PenerimaanIkan extends Component
                 ->where('kategori_berat_id', $kategori_berat_id)
                 ->where('berat_ikan', $row['berat_ikan'])
                 ->where('suhu_ikan', $row['suhu_ikan'])
+                ->where('no_ikan', $row['no_ikan'])
                 ->exists();
 
             if(!$exists) {
@@ -148,12 +152,12 @@ class PenerimaanIkan extends Component
                     'kategori_berat_id' => $kategori_berat_id,
                     'berat_ikan' => $row['berat_ikan'],
                     'suhu_ikan' => $row['suhu_ikan'],
+                    'no_ikan' => $row['no_ikan'],
                     'created_by' => auth()->id(),
                 ]);
             }
         }
-            $this->reset(['rows', 'session_date', 'session_tgl_bongkar', 'session_supplier', 
-                         'session_jenis_penerimaan', 'session_no_bak', 'selected_grade_id']);
+            $this->reset(['rows','session_supplier', 'session_jenis_penerimaan', 'session_no_bak', 'selected_grade_id']);
             $this->addRow(); // Tambahkan baris kosong setelah simpan
             
             session()->flash('message', 'Data berhasil disimpan!');
@@ -228,16 +232,16 @@ class PenerimaanIkan extends Component
                 $query->where('grade_id', $this->selected_grade_id);
             }
             $result = $query->latest()->get();
-            
             $this->penerimaanIkans = $query->latest()->get();
             $this->data = $this->penerimaanIkans;
             
             foreach ($result as $data) {
                 $this->rows[] = [
-                    'berat_ikan' => $data->berat_ikan,
-                    'suhu_ikan' => $data->suhu_ikan,
                     'grade_id' => $data->grade_id,
                     'kategori_berat_id' => $data->kategori_berat_id,
+                    'berat_ikan' => $data->berat_ikan,
+                    'suhu_ikan' => $data->suhu_ikan,
+                    'no_ikan' => $data->no_ikan,
                 ];
             }
         } catch (\Exception $e) {
@@ -259,7 +263,7 @@ class PenerimaanIkan extends Component
             !$this->session_supplier || !$this->session_jenis_penerimaan || 
             !$this->session_no_bak || !$this->selected_grade_id || 
             !$this->selected_kategori_berat_id) {
-                return;
+            return;
             }
         
             list($grade_id, $kategori_berat_id) = explode('_', $this->selected_grade_id);
@@ -277,10 +281,11 @@ class PenerimaanIkan extends Component
             if ($existingData->isNotEmpty()) {
                 foreach ($existingData as $data) {
                     $this->rows[] = [
-                        'berat_ikan' => $data->berat_ikan,
-                        'suhu_ikan' => $data->suhu_ikan,
                         'grade_id' => $data->grade_id,
                         'kategori_berat_id' => $data->kategori_berat_id,
+                        'berat_ikan' => $data->berat_ikan,
+                        'suhu_ikan' => $data->suhu_ikan,
+                        'no_ikan' => $data->no_ikan,
                     ];
                 }
             } else {
@@ -296,17 +301,17 @@ class PenerimaanIkan extends Component
     public function render() 
 {
         return view('livewire.penerimaan-ikan', [
+            'penerimaanIkans' => $this->penerimaanIkans,
             'data' => $this->data,
-            'suppliers' => $this->suppliers,
-            'grades' => $this->grades,
-            'kategori_berat' => $this->kategoriBerats,
             'session_date' => $this->session_date,
             'session_tgl_bongkar' => $this->session_tgl_bongkar,
+            'suppliers' => $this->suppliers,
             'session_supplier' => $this->session_supplier,
             'session_jenis_penerimaan' => $this->session_jenis_penerimaan,
+            'grades' => $this->grades,
+            'kategori_berat' => $this->kategoriBerats,
             'session_no_bak' => $this->session_no_bak,
             'records' => PenerimaanIkan::all(),
-            'penerimaanIkans' => $this->penerimaanIkans,
         ])->layout('layouts.app');
     }
 }
