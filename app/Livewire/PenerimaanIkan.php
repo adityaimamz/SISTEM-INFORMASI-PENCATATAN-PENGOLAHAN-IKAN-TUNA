@@ -274,6 +274,7 @@ class PenerimaanIkan extends Component
                     ->where('no_bak', $this->session_no_bak)
                     ->where('grade_id', $grade_id)
                     ->where('kategori_berat_id', $kategori_berat_id)
+                    ->orderBy('created_at', 'asc') //urutan input dari terlama ke terbaru
                     ->get();
 
             $this->rows = [];
