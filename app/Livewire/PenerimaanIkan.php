@@ -49,6 +49,15 @@ class PenerimaanIkan extends Component
     public function removeRow($index)
     {
         if (isset($this->rows[$index])) {
+            if (isset($this->rows[$index]['penerimaan_id'])) {
+                try { 
+                    Penerimaan_Ikan::where('penerimaan_id', $this->rows[$index]['penerimaan_id'])->delete();
+                    session()->flash('message', 'Data berhasil dihapus');
+                } catch (\Exception $e) {
+                    session()->flash('error', 'Gagal menghapus data: ' . $e->getMessage());
+                    return;
+                }
+            }
             unset($this->rows[$index]);
             $this->rows = array_values($this->rows);
         }
@@ -157,7 +166,7 @@ class PenerimaanIkan extends Component
                 ]);
             }
         }
-            $this->reset(['rows','session_supplier', 'session_jenis_penerimaan', 'session_no_bak', 'selected_grade_id']);
+            $this->reset(['rows','session_no_bak', 'selected_grade_id']);
             $this->addRow(); // Tambahkan baris kosong setelah simpan
             
             session()->flash('message', 'Data berhasil disimpan!');
@@ -200,6 +209,7 @@ class PenerimaanIkan extends Component
                 'selected_grade_id' => 'nullable|string',
             ]);
             $query = Penerimaan_Ikan::query();
+            $query = Penerimaan_Ikan::with('supplier', 'grade', 'kategoriBeratPenerimaan');
             $query = $query->with(['supplier', 'grade', 'kategoriBeratPenerimaan']);
             $query = \App\Models\Penerimaan_Ikan::with(['supplier', 'grade', 'kategoriBeratPenerimaan']);
             
@@ -232,11 +242,13 @@ class PenerimaanIkan extends Component
                 $query->where('grade_id', $this->selected_grade_id);
             }
             $result = $query->latest()->get();
-            $this->penerimaanIkans = $query->latest()->get();
+            $this->penerimaanIkans = $result;
             $this->data = $this->penerimaanIkans;
             
+            $this->rows = [];
             foreach ($result as $data) {
                 $this->rows[] = [
+                    'penerimaan_id' => $data->penerimaan_id,
                     'grade_id' => $data->grade_id,
                     'kategori_berat_id' => $data->kategori_berat_id,
                     'berat_ikan' => $data->berat_ikan,
@@ -246,7 +258,10 @@ class PenerimaanIkan extends Component
             }
         } catch (\Exception $e) {
             \Log::error('Error filtering data: ' . $e->getMessage());
-            $this->data = []; // Inisialisasi $data dengan array kosong jika error
+            $this->data = [];
+            $this->penerimaanIkans = [];
+            $this->rows = [];
+            session()->flash('error', 'Gagal filter data: ' . $e->getMessage()); // Inisialisasi $data dengan array kosong jika error
         }
     }
 
@@ -267,7 +282,7 @@ class PenerimaanIkan extends Component
             }
         
             list($grade_id, $kategori_berat_id) = explode('_', $this->selected_grade_id);
-            $existingData = Penerimaan_Ikan::where('tgl_penerimaan', $this->session_date)
+            $query = Penerimaan_Ikan::where('tgl_penerimaan', $this->session_date)
                     ->where('tgl_bongkar', $this->session_tgl_bongkar)
                     ->where('supplier_id', $this->session_supplier)
                     ->where('jenis_penerimaan', $this->session_jenis_penerimaan)
@@ -278,15 +293,17 @@ class PenerimaanIkan extends Component
                     ->get();
 
             $this->rows = [];
-        
-            if ($existingData->isNotEmpty()) {
-                foreach ($existingData as $data) {
+            $data = $query->get();
+
+            if ($data->isNotEmpty()) {
+                foreach ($data as $item) {
                     $this->rows[] = [
-                        'grade_id' => $data->grade_id,
-                        'kategori_berat_id' => $data->kategori_berat_id,
-                        'berat_ikan' => $data->berat_ikan,
-                        'suhu_ikan' => $data->suhu_ikan,
-                        'no_ikan' => $data->no_ikan,
+                        'penerimaan_id' => $item->penerimaan_id,
+                        'grade_id' => $item->grade_id,
+                        'kategori_berat_id' => $item->kategori_berat_id,
+                        'berat_ikan' => $item->berat_ikan,
+                        'suhu_ikan' => $item->suhu_ikan,
+                        'no_ikan' => $item->no_ikan,
                     ];
                 }
             } else {
