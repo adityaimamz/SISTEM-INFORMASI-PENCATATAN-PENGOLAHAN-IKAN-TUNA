@@ -111,7 +111,7 @@
                     $selectedSupplier = $suppliers->firstWhere('supplier_id', $session_supplier);
                 @endphp
                 <div class="p-2 rounded-3 shadow-sm text-white"
-                    style="background: linear-gradient(135deg,rgb(0, 117, 235),rgb(204, 255, 0)); font-size: 0.75rem;">
+                    style="background: linear-gradient(135deg,hsl(210, 97.60%, 48.80%),rgba(209, 202, 0, 0.88)); font-size: 0.75rem;">
                     <i class="bi bi-check-circle-fill me-1"></i> 
                     <strong>Sesi Aktif:</strong>
                     <div class="mt-1">
@@ -123,8 +123,8 @@
                     </div>
                 </div>
             @else
-                <div class="p-2 rounded-3 shadow-sm text-dark small"
-                    style="background: #e6f7ff; border: 1px solid rgba(1, 163, 251, 0.99); font-size: 0.75rem;">
+                <div class="p-2 rounded-3 shadow-sm text-white"
+                    style="background:hsl(210, 97.60%, 48.80%); border: 1px solid rgb(255, 255, 255); font-size: 0.75rem;">
                     <i class="bi bi-info-circle me-1"></i> 
                     @if(!$session_date)
                         Pilih tanggal penerimaan terlebih dahulu.
@@ -276,12 +276,12 @@
                                                 <div class="text-danger small">{{ $message }}</div>
                                             @enderror
                                         </td>
-                            <td>
-                                <button class="btn btn-danger btn-sm py-0"
+                                <td>
+                                    <button class="btn btn-danger btn-sm py-0"
                                         wire:click="removeRow({{ $index }})"
                                         style="font-size:.7rem; height:30px; width:30px;">
-                                    <i class="bi bi-trash"></i>
-                                </button>
+                                        <i class="bi bi-trash"></i>
+                                    </button>
                                 </td>
                             </tr>
                                 @endforeach
