@@ -7,3 +7,5 @@
 <link rel="stylesheet" href="{{ asset('dist/assets/compiled/css/app.css') }}">
 <link rel="stylesheet" href="{{ asset('dist/assets/compiled/css/app-dark.css') }}">
 <link rel="stylesheet" href="{{ asset('dist/assets/compiled/css/iconly.css') }}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+

@@ -105,7 +105,6 @@ class PenerimaanIkan extends Component
     }
 
 
-
 // Method saveAll
     public function saveAll()
     {
@@ -241,7 +240,7 @@ class PenerimaanIkan extends Component
             } else {
                 $query->where('grade_id', $this->selected_grade_id);
             }
-            $result = $query->latest()->get();
+            $result = $query->orderBy('no_ikan', 'asc')->get();
             $this->penerimaanIkans = $result;
             $this->data = $this->penerimaanIkans;
             
@@ -289,7 +288,7 @@ class PenerimaanIkan extends Component
                     ->where('no_bak', $this->session_no_bak)
                     ->where('grade_id', $grade_id)
                     ->where('kategori_berat_id', $kategori_berat_id)
-                    ->orderBy('created_at', 'asc') //urutan input dari terlama ke terbaru
+                    ->orderBy('no_ikan', 'asc') //urutan input dari terlama ke terbaru
                     ->get();
 
             $this->rows = [];
@@ -314,6 +313,7 @@ class PenerimaanIkan extends Component
             $this->rows = [];
         }
     }
+    
 
 // Method render
     public function render() 
