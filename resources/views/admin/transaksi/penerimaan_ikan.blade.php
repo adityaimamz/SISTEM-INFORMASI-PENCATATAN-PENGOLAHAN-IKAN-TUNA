@@ -87,13 +87,11 @@
                 </div>
             </div>
         </div>
-
-
-            <div class="card">
-                <div class="card-body">
-                    @livewire('penerimaan-ikan')
-                </div>
+        <div class="card">
+            <div class="card-body">
+                @livewire('penerimaan-ikan')
             </div>
+        </div>
         </section>
     </div>
 </div>

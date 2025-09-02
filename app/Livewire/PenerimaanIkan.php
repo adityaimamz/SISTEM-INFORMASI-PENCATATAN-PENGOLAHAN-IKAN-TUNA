@@ -317,7 +317,7 @@ class PenerimaanIkan extends Component
 
 // Method render
     public function render() 
-{
+    {
         return view('livewire.penerimaan-ikan', [
             'penerimaanIkans' => $this->penerimaanIkans,
             'data' => $this->data,
@@ -331,5 +331,12 @@ class PenerimaanIkan extends Component
             'session_no_bak' => $this->session_no_bak,
             'records' => PenerimaanIkan::all(),
         ])->layout('layouts.app');
+    }
+
+
+// Method print
+    public function print()
+    {
+    
     }
 }
