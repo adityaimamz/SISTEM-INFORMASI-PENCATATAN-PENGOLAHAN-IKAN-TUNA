@@ -47,10 +47,9 @@
 
 <body>
     <!-- Header Section -->
-    <div class="header">
+    <div class="header" style="text-align: center;">
         <img src="{{ public_path('img/logo-removebg.png') }}" alt="Logo">
         <h1>PT BAHARI PRIMA MANUNGGAL</h1>
-        <p>KOMPLEK PELABUHAN PERIKANAN SAMUDERA BITUNG</p>
         <p>JL. Bakti Mulya 2 No. 58, Kel. Tegal Alur, Kec. Kalideres, Jakarta Barat</p>
     </div>
 
@@ -59,14 +58,14 @@
         <tr>
             <!-- Kolom Kiri -->
             <td style="text-align: left; vertical-align: top; width: 50%;">
-                <p><strong>Tanggal Penerimaan</strong>: {{ $date ?? 'Semua Tanggal' }}</p>
-                <p><strong>Tanggal Bongkar</strong>: {{ $tgl_bongkar ?? '-' }}</p>
+                <p><strong>Tanggal Penerimaan</strong>: {{ $session_date ?? 'Semua Tanggal' }}</p>
+                <p><strong>Tanggal Bongkar</strong>: {{ $session_tgl_bongkar ?? '' }}</p>
             </td>
 
             <!-- Kolom Kanan -->
             <td style="text-align: right; vertical-align: top; width: 50%;">
-                <p><strong>Supplier</strong>: {{ $supplier_name }}</p>
-                <p><strong>Jenis Penerimaan</strong>: {{ $jenis_penerimaan_display }}</p>
+                <p><strong>Supplier</strong>: {{ $session_supplier ?? '-' }}</p>
+                <p><strong>Jenis Penerimaan</strong>: {{ $session_jenis_penerimaan ?? '-' }}</p>
             </td>
         </tr>
     </table>
@@ -114,7 +113,7 @@
                     <tr>
                             {{-- No. Bak --}}
                                 <td class="text-center align-middle">
-                                    {{ $session_no_bak }}
+                                    {{ $session_no_bak ?? '-' }}
                                 </td>
 
                             {{-- Berat --}}
@@ -125,7 +124,7 @@
                                             placeholder="Kg"
                                             required>
                                                 @error('rows.{{ $index }}.berat_ikan')
-                                                    <div class="text-danger small">{{ $message }}</div>
+                                                    <div class="text-danger small">{{ number_format($row['berat_ikan'] ?? 0, 2) }}</div>
                                                 @enderror
                                 </td>
 
@@ -137,7 +136,7 @@
                                         placeholder="°C"
                                         required>
                                             @error('rows.{{ $index }}.suhu_ikan')
-                                                <div class="text-danger small">{{ $message }}</div>
+                                                <div class="text-danger small">{{ number_format($row['suhu_ikan'] ?? 0, 1) }}</div>
                                             @enderror
                                 </td>
 
@@ -149,7 +148,7 @@
                                             placeholder="No Ikan"
                                             required>
                                             @error('rows.{{ $index }}.no_ikan')
-                                                <div class="text-danger small">{{ $message }}</div>
+                                                <div class="text-danger small">{{ number_format($row['no_ikan'] ?? 0, 0) }}</div>
                                             @enderror
                                 </td>
                                 <!--
@@ -168,8 +167,8 @@
             @if(isset($rows) && count($rows) > 0)
                 <tr class="table-secondary fw-bold excel-input text-center" style="background-color:rgb(121, 173, 246);">
                     <td>Total</td>
-                    <td>{{ number_format($total_berat, 2) }} kg</td>
-                    <td>{{ $total_ekor }} ekor</td>
+                    <td>{{ number_format($total_berat ?? 0, 2) }} kg</td>
+                    <td>{{ $total_ekor ?? 0 }} ekor</td>
                     <td></td>
                     <td></td>
                 </tr>

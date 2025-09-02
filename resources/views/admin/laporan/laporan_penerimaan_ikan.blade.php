@@ -10,12 +10,13 @@
         .excel-table {
             font-size: 0.75rem;
             border-collapse: collapse;
+            border: 1px solid black;
             width: 100%;
             table-layout: fixed;
         }
         .excel-table th, 
         .excel-table td {
-            border: 1px solid hsl(0, 100.00%, 0.40%);
+            border: 1px solid black;
             padding: 2px 4px;
             vertical-align: middle;
             text-align: center;
@@ -27,7 +28,7 @@
             padding: 0 2px;
             font-size: 0.75rem;
             font-family: 'Arial Narrow', sans-serif;
-            border: 1px solid hsl(0, 89.20%, 7.30%);
+            border: 1px solid black;
             border-radius: 3px;
         }
         .excel-table select {
@@ -47,10 +48,8 @@
 
 <body>
     <!-- Header Section -->
-    <div class="header">
-        <img src="{{ public_path('img/logo-removebg.png') }}" alt="Logo">
-        <h1>PT BAHARI PRIMA MANUNGGAL</h1>
-        <p>KOMPLEK PELABUHAN PERIKANAN SAMUDERA BITUNG</p>
+    <div class="header" style="text-align: center;">
+        <img src="{{ public_path('img/logo-removebg.png') }}" alt="Logo" width="100" height="100">
         <p>JL. Bakti Mulya 2 No. 58, Kel. Tegal Alur, Kec. Kalideres, Jakarta Barat</p>
     </div>
 
@@ -60,7 +59,7 @@
             <!-- Kolom Kiri -->
             <td style="text-align: left; vertical-align: top; width: 50%;">
                 <p><strong>Tanggal Penerimaan</strong>: {{ $session_date ?? 'Semua Tanggal' }}</p>
-                <p><strong>Tanggal Bongkar</strong>: {{ $session_tgl_bongkar ?? '-' }}</p>
+                <p><strong>Tanggal Bongkar</strong>: {{ $session_tgl_bongkar ?? '' }}</p>
             </td>
 
             <!-- Kolom Kanan -->
@@ -93,7 +92,7 @@
                         @endforeach
                     </select>
                 </th>
-                <th rowspan="2" style="width: 80px;">Aksi</th>
+                <!-- <th rowspan="2" style="width: 80px;">Aksi</th> -->
             </tr>
             <tr>
                 <th style="width: 120px;">Berat (Kg)</th>
@@ -114,18 +113,18 @@
                     <tr>
                             {{-- No. Bak --}}
                                 <td class="text-center align-middle">
-                                    {{ $session_no_bak }}
+                                    {{ $session_no_bak ?? '-' }}
                                 </td>
 
                             {{-- Berat --}}
                                 <td>
                                     <input type="number" step="0.01" 
                                             wire:model="rows.{{ $index }}.berat_ikan"
-                                            class="excel-input text-center"
+                                            class="text-center"
                                             placeholder="Kg"
                                             required>
                                                 @error('rows.{{ $index }}.berat_ikan')
-                                                    <div class="text-danger small">{{ $message }}</div>
+                                                    <div class="text-danger small">{{ number_format($row['berat_ikan'] ?? 0, 2) }}</div>
                                                 @enderror
                                 </td>
 
@@ -133,11 +132,11 @@
                                 <td>
                                     <input type="number" step="0.1" 
                                             wire:model="rows.{{ $index }}.suhu_ikan"
-                                            class="excel-input text-center"
+                                            class="text-center"
                                         placeholder="°C"
                                         required>
                                             @error('rows.{{ $index }}.suhu_ikan')
-                                                <div class="text-danger small">{{ $message }}</div>
+                                                <div class="text-danger small">{{ number_format($row['suhu_ikan'] ?? 0, 1) }}</div>
                                             @enderror
                                 </td>
 
@@ -145,32 +144,22 @@
                                 <td>
                                     <input type="number" step="1" 
                                             wire:model="rows.{{ $index }}.no_ikan"
-                                            class="excel-input text-center"
+                                            class="text-center"
                                             placeholder="No Ikan"
                                             required>
                                             @error('rows.{{ $index }}.no_ikan')
-                                                <div class="text-danger small">{{ $message }}</div>
+                                                <div class="text-danger small">{{ number_format($row['no_ikan'] ?? 0, 0) }}</div>
                                             @enderror
                                 </td>
-                                <!--
-                                <td>
-                                    <button class="btn btn-danger btn-sm py-0"
-                                            wire:click="removeRow({{ $index }})"
-                                            style="font-size:.7rem; height:30px; width:30px;">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </td>
-                                -->
                             </tr>
                 @endforeach
             @endif
 
             @if(isset($rows) && count($rows) > 0)
-                <tr class="table-secondary fw-bold excel-input text-center" style="background-color:rgb(121, 173, 246);">
+                <tr class="table-secondary fw-bold text-center" style="background-color:rgb(121, 173, 246);">
                     <td>Total</td>
-                    <td>{{ number_format($total_berat, 2) }} kg</td>
-                    <td>{{ $total_ekor }} ekor</td>
-                    <td></td>
+                    <td>{{ number_format($total_berat ?? 0, 2) }} kg</td>
+                    <td>{{ $total_ekor ?? 0 }} ekor</td>
                     <td></td>
                 </tr>
             @endif

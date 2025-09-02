@@ -6,6 +6,7 @@ use App\Models\Penerimaan_Ikan;
 use App\Models\Supplier;
 use App\Models\Grade;
 use App\Models\KategoriBeratPenerimaan;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PenerimaanIkan extends Component
 {
@@ -337,6 +338,75 @@ class PenerimaanIkan extends Component
 // Method print
     public function print()
     {
+        try {
+            // Validasi data yang diperlukan
+            if (!$this->session_date || !$this->session_tgl_bongkar || 
+                !$this->session_supplier || !$this->session_jenis_penerimaan || 
+                !$this->session_no_bak || !$this->selected_grade_id) {
+                throw new \Exception('Harap lengkapi semua filter terlebih dahulu');
+            }
+    
+            // Pastikan ada data rows
+            if (empty($this->rows)) {
+                throw new \Exception('Tidak ada data yang akan dicetak');
+            }
+    
+            // Ambil data supplier
+            $supplier = \App\Models\Supplier::find($this->session_supplier);
+            
+            // Parse grade_id dan kategori_berat_id
+            list($grade_id, $kategori_berat_id) = explode('_', $this->selected_grade_id);
+            $grade = \App\Models\Grade::find($grade_id);
+            $kategoriBerat = \App\Models\KategoriBeratPenerimaan::find($kategori_berat_id);
+
+            //hitung total berat
+            $total_berat = collect($this->rows)->sum('berat_ikan');
+            $total_ekor = count($this->rows);
+    
+            // Siapkan data untuk view
+            $data = [
+                'session_date' => \Carbon\Carbon::parse($this->session_date)->format('d/m/Y'),
+                'session_tgl_bongkar' => \Carbon\Carbon::parse($this->session_tgl_bongkar)->format('d/m/Y'),
+                'session_supplier' => $supplier ? $supplier->nama_supplier : 'Tidak Diketahui',
+                'session_jenis_penerimaan' => $this->session_jenis_penerimaan,
+                'session_no_bak' => $this->session_no_bak,
+                'rows' => $this->rows,
+                'grades' => $this->grades,
+                'kategori_berat' => $this->kategoriBerats,
+                'total_berat' => $total_berat,
+                'total_ekor' => $total_ekor,
+                'printed_at' => now()->format('d/m/Y H:i:s')
+            ];
+    
+            // Generate PDF
+            $pdf = Pdf::loadView('admin.laporan.laporan_penerimaan_ikan', $data);
+            
+            //$pdf = Pdf::loadView('admin.laporan.laporan_penerimaan_ikan', [
+            //    'session_date' => $this->session_date,
+            //    'session_supplier' => \App\Models\Supplier::find($this->session_supplier)->nama_supplier ?? 'Tidak Diketahui',
+            //    'rows' => $this->rows,
+            //]);
+            // Nama file PDF
+            $fileName = 'Laporan-Penerimaan-Ikan-' . now()->format('Ymd_His') . '.pdf';
+    
+            // Return PDF untuk di-download
+            //return $pdf->download('laporan-penerimaan-'.now()->format('Ymd_His').'.pdf');
+
+
+            return response()->streamDownload(
+                function () use ($pdf) {
+                    echo $pdf->output();
+                },
+                $fileName,
+                ['Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="' . $fileName . '"'
+                ]
+            );
+    
+        } catch (\Exception $e) {
+            $this->dispatch('show-error', message: 'Gagal mencetak: ' . $e->getMessage());
+            //session()->flash('error', 'Gagal mencetak: ' . $e->getMessage());
+        }
     
     }
 }
