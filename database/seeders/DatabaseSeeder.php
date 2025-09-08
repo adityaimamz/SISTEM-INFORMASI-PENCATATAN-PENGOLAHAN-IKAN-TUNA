@@ -6,7 +6,6 @@ use App\Models\User;
 use App\Models\Grade;
 use App\Models\Supplier;
 use App\Models\KategoriBeratPenerimaan;
-use App\Models\KategoriBeratCutting;
 use App\Models\KategoriByprodukCt;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;

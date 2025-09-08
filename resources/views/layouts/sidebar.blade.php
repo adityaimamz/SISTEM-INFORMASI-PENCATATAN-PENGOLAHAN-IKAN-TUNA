@@ -102,11 +102,6 @@
 
                         </li>
 
-                        <li class="submenu-item {{ Request::is('kategori_berat_cutting') ? 'active' : '' }} ">
-                            <a href="/kategori_berat_cutting" class="submenu-link">Kategori Berat Cutting</a>
-
-                        </li>
-
                         <li class="submenu-item {{ Request::is('kategori_byproduk_ct') ? 'active' : '' }} ">
                             <a href="/kategori-byproduk-ct" class="submenu-link">Data By Produk Cutting</a>
                         </li>

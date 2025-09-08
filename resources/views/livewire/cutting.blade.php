@@ -47,34 +47,40 @@
                 </div>
 
                 <div class="col-md-auto">
-                    <label for="tanggal_penerimaan" class="form-label small">Tanggal Penerimaan</label>
-                        <select id="tanggal_penerimaan" 
+                    <label for="penerimaan_id" class="form-label small">Tanggal Penerimaan</label>
+                        <select id="penerimaan_id" 
                             wire:model.live="penerimaan_id"
                             class="form-select form-select-sm @error('penerimaan_id') is-invalid @enderror"
                             @if(!$tgl_injek_co) disabled @endif 
                             required>
                         <option value="">Pilih Tanggal Penerimaan</option>
-                        @foreach ($penerimaan_ikan as $penerimaan)
-                            <option value="{{ $penerimaan->id }}">
-                                {{ \Carbon\Carbon::parse($penerimaan->tgl_penerimaan)->format('d F Y') }} - {{ $penerimaan->supplier->nama_supplier }}
+                        @forelse ($penerimaan_ikan as $penerimaan)
+                            <option value="{{ $penerimaan->penerimaan_id }}">
+                                {{ \Carbon\Carbon::parse($penerimaan->tgl_penerimaan)->format('d F Y') }} - 
+                                {{ $penerimaan->supplier->nama_supplier ?? 'Tidak ada supplier' }}
                             </option>
-                        @endforeach
+                        @empty
+                            <option value="">Tidak ada data penerimaan ikan</option>
+                        @endforelse
                     </select>
                 </div>
 
                 <div class="col-md-auto">
-                    <label for="jenis_penerimaan" class="form-label small">Jenis Penerimaan</label>
-                        <select id="jenis_penerimaan" 
+                    <label for="penerimaan_id" class="form-label small">Jenis Penerimaan</label>
+                        <select id="penerimaan_id" 
                             wire:model.live="penerimaan_id"
                             class="form-select form-select-sm @error('penerimaan_id') is-invalid @enderror"
-                            @if(!$tanggal_penerimaan) disabled @endif 
+                            @if(!$tgl_injek_co) disabled @endif 
                             required>
                         <option value="">Pilih Jenis Penerimaan</option>
-                        @foreach ($penerimaan_ikan as $penerimaan)
-                            <option value="{{ $penerimaan->id }}">
-                                {{ $penerimaan->jenis_penerimaan }} - {{ $penerimaan->supplier->nama_supplier }}
+                        @forelse ($penerimaan_ikan as $penerimaan)
+                            <option value="{{ $penerimaan->penerimaan_id }}" 
+                            @if($penerimaan->jenis_penerimaan == 'Penerimaan' && $tgl_injek_co) selected @endif>
+                                {{ $penerimaan->jenis_penerimaan }}
                             </option>
-                        @endforeach
+                        @empty
+                            <option value="">Tidak ada data penerimaan ikan</option>
+                        @endforelse
                     </select>
                 </div>
             </div>

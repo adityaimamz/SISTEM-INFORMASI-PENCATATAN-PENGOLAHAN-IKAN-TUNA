@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CuttingController;
-use App\Http\Controllers\NoBatchController;
 use App\Http\Controllers\KodeTraceController;
 use App\Http\Controllers\KategoriByprodukCtController;
 use App\Http\Controllers\KategoriController;
@@ -138,7 +137,6 @@ Route::get('/grading', \App\Livewire\GradingProses::class)->name('grading.index'
 Route::resource('penerimaan_ikan', PenerimaanIkanController::class)->middleware('auth');
 Route::resource('cutting', CuttingController::class)->middleware('auth');
 Route::resource('kategori-byproduk-ct', KategoriByprodukCtController::class)->middleware('auth');
-Route::resource('no_batch', NoBatchController::class)->middleware('auth');
 Route::resource('no_container', NoContainersController::class)->middleware('auth');
 Route::resource('kode_trace', KodeTraceController::class)->middleware('auth');
 Route::resource('service', ServiceController::class)->middleware('auth');

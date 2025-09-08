@@ -6,7 +6,6 @@ use App\Models\Cutting;
 use App\Models\Penerimaan_ikan;
 use App\Models\Supplier;
 use Carbon\Carbon;
-use App\Models\KategoriBeratCutting;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use App\Models\Grade;
@@ -23,7 +22,6 @@ class CuttingController extends Controller// Mengubah nama controller menjadi Cu
         $cutting = Cutting::all();
         $penerimaan_ikan = Penerimaan_ikan::all();
         $suppliers = Supplier::all();
-        $kategori_berat_cuttings = KategoriBeratCutting::all();
         $grades = Grade::all(); 
         $selectedSupplier = null;
 
@@ -31,7 +29,6 @@ class CuttingController extends Controller// Mengubah nama controller menjadi Cu
             'cutting' => $cutting,
             'penerimaan_ikan' => $penerimaan_ikan,
             'suppliers' => $suppliers,
-            'kategori_berat_cuttings' => $kategori_berat_cuttings,
             'grades' => $grades,
             'selectedSupplier' => $selectedSupplier
         ]);
@@ -47,15 +44,8 @@ class CuttingController extends Controller// Mengubah nama controller menjadi Cu
             ->with(['kategori_berat', 'penerimaan_ikan.supplier'])
             ->get();
     
-        $total13 = $cuttings->where('kategori_berat.kategori_berat', '1/3')->sum('berat_produk');
-        $total15 = $cuttings->where('kategori_berat.kategori_berat', '3/5')->sum('berat_produk');
-        $total5 = $cuttings->where('kategori_berat.kategori_berat', '5 UP')->sum('berat_produk');
-    
         $pdf = Pdf::loadView('pdf.cutting', [
             'cuttings' => $cuttings,
-            'total13' => $total13,
-            'total15' => $total15,
-            'total5' => $total5,
             'filterMonth' => $filterMonth,
         ]);
     
@@ -97,28 +87,11 @@ class CuttingController extends Controller// Mengubah nama controller menjadi Cu
     
         return redirect()->route('cutting.index')->with('success', 'Cutting berhasil ditambahkan.');
     }
-    
-    /**
-     * Mendapatkan ID kategori berat berdasarkan berat produk.
-     */
-    private function getKategoriBeratId($berat)
-    {
-        if ($berat >= 1 && $berat <= 3) {
-            return KategoriBeratCutting::where('kategori_berat', '1/3')->first()->id;
-        } elseif ($berat > 3 && $berat <= 5) {
-            return KategoriBeratCutting::where('kategori_berat', '3/5')->first()->id;
-        } elseif ($berat > 5) {
-            return KategoriBeratCutting::where('kategori_berat', '5 UP')->first()->id;
-        }
-    
-        return null; // Default jika tidak ada kategori yang cocok
-    }
 
   
-    public function update(Request $request, $no_batch)
+    public function update(Request $request, Cutting $cutting)
     {
 
-        $cutting = Cutting::findOrFail($no_batch); // Mengubah model yang digunakan menjadi Cutting
         $data = [
             'id_produk' => $request->id_produk,
             'kategori_berat_id' => $request->kategori_berat_id,
@@ -133,12 +106,5 @@ class CuttingController extends Controller// Mengubah nama controller menjadi Cu
         $cutting->update($data);
 
         return redirect()->route('cutting.index')->with('success', 'Cutting berhasil diperbarui.'); // Mengubah route redirect menjadi 'cutting.index'
-    }
-    public function destroy($no_batch)
-    {
-        $cutting = Cutting::findOrFail($no_batch); // Mengubah model yang digunakan menjadi Cutting
-        $cutting->delete();
-
-        return redirect()->route('cutting.index')->with('success', 'Cutting berhasil dihapus.'); // Mengubah route redirect menjadi 'cutting.index'
     }
 }
