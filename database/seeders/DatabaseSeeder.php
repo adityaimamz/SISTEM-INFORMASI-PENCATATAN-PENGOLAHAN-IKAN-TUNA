@@ -68,7 +68,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Supplier::create([
-            'supplier_id' => '00',
+            'supplier_id' => 01,
             'nama_supplier' => 'TA',
             'alamat' => 'TATA',
         ]);

@@ -370,16 +370,16 @@ class PenerimaanIkan extends Component
                 'session_supplier' => $supplier ? $supplier->nama_supplier : 'Tidak Diketahui',
                 'session_jenis_penerimaan' => $this->session_jenis_penerimaan,
                 'session_no_bak' => $this->session_no_bak,
+                'grade' => $grade ? $grade->grade : '-',
+                'kategori_berat' => $kategoriBerat ? $kategoriBerat->kategori_berat : '-',
                 'rows' => $this->rows,
-                'grades' => $this->grades,
-                'kategori_berat' => $this->kategoriBerats,
                 'total_berat' => $total_berat,
                 'total_ekor' => $total_ekor,
                 'printed_at' => now()->format('d/m/Y H:i:s')
             ];
     
             // Generate PDF
-            $pdf = Pdf::loadView('admin.laporan.laporan_penerimaan_ikan', $data);
+            $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.laporan.laporan_penerimaan_ikan', $data);
             
             //$pdf = Pdf::loadView('admin.laporan.laporan_penerimaan_ikan', [
             //    'session_date' => $this->session_date,
@@ -393,18 +393,20 @@ class PenerimaanIkan extends Component
             //return $pdf->download('laporan-penerimaan-'.now()->format('Ymd_His').'.pdf');
 
 
-            return response()->streamDownload(
+            return response()->stream(
                 function () use ($pdf) {
                     echo $pdf->output();
                 },
                 $fileName,
-                ['Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'attachment; filename="' . $fileName . '"'
+                [
+                    'Content-Type' => 'application/pdf',
+                    'Content-Disposition' => 'inline; filename="' . $fileName . '"'
                 ]
             );
     
         } catch (\Exception $e) {
             $this->dispatch('show-error', message: 'Gagal mencetak: ' . $e->getMessage());
+            \Log::error('Error in print: ' . $e->getMessage());
             //session()->flash('error', 'Gagal mencetak: ' . $e->getMessage());
         }
     

@@ -126,7 +126,7 @@ Route::get('/get-supplier-by-batch/{no_batch}', function ($no_batch) {
     return response()->json(['supplier_id' => ''], 404);
 });
 
-Route::get('/ikan-pdf', [PenerimaanIkanController::class, 'ikanPdf'])->name('ikan.pdf');
+Route::get('/penerimaan-ikan-pdf', [PenerimaanIkanController::class, 'penerimaanIkanPdf'])->name('penerimaan-ikan.pdf');
 Route::get('/cutting-pdf/{filterMonth}', [CuttingController::class, 'cuttingPdf'])->name('cutting.pdf');
 Route::get('/service-pdf/{filterMonth}', [ServiceController::class, 'servicePdf'])->name('service.pdf');
 Route::get('/packing-pdf/{month}', [PackingController::class, 'packingPdf'])->name('packing.pdf');

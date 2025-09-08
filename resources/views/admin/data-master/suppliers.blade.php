@@ -81,7 +81,7 @@
                                     @foreach ($suppliers as $item)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $item->supplier_id }}</td>
+                                            <td>{{ str_pad($item->supplier_id, 2, '0', STR_PAD_LEFT) }}</td>
                                             <td>{{ $item->nama_supplier }}</td>
                                             <td>{{ $item->alamat }}</td>
                                             <td>
@@ -121,7 +121,7 @@
                                                                 <input type="text" name="supplier_id"
                                                                     id="supplier_id_{{ $item->supplier_id }}"
                                                                     class="form-control border-primary"
-                                                                    value="{{ $item->supplier_id }}" required>
+                                                                    value="{{ str_pad($item->supplier_id, 2, '0', STR_PAD_LEFT) }}" required>
                                                             </div>
 
                                                             <div class="form-group mb-3">

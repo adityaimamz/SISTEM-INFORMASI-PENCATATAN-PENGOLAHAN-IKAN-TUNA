@@ -77,7 +77,7 @@
                 <th rowspan="2" style="width: 100px;">No. Bak</th>
 
                 {{-- Grade di atas --}}
-                <th colspan="3">
+                <th colspan="3"> 
                     <select wire:model.live="selected_grade_id" 
                             class="excel-input @error('selected_grade_id') is-invalid @enderror" 
                             @if(!$session_date || !$session_tgl_bongkar || !$session_supplier || !$session_jenis_penerimaan || !$session_no_bak) disabled @endif 
@@ -92,7 +92,7 @@
                         @endforeach
                     </select>
                 </th>
-                <!-- <th rowspan="2" style="width: 80px;">Aksi</th> -->
+
             </tr>
             <tr>
                 <th style="width: 120px;">Berat (Kg)</th>
@@ -124,7 +124,7 @@
                                             placeholder="Kg"
                                             required>
                                                 @error('rows.{{ $index }}.berat_ikan')
-                                                    <div class="text-danger small">{{ number_format($row['berat_ikan'] ?? 0, 2) }}</div>
+                                                    <div class="text-danger small">{{ $message }}</div>
                                                 @enderror
                                 </td>
 
@@ -136,7 +136,7 @@
                                         placeholder="°C"
                                         required>
                                             @error('rows.{{ $index }}.suhu_ikan')
-                                                <div class="text-danger small">{{ number_format($row['suhu_ikan'] ?? 0, 1) }}</div>
+                                                <div class="text-danger small">{{ $message }}</div>
                                             @enderror
                                 </td>
 
@@ -148,7 +148,7 @@
                                             placeholder="No Ikan"
                                             required>
                                             @error('rows.{{ $index }}.no_ikan')
-                                                <div class="text-danger small">{{ number_format($row['no_ikan'] ?? 0, 0) }}</div>
+                                                <div class="text-danger small">{{ $message }}</div>
                                             @enderror
                                 </td>
                             </tr>

@@ -124,7 +124,7 @@
                                             placeholder="Kg"
                                             required>
                                                 @error('rows.{{ $index }}.berat_ikan')
-                                                    <div class="text-danger small">{{ number_format($row['berat_ikan'] ?? 0, 2) }}</div>
+                                                    <div class="text-danger small">{{ $message }}</div>
                                                 @enderror
                                 </td>
 
@@ -136,7 +136,7 @@
                                         placeholder="°C"
                                         required>
                                             @error('rows.{{ $index }}.suhu_ikan')
-                                                <div class="text-danger small">{{ number_format($row['suhu_ikan'] ?? 0, 1) }}</div>
+                                                <div class="text-danger small">{{ $message }}</div>
                                             @enderror
                                 </td>
 
@@ -148,7 +148,7 @@
                                             placeholder="No Ikan"
                                             required>
                                             @error('rows.{{ $index }}.no_ikan')
-                                                <div class="text-danger small">{{ number_format($row['no_ikan'] ?? 0, 0) }}</div>
+                                                <div class="text-danger small">{{ $message }}</div>
                                             @enderror
                                 </td>
                                 <!--
