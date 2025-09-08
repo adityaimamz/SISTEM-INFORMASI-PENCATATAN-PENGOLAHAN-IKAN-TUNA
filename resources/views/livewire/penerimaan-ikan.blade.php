@@ -74,12 +74,12 @@
                             required>
                         <option value="" selected disabled>Pilih Jenis Penerimaan</option>
                         <option value="Fresh GG">Fresh GG</option>
-                        <option value="Frozen WR YF">Frozen WR YF</option>
+                        <option value="Frozen WR YF">Frozen WR BE</option>
                         <option value="Frozen WR BF">Frozen WR BF</option>
-                        <option value="Frozen WR BE">Frozen WR BE</option>
-                        <option value="Frozen GG YF">Frozen GG YF</option>
+                        <option value="Frozen WR BE">Frozen WR YF</option>
+                        <option value="Frozen GG YF">Frozen GG BE</option>
                         <option value="Frozen GG BF">Frozen GG BF</option>
-                        <option value="Frozen GG BE">Frozen GG BE</option>
+                        <option value="Frozen GG BE">Frozen GG YF</option>
                     </select>
                     @error('session_jenis_penerimaan')
                         <div class="invalid-feedback small d-block">

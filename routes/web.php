@@ -127,13 +127,13 @@ Route::get('/get-supplier-by-batch/{no_batch}', function ($no_batch) {
 });
 
 Route::get('/penerimaan-ikan-pdf', [PenerimaanIkanController::class, 'penerimaanIkanPdf'])->name('penerimaan-ikan.pdf');
-Route::get('/cutting-pdf/{filterMonth}', [CuttingController::class, 'cuttingPdf'])->name('cutting.pdf');
-Route::get('/service-pdf/{filterMonth}', [ServiceController::class, 'servicePdf'])->name('service.pdf');
-Route::get('/packing-pdf/{month}', [PackingController::class, 'packingPdf'])->name('packing.pdf');
-Route::get('/stok-masuk-pdf/{month}/{year}', [ProdukMasukController::class, 'stokMasukPdf'])->name('stok-masuk.pdf');
+Route::get('/cutting-pdf', [CuttingController::class, 'cuttingPdf'])->name('cutting.pdf');
+Route::get('/service-pdf', [ServiceController::class, 'servicePdf'])->name('service.pdf');
+Route::get('/packing-pdf', [PackingController::class, 'packingPdf'])->name('packing.pdf');
+Route::get('/stok-masuk-pdf', [ProdukMasukController::class, 'stokMasukPdf'])->name('stok-masuk.pdf');
 Route::get('/stok-keluar-pdf', [ProdukKeluarController::class, 'stokKeluarPdf'])->name('stok-keluar.pdf');
-Route::resource('penerimaan_ikan', PenerimaanIkanController::class)->middleware('auth');
 Route::get('/grading', \App\Livewire\GradingProses::class)->name('grading.index')->middleware('auth');
+Route::resource('penerimaan_ikan', PenerimaanIkanController::class)->middleware('auth');
 Route::resource('cutting', CuttingController::class)->middleware('auth');
 Route::resource('no_batch', NoBatchController::class)->middleware('auth');
 Route::resource('no_container', NoContainersController::class)->middleware('auth');

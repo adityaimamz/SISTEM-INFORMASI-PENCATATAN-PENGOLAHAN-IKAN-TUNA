@@ -12,6 +12,7 @@ use App\Models\Supplier;
 
 class CuttingFilter extends Component
 {
+    public $tgl_cutting;
     public $no_batches;
     public $penerimaan_ikan;
     public $kategori_berat_cuttings;
@@ -20,7 +21,6 @@ class CuttingFilter extends Component
     public $tanggal_penerimaan;
     public $supplier;
     public $grade;
-    public $tgl_cutting;
     public $supplier_id;
     public $tgl_injek_co;  
 
@@ -70,6 +70,7 @@ class CuttingFilter extends Component
                 if ($penerimaanIkan) {
                     $this->tanggal_penerimaan = $penerimaanIkan->tgl_penerimaan;
                     $this->supplier = $penerimaanIkan->supplier->nama_supplier;
+
                     $this->grade = $penerimaanIkan->grade->grade;
                     $this->tgl_cutting = $cutting->tgl_cutting;
                     $this->supplier_id = $cutting->supplier_id;
