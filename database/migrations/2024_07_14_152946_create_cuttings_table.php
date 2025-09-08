@@ -12,13 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('cuttings', function (Blueprint $table) {
-            $table->integer('cuttings_id');
-            $table->unsignedBigInteger ('penerimaan_id')->unsigned();
-            $table->foreignId('no_batch_id')->constrained('no_batches')->onDelete('cascade'); // corrected to use 'no_batches' table
-            $table->foreignId('id_produk');
-            $table->foreignId('kategori_berat_id')->constrained('kategori_berat_cuttings')->onDelete('cascade');
-            $table->float('berat_produk');
+            $table->unsignedInteger('cuttings_id');
             $table->date('tgl_cutting');
+            $table->date('tgl_injek_co');
+            $table->unsignedBigInteger ('penerimaan_id')->unsigned();
+            $table->float('berat_produk');
+            $table->float('total_produk');
             $table->timestamps();
 
             $table->foreign('penerimaan_id')

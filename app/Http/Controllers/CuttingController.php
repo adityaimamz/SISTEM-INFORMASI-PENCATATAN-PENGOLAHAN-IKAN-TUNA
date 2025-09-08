@@ -29,7 +29,7 @@ class CuttingController extends Controller// Mengubah nama controller menjadi Cu
         $grades = Grade::all(); 
         $selectedSupplier = null;
 
-        return view('admin.transaksi.cutting-filter', [
+        return view('admin.transaksi.cutting', [
             'cutting' => $cutting,
             'penerimaan_ikan' => $penerimaan_ikan,
             'suppliers' => $suppliers,
@@ -77,6 +77,7 @@ class CuttingController extends Controller// Mengubah nama controller menjadi Cu
             'id_produk' => 'required',
             'berat_produk' => 'required|numeric|min:1',
             'tgl_cutting' => 'required|date',
+            'tgl_injek_co' => 'required|date',
             'supplier_id' => 'required',
             'grade_id' => 'required',
             'selectedSupplier' => 'required',
@@ -92,6 +93,7 @@ class CuttingController extends Controller// Mengubah nama controller menjadi Cu
             'berat_produk' => $validated['berat_produk'],
             'kategori_berat_id' => $kategoriBeratId, // Terisi otomatis
             'tgl_cutting' => $validated['tgl_cutting'],
+            'tgl_injek_co' => $validated['tgl_injek_co'],
             'supplier_id' => $validated['supplier_id'],
             'grade_id' => $validated['grade_id'],
             'selectedSupplier' => $validated['selectedSupplier'],
@@ -127,6 +129,7 @@ class CuttingController extends Controller// Mengubah nama controller menjadi Cu
             'kategori_berat_id' => $request->kategori_berat_id,
             'berat_produk' => $request->berat_produk,
             'tgl_cutting' => $request->tgl_cutting,
+            'tgl_injek_co' => $request->tgl_injek_co,
             'supplier_id' => $request->supplier_id,
             'grade_id' => $request->grade_id,
             'selectedSupplier' => $request->selectedSupplier,
