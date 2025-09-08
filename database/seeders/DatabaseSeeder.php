@@ -7,7 +7,7 @@ use App\Models\Grade;
 use App\Models\Supplier;
 use App\Models\KategoriBeratPenerimaan;
 use App\Models\KategoriBeratCutting;
-use App\Models\Kategori_produk;
+use App\Models\KategoriByprodukCt;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -34,6 +34,8 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('superadmin'),
         ]);
 
+        //Grade::factory(3)->create();
+
         Grade::create([
             'grade' => 'B/C',
         ]);
@@ -41,11 +43,10 @@ class DatabaseSeeder extends Seeder
             'grade' => 'D',
         ]);
         Grade::create([
-            'grade' => 'C',
-        ]);
-        Grade::create([
             'grade' => 'Lokal',
         ]);
+
+        //KategoriBeratPenerimaan::factory(3)->create();
 
         KategoriBeratPenerimaan::create([
             'kategori_berat' => '20 UP',
@@ -57,37 +58,36 @@ class DatabaseSeeder extends Seeder
             'kategori_berat' => '30 UP',
         ]);
 
-        KategoriBeratCutting::create([
-            'kategori_berat' => '1/3',
-        ]);
-        KategoriBeratCutting::create([
-            'kategori_berat' => '3/5',
-        ]);
-        KategoriBeratCutting::create([
-            'kategori_berat' => '5 UP',
-        ]);
+        //Supplier::factory(1)->create();
 
         Supplier::create([
             'supplier_id' => 01,
-            'nama_supplier' => 'TA',
-            'alamat' => 'TATA',
-        ]);
-
-        Kategori_produk::create([
-            'jenis_ikan' => '',
-        ]);
-        Kategori_produk::create([
-            'jenis_ikan' => '',
-        ]);
-        Kategori_produk::create([
-            'jenis_ikan' => '',
-        ]);
-        Kategori_produk::create([
-            'jenis_ikan' => '',
-        ]);
-        Kategori_produk::create([
-            'jenis_ikan' => '',
+            'nama_supplier' => 'BPM',
+            'alamat' => 'Jakarta Barat',
         ]);
         
+        //Kategori_byproduk_ct::factory(3)->create();
+
+        KategoriByprodukCt::create([
+            'nama_produk' => 'Kama',
+        ]);
+        KategoriByprodukCt::create([
+            'nama_produk' => 'Belly',
+        ]);
+        KategoriByprodukCt::create([
+            'nama_produk' => 'TM (Tetelan Merah)',
+        ]);
+        KategoriByprodukCt::create([
+            'nama_produk' => 'D. Kepala',
+        ]); 
+        KategoriByprodukCt::create([
+            'nama_produk' => 'D. Pipi',
+        ]); 
+        KategoriByprodukCt::create([
+            'nama_produk' => 'D. Kerok',
+        ]); 
+        KategoriByprodukCt::create([
+            'nama_produk' => 'Iga Kerok',
+        ]); 
     }
 }

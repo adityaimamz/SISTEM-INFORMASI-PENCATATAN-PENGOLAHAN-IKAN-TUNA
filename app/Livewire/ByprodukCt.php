@@ -5,14 +5,14 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Penerimaan_Ikan;
 use App\Models\Supplier;
+use App\Models\KategoriByprodukCt;
 
-class Ikan extends Component
+class ByprodukCt extends Component
 {
     public $date;
     public $supplier;
     public $data;
     public $suppliers;
-
     public function mount()
     {
         $this->date = now()->format('Y-m-d');
@@ -43,6 +43,6 @@ class Ikan extends Component
 
     public function render()
     {
-        return view('livewire.ikan');
+        return view('livewire.kategori-byproduk-ct');
     }
 }

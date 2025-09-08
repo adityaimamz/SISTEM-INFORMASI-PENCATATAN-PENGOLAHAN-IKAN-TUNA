@@ -4,7 +4,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CuttingController;
 use App\Http\Controllers\NoBatchController;
 use App\Http\Controllers\KodeTraceController;
-use App\Http\Controllers\IkanController;
+use App\Http\Controllers\KategoriByprodukCtController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\KategoriBeratPenerimaanController;
@@ -54,10 +54,11 @@ Route::middleware('is_admin')->group(function () {
     });
     Route::resource('akun', AccountController::class);
     Route::resource('kategori', KategoriController::class);
-    Route::resource('ikan', IkanController::class);
     Route::resource('grade', GradeController::class);
     Route::resource('kategori_berat_penerimaan', KategoriBeratPenerimaanController::class);
     Route::resource('kategori_berat_cutting', KategoriBeratCuttingController::class);
+    Route::resource('kategori-byproduk-ct', KategoriByprodukCtController::class)
+        ->parameters(['kategori-byproduk-ct'=> 'kategori_byproduk_ct']);
     Route::resource('suppliers', SupplierController::class);
     Route::resource('penerimaan_ikan', PenerimaanIkanController::class);
 });
@@ -128,6 +129,7 @@ Route::get('/get-supplier-by-batch/{no_batch}', function ($no_batch) {
 
 Route::get('/penerimaan-ikan-pdf', [PenerimaanIkanController::class, 'penerimaanIkanPdf'])->name('penerimaan-ikan.pdf');
 Route::get('/cutting-pdf', [CuttingController::class, 'cuttingPdf'])->name('cutting.pdf');
+Route::get('/kategori-byproduk-ct-pdf', [KategoriByprodukCtController::class, 'kategoriByprodukCtPdf'])->name('kategori-byproduk-ct.pdf');
 Route::get('/service-pdf', [ServiceController::class, 'servicePdf'])->name('service.pdf');
 Route::get('/packing-pdf', [PackingController::class, 'packingPdf'])->name('packing.pdf');
 Route::get('/stok-masuk-pdf', [ProdukMasukController::class, 'stokMasukPdf'])->name('stok-masuk.pdf');
@@ -135,6 +137,7 @@ Route::get('/stok-keluar-pdf', [ProdukKeluarController::class, 'stokKeluarPdf'])
 Route::get('/grading', \App\Livewire\GradingProses::class)->name('grading.index')->middleware('auth');
 Route::resource('penerimaan_ikan', PenerimaanIkanController::class)->middleware('auth');
 Route::resource('cutting', CuttingController::class)->middleware('auth');
+Route::resource('kategori-byproduk-ct', KategoriByprodukCtController::class)->middleware('auth');
 Route::resource('no_batch', NoBatchController::class)->middleware('auth');
 Route::resource('no_container', NoContainersController::class)->middleware('auth');
 Route::resource('kode_trace', KodeTraceController::class)->middleware('auth');

@@ -16,7 +16,6 @@ return new class extends Migration
             $table->integer('cuttings_id')->unsigned();
             $table->foreignId('kode_trace_id')->constrained('kode_traces')->onDelete('cascade');
             $table->foreignId('no_batch_id'); // corrected to use 'cuttings' table
-            $table->foreignId('id_ikan')->constrained('Kategori_produks')->onDelete('cascade');
             $table->float('kg');
             $table->integer('pcs');
             $table->date('tgl_service');

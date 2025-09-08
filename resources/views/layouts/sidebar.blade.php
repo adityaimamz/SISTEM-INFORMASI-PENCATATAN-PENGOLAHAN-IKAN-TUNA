@@ -73,15 +73,9 @@
                         <span>Supplier</span>
                     </a>
                 </li>
-                <li class="sidebar-item {{ Request::is('ikan') ? 'active' : '' }}">
-                    <a href="/ikan" class='sidebar-link'>
-                        <i class="fa-fw select-all fas"></i>
-                        <span>Ikan</span>
-                    </a>
-                </li>
                 @endif --}}
-                @if(Auth::user()->role_id == 1)
 
+                @if(Auth::user()->role_id == 1)
                 <li class="sidebar-item  has-sub">
                     <a href="#" class='sidebar-link'>
                         <i class="bi bi-database-fill"></i>
@@ -113,8 +107,8 @@
 
                         </li>
 
-                        <li class="submenu-item {{ Request::is('ikan') ? 'active' : '' }} ">
-                            <a href="/ikan" class="submenu-link">Data Produk</a>
+                        <li class="submenu-item {{ Request::is('kategori_byproduk_ct') ? 'active' : '' }} ">
+                            <a href="/kategori-byproduk-ct" class="submenu-link">Data By Produk Cutting</a>
                         </li>
                     </ul>
                 </li>

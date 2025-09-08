@@ -16,6 +16,7 @@ return new class extends Migration
             $table->date('tgl_cutting');
             $table->date('tgl_injek_co');
             $table->unsignedBigInteger ('penerimaan_id')->unsigned();
+            $table->unsignedBigInteger ('produk_id')->unsigned();
             $table->float('berat_produk');
             $table->float('total_produk');
             $table->timestamps();
