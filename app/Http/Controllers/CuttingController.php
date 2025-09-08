@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Cutting;
 use App\Models\Penerimaan_ikan;
 use App\Models\Supplier;
-use App\Models\NoBatch;
 use Carbon\Carbon;
 use App\Models\KategoriBeratCutting;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -22,7 +21,6 @@ class CuttingController extends Controller// Mengubah nama controller menjadi Cu
     public function index()
     {
         $cutting = Cutting::all();
-        $no_batch = NoBatch::all();
         $penerimaan_ikan = Penerimaan_ikan::all();
         $suppliers = Supplier::all();
         $kategori_berat_cuttings = KategoriBeratCutting::all();
@@ -34,7 +32,6 @@ class CuttingController extends Controller// Mengubah nama controller menjadi Cu
             'penerimaan_ikan' => $penerimaan_ikan,
             'suppliers' => $suppliers,
             'kategori_berat_cuttings' => $kategori_berat_cuttings,
-            'no_batch' => $no_batch,
             'grades' => $grades,
             'selectedSupplier' => $selectedSupplier
         ]);
@@ -47,7 +44,7 @@ class CuttingController extends Controller// Mengubah nama controller menjadi Cu
     
         $cuttings = Cutting::whereMonth('tgl_cutting', Carbon::parse($filterMonth)->month)
             ->whereYear('tgl_cutting', Carbon::parse($filterMonth)->year)
-            ->with(['kategori_berat', 'penerimaan_ikan.supplier', 'no_batch'])
+            ->with(['kategori_berat', 'penerimaan_ikan.supplier'])
             ->get();
     
         $total13 = $cuttings->where('kategori_berat.kategori_berat', '1/3')->sum('berat_produk');
@@ -88,7 +85,6 @@ class CuttingController extends Controller// Mengubah nama controller menjadi Cu
     
         // Simpan data cutting
         Cutting::create([
-            'no_batch_id' => $validated['no_batch_id'],
             'id_produk' => $validated['id_produk'],
             'berat_produk' => $validated['berat_produk'],
             'kategori_berat_id' => $kategoriBeratId, // Terisi otomatis
@@ -124,7 +120,6 @@ class CuttingController extends Controller// Mengubah nama controller menjadi Cu
 
         $cutting = Cutting::findOrFail($no_batch); // Mengubah model yang digunakan menjadi Cutting
         $data = [
-            'no_batch_id' => $request->no_batch_id,
             'id_produk' => $request->id_produk,
             'kategori_berat_id' => $request->kategori_berat_id,
             'berat_produk' => $request->berat_produk,

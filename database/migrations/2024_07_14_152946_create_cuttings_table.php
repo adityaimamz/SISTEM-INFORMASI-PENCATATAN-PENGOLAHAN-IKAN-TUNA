@@ -17,6 +17,7 @@ return new class extends Migration
             $table->date('tgl_injek_co');
             $table->unsignedBigInteger ('penerimaan_id')->unsigned();
             $table->unsignedBigInteger ('produk_id')->unsigned();
+            $table->char('no_batch');
             $table->float('berat_produk');
             $table->float('total_produk');
             $table->timestamps();
@@ -24,6 +25,11 @@ return new class extends Migration
             $table->foreign('penerimaan_id')
                   ->references('penerimaan_id')
                   ->on('penerimaan_ikans')
+                  ->onDelete('cascade');
+
+            $table->foreign('ketegori_byproduk_id')
+                  ->references('ketegori_byproduk_id')
+                  ->on('kategori_byproduk_cts')
                   ->onDelete('cascade');
         });
 
@@ -34,6 +40,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('penerimaan_ikans');
+        Schema::dropIfExists('cuttings');
     }
 };

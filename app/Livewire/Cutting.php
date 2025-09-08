@@ -3,35 +3,29 @@
 namespace App\Livewire;
 
 use App\Models\Cutting as CuttingModel;
-use App\Models\KategoriBeratCutting;
-use App\Models\NoBatch;
 use App\Models\Penerimaan_ikan;
-use Livewire\Component;
 use App\Models\Supplier;
+use App\Models\KategoriByprodukCt;
+use Livewire\Component;
+
 
 
 class Cutting extends Component
 {
     // Properti untuk form input dan filter
-    public $tgl_cutting;
-    public $tgl_injek_co; 
+    public $session_tgl_cutting;
+    public $session_tgl_injek_co; 
     public $penerimaan_id;
-    public $no_batches;
-    public $penerimaan_ikan;
-    public $kategori_berat_cuttings;
     public $cuttings = [];
-    public $no_batch;
-    public $tanggal_penerimaan;
-    public $supplier;
-    public $grade;
-    public $supplier_id;
+    public $suppliers = [];
     public $selectedSupplier;
+    public $rows = [];
+    public $data = []; // menambahkan properti $data yang hilang
     
      
 
     // Properties for editing
     public $cutting_id;
-    public $edit_no_batch;
     public $edit_id_produk;
     public $edit_berat_produk;
     public $edit_kategori_berat_id;
@@ -45,11 +39,8 @@ class Cutting extends Component
     // Insialisasi data
     public function mount()
     {
-        $this->no_batches;
         $this->loadPenerimaanIkan();
         $this->cuttings = collect();
-        $this->tanggal_penerimaan = null;
-        $this->tgl_injek_co = null;
         $this->penerimaan_id = null;
     }
 
@@ -85,7 +76,6 @@ class Cutting extends Component
             $this->grade = null;
             $this->tgl_cutting = null;
             $this->tgl_injek_co = null;
-            $this->edit_no_batch = null;
             $this->edit_id_produk = null;
             $this->edit_berat_produk = null;
             $this->edit_kategori_berat_id = null;
@@ -101,7 +91,6 @@ class Cutting extends Component
     {
         $cutting = Cutting::findOrFail($id);
         if ($cutting) {
-            $this->edit_no_batch = $cutting->no_batch_id;
             $this->edit_id_produk = $cutting->id_produk;
             $this->edit_berat_produk = $cutting->berat_produk;
             $this->edit_kategori_berat_id = $cutting->kategori_berat_id;
@@ -118,7 +107,6 @@ class Cutting extends Component
     {
         // Validasi input
         $this->validate([
-            'edit_no_batch' => 'required',
             'edit_id_produk' => 'required',
             'edit_berat_produk' => 'required|numeric|min:0',
             'edit_supplier' => 'required',
@@ -135,7 +123,6 @@ class Cutting extends Component
         // Update data cutting
         $cutting = Cutting::findOrFail($this->cutting_id);
         $cutting->update([
-            'no_batch_id' => $this->edit_no_batch,
             'id_produk' => $this->edit_id_produk,
             'berat_produk' => $this->edit_berat_produk,
             'kategori_berat_id' => $kategoriBeratId,
@@ -179,14 +166,12 @@ class Cutting extends Component
     {
         return view('livewire.cutting', [
             'cuttings' => $this->cuttings,
-            'no_batches' => $this->no_batches,
             'penerimaan_ikan' => $this->penerimaan_ikan,
             'kategori_berat_cuttings' => $this->kategori_berat_cuttings,
             'tanggal_penerimaan' => $this->tanggal_penerimaan,
             'supplier' => $this->supplier,
             'grade' => $this->grade,
             'tgl_injek_co' => $this->tgl_injek_co,
-            'edit_no_batch' => $this->edit_no_batch,
             'edit_id_produk' => $this->edit_id_produk,
             'edit_berat_produk' => $this->edit_berat_produk,
             'edit_kategori_berat_id' => $this->edit_kategori_berat_id,

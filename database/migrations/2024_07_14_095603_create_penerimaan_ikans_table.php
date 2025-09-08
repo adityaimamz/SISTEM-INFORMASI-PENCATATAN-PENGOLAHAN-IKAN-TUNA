@@ -21,6 +21,7 @@ return new class extends Migration
             $table->date('tgl_bongkar');
             $table->float('suhu_ikan');
             $table->string('no_bak')->nullable();
+            $table->string('no_ikan');
             $table->timestamps();
 
             $table->foreign('supplier_id')
