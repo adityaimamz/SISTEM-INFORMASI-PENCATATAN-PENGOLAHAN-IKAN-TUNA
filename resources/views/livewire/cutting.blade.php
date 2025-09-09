@@ -23,67 +23,70 @@
         <div class="card-body p-3">
             <div class="row g-2">
                 <div class="col-md-auto">
-                    <label for="tgl_cutting" class="form-label small">Tanggal Cutting</label>
-                        <input type="date" id="tgl_cutting" 
-                            wire:model.live="tgl_cutting" 
-                            class="form-control form-control-sm @error('tgl_cutting') is-invalid @enderror"
+                    <label for="session_tgl_cutting" class="form-label small">Tanggal Cutting</label>
+                        <input type="date" id="session_tgl_cutting" 
+                            wire:model.live="session_tgl_cutting" 
+                            class="form-control form-control-sm @error('session_tgl_cutting') is-invalid @enderror"
                             required>
-                        @error('tgl_cutting')
+                        @error('session_tgl_cutting')
                             <div class="invalid-feedback small">{{ $message }}</div>
                         @enderror
                 </div>
 
                 <div class="col-md-auto">
-                    <label for="tgl_injek_co" class="form-label small">Tanggal Injek CO</label>
-                        <input type="date" id="tgl_injek_co" 
-                            wire:model.live="tgl_injek_co"
-                            class="form-control form-control-sm @error('tgl_injek_co') is-invalid @enderror"
-                            @if($tgl_cutting) disabled @endif 
-                            min="{{ $tgl_cutting }}"
+                    <label for="session_tgl_injek_co" class="form-label small">Tanggal Injek CO</label>
+                        <input type="date" id="session_tgl_injek_co" 
+                            wire:model.live="session_tgl_injek_co"
+                            class="form-control form-control-sm @error('session_tgl_injek_co') is-invalid @enderror"
+                            @if(!$session_tgl_cutting) disabled @endif 
+                            min="{{ $session_tgl_cutting }}"
                             required>
-                        @error('tgl_injek_co')
+                        @error('session_tgl_injek_co')
                             <div class="invalid-feedback small">{{ $message }}</div>
                         @enderror
                 </div>
 
                 <div class="col-md-auto">
-                    <label for="penerimaan_id" class="form-label small">Tanggal Penerimaan</label>
-                        <select id="penerimaan_id" 
-                            wire:model.live="penerimaan_id"
-                            class="form-select form-select-sm @error('penerimaan_id') is-invalid @enderror"
-                            @if(!$tgl_injek_co) disabled @endif 
+                    <label for="selectedTanggalPenerimaan" class="form-label small">Tanggal Penerimaan</label>
+                        <select id="selectedTanggalPenerimaan" 
+                            wire:model.live="selectedTanggalPenerimaan"
+                            wire:change="updateSelectedTanggalPenerimaan($event.target.value)"
+                            class="form-select form-select-sm @error('selectedTanggalPenerimaan') is-invalid @enderror"
+                            @if(!$session_tgl_injek_co) disabled @endif 
                             required>
-                        <option value="">Pilih Tanggal Penerimaan</option>
-                        @forelse ($penerimaan_ikan as $penerimaan)
-                            <option value="{{ $penerimaan->penerimaan_id }}">
-                                {{ \Carbon\Carbon::parse($penerimaan->tgl_penerimaan)->format('d F Y') }} - 
-                                {{ $penerimaan->supplier->nama_supplier ?? 'Tidak ada supplier' }}
-                            </option>
-                        @empty
-                            <option value="">Tidak ada data penerimaan ikan</option>
-                        @endforelse
-                    </select>
+                            <option value="">Pilih Tanggal Penerimaan</option>
+                            @foreach ($penerimaan_ikan->unique('tgl_penerimaan') as $penerimaan)
+                                <option value="{{ $penerimaan->penerimaan_id }}">
+                                    {{ \Carbon\Carbon::parse($penerimaan->tgl_penerimaan)->format('d F Y') }}
+                                </option>
+                            @endforeach
+                        </select>
                 </div>
 
                 <div class="col-md-auto">
                     <label for="penerimaan_id" class="form-label small">Jenis Penerimaan</label>
                         <select id="penerimaan_id" 
-                            wire:model.live="penerimaan_id"
-                            class="form-select form-select-sm @error('penerimaan_id') is-invalid @enderror"
-                            @if(!$tgl_injek_co) disabled @endif 
-                            required>
-                        <option value="">Pilih Jenis Penerimaan</option>
-                        @forelse ($penerimaan_ikan as $penerimaan)
-                            <option value="{{ $penerimaan->penerimaan_id }}" 
-                            @if($penerimaan->jenis_penerimaan == 'Penerimaan' && $tgl_injek_co) selected @endif>
-                                {{ $penerimaan->jenis_penerimaan }}
-                            </option>
-                        @empty
-                            <option value="">Tidak ada data penerimaan ikan</option>
-                        @endforelse
-                    </select>
+                                wire:model.live="penerimaan_id"
+                                class="form-select form-select-sm @error('penerimaan_id') is-invalid @enderror"
+                                @if(!$selectedTanggalPenerimaan) disabled @endif 
+                                required>
+                            <option value="">Pilih Jenis Penerimaan</option>
+                            @forelse ($filteredPenerimaan as $penerimaan)
+                                @php
+                                    $jenis = $penerimaan->jenis_penerimaan;
+                                    $supplier = $penerimaan->supplier->nama_supplier ?? 'Tidak ada supplier';
+                                    $displayText = $jenis . ' ' . $supplier;
+                                @endphp
+                                <option value="{{ $penerimaan->penerimaan_id }}">
+                                    {{ $displayText }}
+                                </option>
+                            @empty
+                                <option value="">Tidak ada data penerimaan ikan</option>
+                            @endforelse
+                        </select>
                 </div>
             </div>
         </div>
     </div>
+</div>
     

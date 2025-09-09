@@ -12,34 +12,39 @@ use Livewire\Component;
 
 class Cutting extends Component
 {
-    // Properti untuk form input dan filter
+
+// Properti untuk form input dan filter
+    public $cuttings = [];                      //tabel cutting
     public $session_tgl_cutting;
     public $session_tgl_injek_co; 
-    public $penerimaan_id;
-    public $cuttings = [];
+    public $penerimaan_ikan;                    //tabel penerimaan
+    public $selectedTanggalPenerimaan;
+    public $filteredPenerimaan = [];
     public $suppliers = [];
     public $selectedSupplier;
     public $rows = [];
-    public $data = []; // menambahkan properti $data yang hilang
+    public $data = [];
     
-     
-
-    // Properties for editing
+// Properties for editing
     public $cutting_id;
     public $edit_tgl_cutting;
     public $edit_tgl_injek_co;
 
-    // Insialisasi data
+// Insialisasi data
     public function mount()
-    {
+    {        
+        $this->cuttings = collect();            //tabel cutting
+        $this->session_tgl_cutting = null;
+        $this->session_tgl_injek_co = null;
+        $this->penerimaan_id = null;            //tabel penerimaan
         $this->penerimaan_ikan = Penerimaan_ikan::with('supplier')
             ->orderBy('tgl_penerimaan', 'desc')
             ->get();
-        $this->cuttings = collect();
-        $this->penerimaan_id = null;
+        $this->selectedTanggalPenerimaan = null;
+        $this->filteredPenerimaan = collect();
     }
 
-    //memuat data penerimaan ikan
+    //memuat data- data yang ada pada penerimaan ikan
     public function loadPenerimaanIkan()
     {
         $this->penerimaan_ikan = Penerimaan_ikan::with('supplier')
@@ -47,6 +52,20 @@ class Cutting extends Component
             ->get();
         return $this->penerimaan_ikan;
     }
+
+    public function updateSelectedTanggalPenerimaan($value)
+    {
+        if($value) {
+            $this->filteredPenerimaan = Penerimaan_ikan::where('penerimaan_id', $value)
+                ->with('supplier')
+                ->get();
+        } else {
+            $this->filteredPenerimaan = collect();
+        }
+        $this->penerimaan_id = null;
+    }
+
+    //memuat data- data yang ada pada penerimaan ikan
 
     public function loadCuttingForEdit($id)
     {
@@ -91,9 +110,10 @@ class Cutting extends Component
     {
         return view('livewire.cutting', [
             'cuttings' => $this->cuttings,
-            'tgl_cutting' => $this->tgl_cutting,
-            'tgl_injek_co' => $this->tgl_injek_co,
+            'session_tgl_cutting' => $this->session_tgl_cutting,
+            'session_tgl_injek_co' => $this->session_tgl_injek_co,
             'selectedSupplier' => $this->selectedSupplier,
+            'penerimaan_ikan' => $this->penerimaan_ikan,
         ]);
     }   
 }
