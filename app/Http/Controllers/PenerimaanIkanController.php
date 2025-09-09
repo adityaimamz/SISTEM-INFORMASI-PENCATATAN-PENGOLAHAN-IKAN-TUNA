@@ -33,21 +33,13 @@ class PenerimaanIkanController extends Controller
         ]);
     }
 
-    public function getIkan($id)
-    {
-        $ikan = Kategori_produk::find($id);
-        return $ikan ? json_encode($ikan) : 'ikan tidak ditemukan';
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $jenis_penerimaan = ['Fresh GG', 'Frozen WR'];
         
     }
 
+// PDF Penerimaan Ikan
     public function ikanPdf(Request $request)
     {
         $date = $request->get('date');
@@ -86,17 +78,16 @@ class PenerimaanIkanController extends Controller
         return $pdf->download('laporan_penerimaan_ikan_' . ($date ?? 'all_dates') . '.pdf');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+// Store Penerimaan Ikan
     public function store(Request $request)
     {
         try {
             $validated = $request->validate([
-                'tgl_penerimaan' => 'required|date',
-                'supplier_id' => 'required|exists:suppliers,supplier_id',
-                'grade_id' => 'required|exists:grades,id',
+                'tgl_penerimaan' => 'required|date',                                        // Tabel Penerimaan Ikan
                 'berat_ikan' => 'required|numeric|min:10',
+                'supplier_id' => 'required|exists:suppliers,supplier_id',                   // Tabel supplier
+                'grade_id' => 'required|exists:grades,id',                                  // Tabel grade
+                'kategori_berat_id' => 'required|exists:kategori_berat_penerimaans,id',     // Tabel Kategori Berat Penerimaan
             ]);
 
             $kategoriBeratId = $this->getKategoriBeratId($validated['berat_ikan']);
@@ -106,11 +97,11 @@ class PenerimaanIkanController extends Controller
             }
 
             Penerimaan_Ikan::create([
-                'tgl_penerimaan' => $validated['tgl_penerimaan'],
-                'supplier_id' => $validated['supplier_id'],
-                'grade_id' => $validated['grade_id'],
-                'kategori_berat_id' => $kategoriBeratId,
+                'tgl_penerimaan' => $validated['tgl_penerimaan'],                           // Tabel Penerimaan Ikan
                 'berat_ikan' => $validated['berat_ikan'],
+                'supplier_id' => $validated['supplier_id'],                                  // Tabel supplier
+                'grade_id' => $validated['grade_id'],                                        // Tabel grade
+                'kategori_berat_id' => $kategoriBeratId,                                    // Tabel Kategori Berat Penerimaan
             ]);
 
             return redirect()->route('penerimaan_ikan.index')->with('success', 'Penerimaan Ikan berhasil ditambahkan.');

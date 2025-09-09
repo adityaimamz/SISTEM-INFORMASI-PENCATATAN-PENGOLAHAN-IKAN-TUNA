@@ -30,67 +30,9 @@
             <!-- Modal untuk Tambah Penerimaan (Supplier + Date) -->
             <div class="modal fade" id="tambahPenerimaanModal" tabindex="-1" role="dialog"
                 aria-labelledby="tambahPenerimaanModalTitle" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="tambahPenerimaanModalTitle">Tambah Data Penerimaan Ikan</h5>
-                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                <i data-feather="x"></i>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form wire:submit.prevent="store" class="mt-0">
-                                <div class="form-group">
-                                    <label for="supplier_id">Supplier</label>
-                                    <select wire:model="supplier_id" class="form-control border-primary" required>
-                                        <option value="" selected disabled>Pilih Supplier</option>
-                                        @foreach ($suppliers as $supplier)
-                                            <option value="{{ $supplier->supplier_id }}">
-                                                {{ $supplier->nama_supplier }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('supplier_id') <span class="text-danger">{{ $message }}</span> @enderror
-                                </div>
-                                <div class="form-group">
-                                    <label for="tgl_penerimaan">Tanggal Penerimaan</label>
-                                    <input type="date" wire:model="tgl_penerimaan"
-                                        class="form-control border-primary" required>
-                                    @error('tgl_penerimaan') <span class="text-danger">{{ $message }}</span> @enderror
-                                </div>
-                                <div class="form-group">
-                                    <label for="grade_id">Grade</label>
-                                    <select wire:model="grade_id" class="form-control border-primary" required>
-                                        <option value="" selected disabled>Pilih Grade</option>
-                                        @foreach ($grades as $grade)
-                                            <option value="{{ $grade->id }}">{{ $grade->grade }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('grade_id') <span class="text-danger">{{ $message }}</span> @enderror
-                                </div>
-                                <div class="form-group">
-                                    <label for="berat_ikan">Berat Ikan (kg)</label>
-                                    <input type="number" wire:model="berat_ikan" step="0.01" min="10"
-                                        class="form-control border-primary" required>
-                                    @error('berat_ikan') <span class="text-danger">{{ $message }}</span> @enderror
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
-                                        <span class="d-none d-sm-block">Batal</span>
-                                    </button>
-                                    <button type="submit" class="btn btn-primary ms-1">
-                                        <span class="d-none d-sm-block">Submit</span>
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
             </div>
-            <div class="card">
-                <div class="card-body">
-                    @livewire('penerimaan-ikan')
-                </div>
+            <div class="card-body">
+                @livewire('penerimaan-ikan')
             </div>
         </section>
     </div>

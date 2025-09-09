@@ -74,12 +74,12 @@
                             required>
                         <option value="" selected disabled>Pilih Jenis Penerimaan</option>
                         <option value="Fresh GG">Fresh GG</option>
-                        <option value="Frozen WR YF">Frozen WR BE</option>
-                        <option value="Frozen WR BF">Frozen WR BF</option>
-                        <option value="Frozen WR BE">Frozen WR YF</option>
                         <option value="Frozen GG YF">Frozen GG BE</option>
                         <option value="Frozen GG BF">Frozen GG BF</option>
                         <option value="Frozen GG BE">Frozen GG YF</option>
+                        <option value="Frozen WR YF">Frozen WR BE</option>
+                        <option value="Frozen WR BF">Frozen WR BF</option>
+                        <option value="Frozen WR BE">Frozen WR YF</option>
                     </select>
                     @error('session_jenis_penerimaan')
                         <div class="invalid-feedback small d-block">
@@ -185,10 +185,10 @@
     
     {{-- ======== TABEL INPUT DETAIL (berat & suhu) + Tombol Tambah & Simpan ======== --}}
     <div class="d-flex justify-content-center my-3">
-            <div class="card-header d-flex justify-content-between align-items-center py-1 px-2" style="max-width: 450px;">
-                <span class="fw-semibold" style="font-size: 1.3rem; font-family: 'Copperplate', fantasy; color:rgb(16, 10, 10); letter-spacing: 1px; text-transform: uppercase;">
-                    <img src="{{ asset('img/logo.png') }}" alt="Logo" width="100" height="100"> Tally Penerimaan Ikan Tuna</span>
-            </div>
+        <div class="card-header d-flex justify-content-between align-items-center py-1 px-2" style="max-width: 450px;">
+            <span class="fw-semibold" style="font-size: 1.3rem; font-family: 'Copperplate', fantasy; color:rgb(16, 10, 10); letter-spacing: 1px; text-transform: uppercase;">
+                <img src="{{ asset('img/logo.png') }}" alt="Logo" width="100" height="100"> Tally Penerimaan Ikan Tuna</span>
+        </div>
     </div>
 
     <div class="card-body p-1">
@@ -217,15 +217,15 @@
                                             </option>
                                         @endforeach
                                     @endforeach
-                                        </select>
-                                    </th>
-                                    <th rowspan="2" style="width: 80px;">Aksi</th>
-                                </tr>
-                                <tr>
-                                    <th style="width: 120px;">Berat (Kg)</th>
-                                    <th style="width: 120px;">Suhu (°C)</th>
-                                    <th style="width: 120px;">No Ikan</th>
-                                </tr>
+                                </select>
+                            </th>
+                            <th rowspan="2" style="width: 80px;">Aksi</th>
+                        </tr>
+                        <tr>
+                            <th style="width: 120px;">Berat (Kg)</th>
+                            <th style="width: 120px;">Suhu (°C)</th>
+                            <th style="width: 120px;">No Ikan</th>
+                        </tr>
                     </thead>
 
                     <tbody>
@@ -278,6 +278,8 @@
                                                     <div class="text-danger small">{{ $message }}</div>
                                                 @enderror
                                 </td>
+
+                                {{-- Aksi --}}
                                 <td>
                                     <button class="btn btn-danger btn-sm py-0"
                                             wire:click="removeRow({{ $index }})"

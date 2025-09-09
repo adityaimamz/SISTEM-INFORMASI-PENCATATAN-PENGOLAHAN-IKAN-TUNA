@@ -68,6 +68,7 @@ class PenerimaanIkan extends Component
         'refreshComponent' => '$refresh',
         'updateFilter' => 'filterData',
     ];
+
     public function updated($propertyName)
     {
         $filterField = [
@@ -91,6 +92,7 @@ class PenerimaanIkan extends Component
             }
         }
     }
+    
     public function resetForm()
     {
         $this->rows = [];

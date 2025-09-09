@@ -32,7 +32,7 @@ class CuttingController extends Controller// Mengubah nama controller menjadi Cu
         ]);
     }
 
-
+// PDF Cutting
     public function cuttingPdf(Request $request)
     {
         $filterMonth = $request->input('filterMonth');
@@ -51,18 +51,15 @@ class CuttingController extends Controller// Mengubah nama controller menjadi Cu
     }
     
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         // Validasi input
         $validated = $request->validate([
-            'no_batch_id' => 'required',
-            'id_produk' => 'required',
-            'berat_produk' => 'required|numeric|min:1',
-            'tgl_cutting' => 'required|date',
+            'tgl_cutting' => 'required|date',               // Tabel Cutting
             'tgl_injek_co' => 'required|date',
+            'berat_produk' => 'required|numeric|min:1',
+            'total_produk' => 'required|numeric|min:1',
+            'kategori_byproduk_id' => 'required',           // Tabel Kategori By Produk
             'supplier_id' => 'required',
             'selectedSupplier' => 'required',
         ]);
@@ -72,11 +69,11 @@ class CuttingController extends Controller// Mengubah nama controller menjadi Cu
     
         // Simpan data cutting
         Cutting::create([
-            'id_produk' => $validated['id_produk'],
-            'berat_produk' => $validated['berat_produk'],
-            'kategori_berat_id' => $kategoriBeratId, // Terisi otomatis
-            'tgl_cutting' => $validated['tgl_cutting'],
+            'tgl_cutting' => $validated['tgl_cutting'],                     // Tabel Cutting
             'tgl_injek_co' => $validated['tgl_injek_co'],
+            'berat_produk' => $validated['berat_produk'],
+            'total_produk' => $validated['total_produk'],                   
+            'kategori_byproduk_id' => $validated['kategori_byproduk_id'],   // Tabel Kategori By Produk
             'supplier_id' => $validated['supplier_id'],
             'selectedSupplier' => $validated['selectedSupplier'],
         ]);

@@ -122,7 +122,7 @@
                         </li>
 
                         <li class="submenu-item  {{ Request::is('cutting') ? 'active' : '' }}">
-                            <a href="/cutting" class="submenu-link">Cutting</a>
+                            <a href="/cutting" class="submenu-link">Cutting by Produk</a>
 
                         </li>
 
