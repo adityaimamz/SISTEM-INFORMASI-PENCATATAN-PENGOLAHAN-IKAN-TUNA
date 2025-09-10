@@ -278,60 +278,60 @@
                     <tbody>
                         @php
                             $rowsCollection = collect($rows ?? []);
-                            $total_berat1 = $rowsCollection->sum(fn($r) => (float)($r['berat_produk1'] ?? 0));
-                            $total_berat2 = $rowsCollection->sum(fn($r) => (float)($r['berat_produk2'] ?? 0));
-                            $total_berat3 = $rowsCollection->sum(fn($r) => (float)($r['berat_produk3'] ?? 0));
-                            $total_berat4 = $rowsCollection->sum(fn($r) => (float)($r['berat_produk4'] ?? 0));
-                            $total_berat5 = $rowsCollection->sum(fn($r) => (float)($r['berat_produk5'] ?? 0));
-                            $total_berat6 = $rowsCollection->sum(fn($r) => (float)($r['berat_produk6'] ?? 0));
-                            $total_berat7 = $rowsCollection->sum(fn($r) => (float)($r['berat_produk7'] ?? 0));
+                            $total_berat1 = $rowsCollection->sum(fn($r) => (float)($r['berat_produk'] ?? 0));
+                            $total_berat2 = $rowsCollection->sum(fn($r) => (float)($r['berat_produk'] ?? 0));
+                            $total_berat3 = $rowsCollection->sum(fn($r) => (float)($r['berat_produk'] ?? 0));
+                            $total_berat4 = $rowsCollection->sum(fn($r) => (float)($r['berat_produk'] ?? 0));
+                            $total_berat5 = $rowsCollection->sum(fn($r) => (float)($r['berat_produk'] ?? 0));
+                            $total_berat6 = $rowsCollection->sum(fn($r) => (float)($r['berat_produk'] ?? 0));
+                            $total_berat7 = $rowsCollection->sum(fn($r) => (float)($r['berat_produk'] ?? 0));
                             
 
                             $this->total_pcs1 = $rowsCollection->sum(function($row) {
                                 $total = 0;
-                                for ($i = 1; $i <= 1; $i++) {
+                                for ($i = 1; $i <= 7; $i++) {
                                     $total += (int)($row['total_produk' . $i] ?? 0);
                                 }
                                 return $total;
                             });
                             $this->total_pcs2 = $rowsCollection->sum(function($row) {
                                 $total = 0;
-                                for ($i = 2; $i <= 2; $i++) {
+                                for ($i = 1; $i <= 7; $i++) {
                                     $total += (int)($row['total_produk' . $i] ?? 0);
                                 }
                                 return $total;
                             });
                             $this->total_pcs3 = $rowsCollection->sum(function($row) {
                                 $total = 0;
-                                for ($i = 3; $i <= 3; $i++) {
+                                for ($i = 1; $i <= 7; $i++) {
                                     $total += (int)($row['total_produk' . $i] ?? 0);
                                 }
                                 return $total;
                             });
                             $this->total_pcs4 = $rowsCollection->sum(function($row) {
                                 $total = 0;
-                                for ($i = 4; $i <= 4; $i++) {
+                                for ($i = 1; $i <= 7; $i++) {
                                     $total += (int)($row['total_produk' . $i] ?? 0);
                                 }
                                 return $total;
                             });
                             $this->total_pcs5 = $rowsCollection->sum(function($row) {
                                 $total = 0;
-                                for ($i = 5; $i <= 5; $i++) {
+                                for ($i = 1; $i <= 7; $i++) {
                                     $total += (int)($row['total_produk' . $i] ?? 0);
                                 }
                                 return $total;
                             });
                             $this->total_pcs6 = $rowsCollection->sum(function($row) {
                                 $total = 0;
-                                for ($i = 6; $i <= 6; $i++) {
+                                for ($i = 1; $i <= 7; $i++) {
                                     $total += (int)($row['total_produk' . $i] ?? 0);
                                 }
                                 return $total;
                             });
                             $this->total_pcs7 = $rowsCollection->sum(function($row) {
                                 $total = 0;
-                                for ($i = 7; $i <= 7; $i++) {
+                                for ($i = 1; $i <= 7; $i++) {
                                     $total += (int)($row['total_produk' . $i] ?? 0);
                                 }
                                 return $total;
