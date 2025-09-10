@@ -21,20 +21,13 @@ class Cutting extends Model
         'penerimaan_id',
         'kategori_byproduk_id',
         'no_batch',
-        'berat_produk1',
-        'total_produk1',
-        'berat_produk2',
-        'total_produk2',
-        'berat_produk3',
-        'total_produk3',
-        'berat_produk4',
-        'total_produk4',
-        'berat_produk5',
-        'total_produk5',
-        'berat_produk6',
-        'total_produk6',
-        'berat_produk7',
-        'total_produk7',
+        'berat_produk',
+        'total_produk',
+    ];
+
+    protected $casts = [
+        'berat_produk' => 'array',
+        'total_produk' => 'array',
     ];
 
     protected $dates = [

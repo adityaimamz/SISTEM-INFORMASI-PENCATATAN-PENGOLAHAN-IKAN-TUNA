@@ -38,6 +38,15 @@ class CuttingByP extends Component
     public $suppliers = [];
     public $selectedSupplier;
     public $kategori_byproduk_ct = [];          //tabel produk
+    public $selectedKategoriByproduk = [
+        1 => null,
+        2 => null,
+        3 => null,
+        4 => null,
+        5 => null,
+        6 => null,
+        7 => null,
+    ];
     public $rows = [];
     public $data = [];
     
@@ -68,13 +77,14 @@ class CuttingByP extends Component
         $this->total_pcs5 = 0;
         $this->total_pcs6 = 0;
         $this->total_pcs7 = 0;
-        $this->penerimaan_id = null;                    //tabel penerimaan
+        $this->penerimaan_id = null;                                 //tabel penerimaan
         $this->penerimaan_ikan = Penerimaan_ikan::with('supplier')
             ->orderBy('tgl_penerimaan', 'desc')
             ->get();
         $this->selectedTanggalPenerimaan = null;
         $this->filteredPenerimaan = collect();
         $this->kategori_byproduk_ct = KategoriByprodukCt::all();     //tabel produk
+        $this->selectedKategoriByproduk = null;
     }
 
     //memuat data- data yang ada pada penerimaan ikan
@@ -115,77 +125,21 @@ class CuttingByP extends Component
     public function updatedRows()
     {
         //kg
-        $this->total_berat1 = collect($this->rows)->sum(function($row) {
-            return (float)$row['berat_produk1'] ?? 0;
-        });
-        $this->total_berat2 = collect($this->rows)->sum(function($row) {
-            return (float)$row['berat_produk2'] ?? 0;
-        });
-        $this->total_berat3 = collect($this->rows)->sum(function($row) {
-            return (float)$row['berat_produk3'] ?? 0;
-        });
-        $this->total_berat4 = collect($this->rows)->sum(function($row) {
-            return (float)$row['berat_produk4'] ?? 0;
-        });
-        $this->total_berat5 = collect($this->rows)->sum(function($row) {
-            return (float)$row['berat_produk5'] ?? 0;
-        });
-        $this->total_berat6 = collect($this->rows)->sum(function($row) {
-            return (float)$row['berat_produk6'] ?? 0;
-        });
-        $this->total_berat7 = collect($this->rows)->sum(function($row) {
-            return (float)$row['berat_produk7'] ?? 0;
-        });
+        $this->total_berat1 = collect($this->rows)->sum(fn($row) => (float)$row['berat_produk1'] ?? 0);
+        $this->total_berat2 = collect($this->rows)->sum(fn($row) => (float)$row['berat_produk2'] ?? 0);
+        $this->total_berat3 = collect($this->rows)->sum(fn($row) => (float)$row['berat_produk3'] ?? 0);
+        $this->total_berat4 = collect($this->rows)->sum(fn($row) => (float)$row['berat_produk4'] ?? 0);
+        $this->total_berat5 = collect($this->rows)->sum(fn($row) => (float)$row['berat_produk5'] ?? 0);
+        $this->total_berat6 = collect($this->rows)->sum(fn($row) => (float)$row['berat_produk6'] ?? 0);
+        $this->total_berat7 = collect($this->rows)->sum(fn($row) => (float)$row['berat_produk7'] ?? 0);
         //pcs  
-        $this->total_pcs1 = collect($this->rows)->sum(function($row) {
-            $total = 0;
-            for ($i = 1; $i <= 1; $i++) {
-                $total += (int)$row['total_produk' . $i] ?? 0;
-            }
-            return $total;
-        });
-        $this->total_pcs2 = collect($this->rows)->sum(function($row) {
-            $total = 0;
-            for ($i = 2; $i <= 2; $i++) {
-                $total += (int)$row['total_produk' . $i] ?? 0;
-            }
-            return $total;
-        });
-        $this->total_pcs3 = collect($this->rows)->sum(function($row) {
-            $total = 0;
-            for ($i = 3; $i <= 3; $i++) {
-                $total += (int)$row['total_produk' . $i] ?? 0;
-            }
-            return $total;
-        });
-        $this->total_pcs4 = collect($this->rows)->sum(function($row) {
-            $total = 0;
-            for ($i = 4; $i <= 4; $i++) {
-                $total += (int)$row['total_produk' . $i] ?? 0;
-            }
-            return $total;
-        });
-        $this->total_pcs5 = collect($this->rows)->sum(function($row) {
-            $total = 0;
-            for ($i = 5; $i <= 5; $i++) {
-                $total += (int)$row['total_produk' . $i] ?? 0;
-            }
-            return $total;
-        });
-        $this->total_pcs6 = collect($this->rows)->sum(function($row) {
-            $total = 0;
-            for ($i = 6; $i <= 6; $i++) {
-                $total += (int)$row['total_produk' . $i] ?? 0;
-            }
-            return $total;
-        });
-        $this->total_pcs7 = collect($this->rows)->sum(function($row) {
-            $total = 0;
-            for ($i = 7; $i <= 7; $i++) {
-                $total += (int)$row['total_produk' . $i] ?? 0;
-            }
-            return $total;
-        });
+        $this->total_pcs1 = collect($this->rows)->sum(fn($row) => (int)$row['total_produk1'] ?? 0);
+        $this->total_pcs2 = collect($this->rows)->sum(fn($row) => (int)$row['total_produk2'] ?? 0);
+        $this->total_pcs3 = collect($this->rows)->sum(fn($row) => (int)$row['total_produk3'] ?? 0);
+        $this->total_pcs4 = collect($this->rows)->sum(fn($row) => (int)$row['total_produk4'] ?? 0);
+        $this->total_pcs5 = collect($this->rows)->sum(fn($row) => (int)$row['total_produk5'] ?? 0);
+        $this->total_pcs6 = collect($this->rows)->sum(fn($row) => (int)$row['total_produk6'] ?? 0);
+        $this->total_pcs7 = collect($this->rows)->sum(fn($row) => (int)$row['total_produk7'] ?? 0);
     }
 
     public function removeRow($index)
@@ -211,20 +165,28 @@ class CuttingByP extends Component
             return;
         }
 
+        if(empty(array_filter($this->selectedKategoriByproduk))) {
+            session()->flash('error', 'Tidak Ada Produk');
+            return;
+        }
+
         foreach ($this->rows as $row) {
-            $data = [
-                'cutting_id' => $row['cutting_id'] ?? '',
-                'no_batch' => $row['no_batch'] ?? '',
-                'tgl_cutting' => $this->session_tgl_cutting,
-                'tgl_injek_co' => $this->session_tgl_injek_co,
-                'penerimaan_id' => $this->penerimaan_id,
-                'kategori_byproduk_id' => $row['kategori_byproduk_id'] ?? null,
-            ];
+            $berat_produk = [];
+            $total_produk = [];
 
             for($i = 1; $i <= 7; $i++) {
-                $data['berat_produk' . $i] = $row['berat_produk' . $i] ?? 0;
-                $data['total_produk' . $i] = $row['total_produk' . $i] ?? 0;
+                $berat_produk[$i] = (float) ($row['berat_produk' . $i] ?? 0);
+                $total_produk[$i] = (int) ($row['total_produk' . $i] ?? 0);
             }
+
+            $data = [
+                'penerimaan_id' => $this->penerimaan_id,
+                'berat_produk' => $berat_produk,
+                'total_produk' => $total_produk,
+                'tgl_cutting' => $this->edit_tgl_cutting,
+                'tgl_injek_co' => $this->edit_tgl_injek_co,
+                'kategori_byproduk_id' => $this->selectedKategoriByproduk,
+            ];
 
             try {
                 if(isset($row['cutting_id']) && $row['cutting_id'] != '') {
@@ -293,6 +255,7 @@ class CuttingByP extends Component
             'session_tgl_injek_co' => $this->session_tgl_injek_co,
             'selectedSupplier' => $this->selectedSupplier,
             'penerimaan_ikan' => $this->penerimaan_ikan,
+            'kategori_byproduk_ct' => KategoriByprodukCt::all(),
         ]);
     }   
 }

@@ -27,8 +27,8 @@ return new class extends Migration
                   ->on('penerimaan_ikans')
                   ->onDelete('cascade');
 
-            $table->foreign('ketegori_byproduk_id')
-                  ->references('ketegori_byproduk_id')
+            $table->foreign('kategori_byproduk_id')
+                  ->references('kategori_byproduk_id')
                   ->on('kategori_byproduk_cts')
                   ->onDelete('cascade');
         });

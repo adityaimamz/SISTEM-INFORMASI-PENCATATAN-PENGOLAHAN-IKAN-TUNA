@@ -179,112 +179,40 @@
                         <tr>
                             <th rowspan="2" style="width: 100px;">No. Batch</th>
                             {{-- Produk Tabel 1 --}}
-                            <th colspan="2">
-                                <select wire:model.live="selected_produk_id" 
-                                        class="excel-input @error('selected_produk_id') is-invalid @enderror" 
-                                        required style="font-size:.8rem; height:30px; background-color:rgb(121, 173, 246);">
-                                    <option value="" class="text-center" style="font-weight: bold;">-- Produk --</option>
-                                    @foreach($kategori_byproduk_ct as $produk)
-                                        <option value="{{ $produk->kategori_byproduk_ct_id }}" class="text-center">{{ $produk->nama_produk }}</option>
-                                    @endforeach
-                                </select>
-                            </th>
-                            {{-- Produk Tabel 2 --}}
-                            <th colspan="2">
-                                <select wire:model.live="selected_produk_id" 
-                                        class="excel-input @error('selected_produk_id') is-invalid @enderror" 
-                                        required style="font-size:.8rem; height:30px; background-color:rgb(121, 173, 246);">
-                                    <option value="" class="text-center" style="font-weight: bold;">-- Produk --</option>
-                                    @foreach($kategori_byproduk_ct as $produk)
-                                        <option value="{{ $produk->kategori_byproduk_ct_id }}" class="text-center">{{ $produk->nama_produk }}</option>
-                                    @endforeach
-                                </select>
-                            </th>
-                            {{-- Produk Tabel 3 --}}
-                            <th colspan="2">
-                                <select wire:model.live="selected_produk_id" 
-                                        class="excel-input @error('selected_produk_id') is-invalid @enderror" 
-                                        required style="font-size:.8rem; height:30px; background-color:rgb(121, 173, 246);">
-                                    <option value="" class="text-center" style="font-weight: bold;">-- Produk --</option>
-                                    @foreach($kategori_byproduk_ct as $produk)
-                                        <option value="{{ $produk->kategori_byproduk_ct_id }}" class="text-center">{{ $produk->nama_produk }}</option>
-                                    @endforeach
-                                </select>
-                            </th>
-                            {{-- Produk Tabel 4 --}}
-                            <th colspan="2">
-                                <select wire:model.live="selected_produk_id" 
-                                        class="excel-input @error('selected_produk_id') is-invalid @enderror" 
-                                        required style="font-size:.8rem; height:30px; background-color:rgb(121, 173, 246);">
-                                    <option value="" class="text-center" style="font-weight: bold;">-- Produk --</option>
-                                    @foreach($kategori_byproduk_ct as $produk)
-                                        <option value="{{ $produk->kategori_byproduk_ct_id }}" class="text-center">{{ $produk->nama_produk }}</option>
-                                    @endforeach
-                                </select>
-                            </th>
-                            {{-- Produk Tabel 5 --}}
-                            <th colspan="2">
-                                <select wire:model.live="selected_produk_id" 
-                                        class="excel-input @error('selected_produk_id') is-invalid @enderror" 
-                                        required style="font-size:.8rem; height:30px; background-color:rgb(121, 173, 246);">
-                                    <option value="" class="text-center" style="font-weight: bold;">-- Produk --</option>
-                                    @foreach($kategori_byproduk_ct as $produk)
-                                        <option value="{{ $produk->kategori_byproduk_ct_id }}" class="text-center">{{ $produk->nama_produk }}</option>
-                                    @endforeach
-                                </select>
-                            </th>
-                            {{-- Produk Tabel 6 --}}
-                            <th colspan="2">
-                                <select wire:model.live="selected_produk_id" 
-                                        class="excel-input @error('selected_produk_id') is-invalid @enderror" 
-                                        required style="font-size:.8rem; height:30px; background-color:rgb(121, 173, 246);">
-                                    <option value="" class="text-center" style="font-weight: bold;">-- Produk --</option>
-                                    @foreach($kategori_byproduk_ct as $produk)
-                                        <option value="{{ $produk->kategori_byproduk_ct_id }}" class="text-center">{{ $produk->nama_produk }}</option>
-                                    @endforeach
-                                </select>
-                            </th>
-                            {{-- Produk Tabel 7 --}}
-                            <th colspan="2">
-                                <select wire:model.live="selected_produk_id" 
-                                        class="excel-input @error('selected_produk_id') is-invalid @enderror" 
-                                        required style="font-size:.8rem; height:30px; background-color:rgb(121, 173, 246);">
-                                    <option value="" class="text-center" style="font-weight: bold;">-- Produk --</option>
-                                    @foreach($kategori_byproduk_ct as $produk)
-                                        <option value="{{ $produk->kategori_byproduk_ct_id }}" class="text-center">{{ $produk->nama_produk }}</option>
-                                    @endforeach
-                                </select>
-                            </th>
+                            @for($i = 1; $i <= 7; $i++)
+                                    <th colspan="2">
+                                        <select wire:model.live="selectedKategoriByproduk.{{ $i }}" 
+                                                class="excel-input @error('selectedKategoriByproduk.{{ $i }}') is-invalid @enderror" 
+                                                required style="font-size:.8rem; height:30px; background-color:rgb(121, 173, 246);">
+                                                <option value="" class="text-center" style="font-weight: bold;">-- Produk --</option>
+                                                @foreach($kategori_byproduk_ct as $produk)
+                                                    <option value="{{ $produk->kategori_byproduk_ct_id }}" class="text-center">
+                                                        {{ $produk->nama_byproduk_ct }}
+                                                    </option>
+                                                @endforeach
+                                        </select>
+                                    </th>
+                            @endfor
                             <th rowspan="2" style="width: 40px;">Aksi</th>
                         </tr>
                         <tr>
-                            <th style="width: 120px;">Berat (Kg)</th>
-                            <th style="width: 120px;">Total (Pcs)</th>
-                            <th style="width: 120px;">Berat (Kg)</th>
-                            <th style="width: 120px;">Total (Pcs)</th>
-                            <th style="width: 120px;">Berat (Kg)</th>
-                            <th style="width: 120px;">Total (Pcs)</th>
-                            <th style="width: 120px;">Berat (Kg)</th>
-                            <th style="width: 120px;">Total (Pcs)</th>
-                            <th style="width: 120px;">Berat (Kg)</th>
-                            <th style="width: 120px;">Total (Pcs)</th>
-                            <th style="width: 120px;">Berat (Kg)</th>
-                            <th style="width: 120px;">Total (Pcs)</th>
-                            <th style="width: 120px;">Berat (Kg)</th>
-                            <th style="width: 120px;">Total (Pcs)</th>
+                            @for($i = 1; $i <= 7; $i++)
+                                    <th style="width: 120px;">Berat (Kg)</th>
+                                    <th style="width: 120px;">Total (Pcs)</th>
+                            @endfor
                         </tr>
                     </thead>
 
                     <tbody>
                         @php
                             $rowsCollection = collect($rows ?? []);
-                            $total_berat1 = $rowsCollection->sum(fn($r) => (float)($r['berat_produk'] ?? 0));
-                            $total_berat2 = $rowsCollection->sum(fn($r) => (float)($r['berat_produk'] ?? 0));
-                            $total_berat3 = $rowsCollection->sum(fn($r) => (float)($r['berat_produk'] ?? 0));
-                            $total_berat4 = $rowsCollection->sum(fn($r) => (float)($r['berat_produk'] ?? 0));
-                            $total_berat5 = $rowsCollection->sum(fn($r) => (float)($r['berat_produk'] ?? 0));
-                            $total_berat6 = $rowsCollection->sum(fn($r) => (float)($r['berat_produk'] ?? 0));
-                            $total_berat7 = $rowsCollection->sum(fn($r) => (float)($r['berat_produk'] ?? 0));
+                            $total_berat1 = $rowsCollection->sum(fn($r) => (float)($r['berat_produk1'] ?? 0));
+                            $total_berat2 = $rowsCollection->sum(fn($r) => (float)($r['berat_produk2'] ?? 0));
+                            $total_berat3 = $rowsCollection->sum(fn($r) => (float)($r['berat_produk3'] ?? 0));
+                            $total_berat4 = $rowsCollection->sum(fn($r) => (float)($r['berat_produk4'] ?? 0));
+                            $total_berat5 = $rowsCollection->sum(fn($r) => (float)($r['berat_produk5'] ?? 0));
+                            $total_berat6 = $rowsCollection->sum(fn($r) => (float)($r['berat_produk6'] ?? 0));
+                            $total_berat7 = $rowsCollection->sum(fn($r) => (float)($r['berat_produk7'] ?? 0));
                             
 
                             $this->total_pcs1 = $rowsCollection->sum(function($row) {
@@ -352,161 +280,42 @@
                                                 <div class="text-danger small">{{ $message }}</div>
                                             @enderror
                                     </td>
-                                {{-- Berat & Total Produk 1 --}}
-                                    <td>
-                                        <input type="number" step="0.1" 
-                                            wire:model="rows.{{ $index }}.berat_produk1"
-                                            class="excel-input text-center"
-                                            placeholder="Kg"
-                                            required>
-                                                @error('rows.{{ $index }}.berat_produk1')
-                                                    <div class="text-danger small">{{ $message }}</div>
-                                                @enderror
-                                    </td>
-                                    <td>
-                                        <input type="number" 
-                                            wire:model="rows.{{ $index }}.total_produk1"
-                                            class="excel-input text-center"
-                                            placeholder="Pcs"
-                                            required>
-                                                @error('rows.{{ $index }}.total_produk1')
-                                                    <div class="text-danger small">{{ $message }}</div>
-                                                @enderror
-                                    </td>
-                                {{-- Berat & Total Produk 2 --}}
-                                    <td>
-                                        <input type="number" step="0.1" 
-                                            wire:model="rows.{{ $index }}.berat_produk2"
-                                            class="excel-input text-center"
-                                            placeholder="Kg"
-                                            required>
-                                                @error('rows.{{ $index }}.berat_produk2')
-                                                    <div class="text-danger small">{{ $message }}</div>
-                                                @enderror
-                                    </td>
-                                    <td>
-                                        <input type="number" 
-                                            wire:model="rows.{{ $index }}.total_produk2"
-                                            class="excel-input text-center"
-                                            placeholder="Pcs"
-                                            required>
-                                                @error('rows.{{ $index }}.total_produk2')
-                                                    <div class="text-danger small">{{ $message }}</div>
-                                                @enderror
-                                    </td>
-                                {{-- Berat & Total Produk 3 --}}
-                                    <td>
-                                        <input type="number" step="0.1" 
-                                            wire:model="rows.{{ $index }}.berat_produk3"
-                                            class="excel-input text-center"
-                                            placeholder="Kg"
-                                            required>
-                                                @error('rows.{{ $index }}.berat_produk3')
-                                                    <div class="text-danger small">{{ $message }}</div>
-                                                @enderror
-                                    </td>
-                                    <td>
-                                        <input type="number" 
-                                            wire:model="rows.{{ $index }}.total_produk3"
-                                            class="excel-input text-center"
-                                            placeholder="Pcs"
-                                            required>
-                                                @error('rows.{{ $index }}.total_produk3')
-                                                    <div class="text-danger small">{{ $message }}</div>
-                                                @enderror
-                                    </td>
-                                {{-- Berat & Total Produk 4 --}}
-                                    <td>
-                                        <input type="number" step="0.1" 
-                                            wire:model="rows.{{ $index }}.berat_produk4"
-                                            class="excel-input text-center"
-                                            placeholder="Kg"
-                                            required>
-                                                @error('rows.{{ $index }}.berat_produk4')
-                                                    <div class="text-danger small">{{ $message }}</div>
-                                                @enderror
-                                    </td>
-                                    <td>
-                                        <input type="number" 
-                                            wire:model="rows.{{ $index }}.total_produk4"
-                                            class="excel-input text-center"
-                                            placeholder="Pcs"
-                                            required>
-                                                @error('rows.{{ $index }}.total_produk4')
-                                                    <div class="text-danger small">{{ $message }}</div>
-                                                @enderror
-                                    </td>
-                                {{-- Berat & Total Produk 5 --}}
-                                    <td>
-                                        <input type="number" step="0.1" 
-                                            wire:model="rows.{{ $index }}.berat_produk5"
-                                            class="excel-input text-center"
-                                            placeholder="Kg"
-                                            required>
-                                                @error('rows.{{ $index }}.berat_produk5')
-                                                    <div class="text-danger small">{{ $message }}</div>
-                                                @enderror
-                                    </td>
-                                    <td>
-                                        <input type="number" 
-                                            wire:model="rows.{{ $index }}.total_produk5"
-                                            class="excel-input text-center"
-                                            placeholder="Pcs"
-                                            required>
-                                                @error('rows.{{ $index }}.total_produk5')
-                                                    <div class="text-danger small">{{ $message }}</div>
-                                                @enderror
-                                    </td>
-                                {{-- berat & total produk 6 --}}
-                                    <td>
-                                        <input type="number" step="0.1" 
-                                            wire:model="rows.{{ $index }}.berat_produk6"
-                                            class="excel-input text-center"
-                                            placeholder="Kg"
-                                            required>
-                                                @error('rows.{{ $index }}.berat_produk6')
-                                                    <div class="text-danger small">{{ $message }}</div>
-                                                @enderror
-                                    </td>
-                                    <td>
-                                        <input type="number" 
-                                            wire:model="rows.{{ $index }}.total_produk6"
-                                            class="excel-input text-center"
-                                            placeholder="Pcs"
-                                            required>
-                                                @error('rows.{{ $index }}.total_produk6')
-                                                    <div class="text-danger small">{{ $message }}</div>
-                                                @enderror
-                                    </td>
-                                {{-- berat & total produk 7 --}}
-                                    <td>
-                                        <input type="number" step="0.1" 
-                                            wire:model="rows.{{ $index }}.berat_produk7"
-                                            class="excel-input text-center"
-                                            placeholder="Kg"
-                                            required>
-                                                @error('rows.{{ $index }}.berat_produk7')
-                                                    <div class="text-danger small">{{ $message }}</div>
-                                                @enderror
-                                    </td>
-                                    <td>
-                                        <input type="number" 
-                                            wire:model="rows.{{ $index }}.total_produk7"
-                                            class="excel-input text-center"
-                                            placeholder="Pcs"
-                                            required>
-                                                @error('rows.{{ $index }}.total_produk7')
-                                                    <div class="text-danger small">{{ $message }}</div>
-                                                @enderror
-                                    </td>
+                                {{-- Berat & Total Produk --}}
+                                    @for ($i = 1; $i <= 7; $i++)
+                                        @if(!empty($selectedKategoriByproduk[$i]))
+                                            <td>
+                                                <input type="number" step="0.1" 
+                                                    wire:model="rows.{{ $index }}.berat_produk{{ $i }}"
+                                                    class="excel-input text-center"
+                                                    placeholder="Kg"
+                                                    required>
+                                                        @error('rows.{{ $index }}.berat_produk{{ $i }}')
+                                                            <div class="text-danger small">{{ $message }}</div>
+                                                        @enderror
+                                                </td>
+                                            <td>
+                                                <input type="number" 
+                                                    wire:model="rows.{{ $index }}.total_produk{{ $i }}"
+                                                    class="excel-input text-center"
+                                                    placeholder="Pcs"
+                                                    required>
+                                                        @error('rows.{{ $index }}.total_produk{{ $i }}')
+                                                            <div class="text-danger small">{{ $message }}</div>
+                                                        @enderror
+                                            </td>
+                                        @else
+                                            <td></td>
+                                            <td></td>
+                                        @endif
+                                    @endfor
                                 {{-- aksi --}}
-                                    <td>
-                                        <button class="btn btn-danger btn-sm py-0"
+                                        <td>
+                                            <button class="btn btn-danger btn-sm py-0"
                                                 wire:click="removeRow({{ $index }})"
                                                 style="font-size:.7rem; height:30px; width:30px;">
                                                 <i class="bi bi-trash"></i>
                                             </button>
-                                    </td>
+                                        </td>
                                 </tr>
                             @endforeach
                         @endif
