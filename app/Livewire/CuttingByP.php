@@ -51,7 +51,7 @@ class CuttingByP extends Component
         $this->session_tgl_injek_co = null;
         $this->rows = [];
         $this->addRow();
-        $this->updatedRows();
+        $this->calculateTotals();
         $this->total_berat1 = 0;
         $this->total_berat2 = 0;
         $this->total_berat3 = 0;
@@ -108,10 +108,10 @@ class CuttingByP extends Component
             $newRow['total_produk' . $i] = 0;
         }
         $this->rows[] = $newRow;
-        $this->updatedRows();
+        $this->calculateTotals();
     }
 
-    public function updatedRows()
+    public function calculateTotals()
     {
         for($i = 1; $i <= 7; $i++) {
             $this->total_berat[$i] = 0;
@@ -132,7 +132,7 @@ class CuttingByP extends Component
         ]);
 
         if (str_starts_with($propertyName, 'rows.')) {
-            $this->updatedRows();
+            $this->calculateTotals();
         }
     }
 

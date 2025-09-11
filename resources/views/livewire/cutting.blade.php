@@ -183,7 +183,7 @@
                     <thead class="table-light text-center align-middle" style="background-color:rgb(121, 173, 246);">
                         <tr>
                             <th rowspan="2" style="width: 100px;">No. Batch</th>
-                            {{-- Produk Tabel 1 --}}
+                            {{-- Produk --}}
                             @for($i = 1; $i <= 7; $i++)
                                     <th colspan="2">
                                         <select wire:model.live="selectedKategoriByproduk.{{ $i }}" 
@@ -202,8 +202,8 @@
                         </tr>
                         <tr>
                             @for($i = 1; $i <= 7; $i++)
-                                    <th style="width: 120px;">Berat (Kg)</th>
-                                    <th style="width: 120px;">Total (Pcs)</th>
+                                <th style="width: 120px;">Berat (Kg)</th>
+                                <th style="width: 120px;">Total (Pcs)</th>
                             @endfor
                         </tr>
                     </thead>
@@ -227,14 +227,14 @@
                                     <td>
                                         <input type="number" step="0.1" 
                                                 wire:model.live="rows.{{ $index }}.berat_produk{{ $i }}"
-                                                wire:change="updatedRows"
+                                                wire:change="calculateTotals"
                                                 class="excel-input text-center"
                                                 placeholder="Kg">
                                     </td>
                                     <td>
                                         <input type="number" 
                                                 wire:model.live="rows.{{ $index }}.total_produk{{ $i }}"
-                                                wire:change="updatedRows"
+                                                wire:change="calculateTotals"
                                                 class="excel-input text-center"
                                                 placeholder="Pcs">
                                     </td>
