@@ -9,14 +9,12 @@ class Cutting extends Model
 {
     use HasFactory;
 
-    protected $table  = 'cuttings';
+    protected $table = 'cuttings';
     protected $primaryKey = 'cutting_id';
     public $incrementing = true;
-    public $timestamps = false;
-
+    public $timestamps = true;
 
     protected $fillable = [
-        'cutting_id',
         'tgl_cutting',
         'tgl_injek_co',
         'penerimaan_id',
@@ -27,15 +25,10 @@ class Cutting extends Model
     ];
 
     protected $casts = [
-        'tgl_cutting' => 'date',
-        'tgl_injek_co' => 'date',
+        'tgl_cutting' => 'date:Y-m-d',
+        'tgl_injek_co' => 'date:Y-m-d',
         'berat_produk' => 'array',
         'total_produk' => 'array',
-    ];
-
-    protected $dates = [
-        'tgl_cutting',
-        'tgl_injek_co',
     ];
 
     public function penerimaan_ikan()
@@ -43,13 +36,13 @@ class Cutting extends Model
         return $this->belongsTo(Penerimaan_ikan::class, 'penerimaan_id', 'penerimaan_id');
     }
     
+    public function kategori_byproduk()
+    {
+        return $this->belongsTo(KategoriByprodukCt::class, 'kategori_byproduk_id', 'kategori_byproduk_id');
+    }
+    
     public function services()
     {
         return $this->hasMany(Service::class, 'cutting_id');
-    }
-    
-    public function kategori_byproduk_id()
-    {
-        return $this->belongsTo(KategoriByprodukCt::class, 'kategori_byproduk_id', 'kategori_byproduk_id');
     }
 }

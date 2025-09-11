@@ -12,14 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('cuttings', function (Blueprint $table) {
-            $table->unsignedInteger('cutting_id')->primary();
+            $table->id('cutting_id');
             $table->date('tgl_cutting');
             $table->date('tgl_injek_co');
-            $table->unsignedBigInteger ('penerimaan_id')->unsigned();
-            $table->unsignedBigInteger ('produk_id')->unsigned();
-            $table->char('no_batch');
-            $table->float('berat_produk');
-            $table->float('total_produk');
+            $table->unsignedBigInteger('penerimaan_id');
+            $table->unsignedBigInteger('kategori_byproduk_id');
+            $table->string('no_batch');
+            $table->json('berat_produk');
+            $table->json('total_produk');
             $table->timestamps();
 
             $table->foreign('penerimaan_id')
@@ -32,7 +32,6 @@ return new class extends Migration
                   ->on('kategori_byproduk_cts')
                   ->onDelete('cascade');
         });
-
     }
 
     /**

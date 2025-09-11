@@ -154,15 +154,17 @@ class CuttingByP extends Component
     {
         try {
             // Validasi input
-            $validated = $this->validate([
+            $this->validate([
                 'penerimaan_id' => 'required|exists:penerimaan_ikan,penerimaan_id',
                 'session_tgl_cutting' => 'required|date',
                 'session_tgl_injek_co' => 'required|date|after_or_equal:session_tgl_cutting',
+                'rows.*.no_batch' => 'required|string|max:50',
             ], [
                 'penerimaan_id.required' => 'Penerimaan harus dipilih',
                 'session_tgl_cutting.required' => 'Tanggal cutting harus diisi',
                 'session_tgl_injek_co.required' => 'Tanggal injek CO harus diisi',
                 'session_tgl_injek_co.after_or_equal' => 'Tanggal injek CO harus setelah atau sama dengan tanggal cutting',
+                'rows.*.no_batch.required' => 'No. Batch harus diisi',
             ]);
 
             // Validasi minimal satu produk dipilih
@@ -198,7 +200,7 @@ class CuttingByP extends Component
 
                 // Siapkan data untuk setiap produk
                 for($i = 1; $i <= 7; $i++) {
-                    $berat = !empty($row['berat_produk' . $i]) ? (float)$row['berat_produk' . $i] : 0;
+                    $berat = !empty($row['berat_produk' . $i]) ? (float)str_replace(',', '.', $row['berat_produk' . $i]) : 0;
                     $total = !empty($row['total_produk' . $i]) ? (int)$row['total_produk' . $i] : 0;
                     
                     if($berat > 0 || $total > 0) {
@@ -220,13 +222,21 @@ class CuttingByP extends Component
                             'tgl_cutting' => $this->session_tgl_cutting,
                             'tgl_injek_co' => $this->session_tgl_injek_co,
                             'kategori_byproduk_id' => $kategoriId,
-                            'berat_produk' => $berat_produk,
-                            'total_produk' => $total_produk,
+                            'berat_produk' => json_encode($berat_produk),
+                            'total_produk' => json_encode($total_produk),
                             'no_batch' => $row['no_batch'] ?? null,
                         ];
 
-                        Cutting::create($data);
-                        $savedCount++;
+                        // Debug data sebelum disimpan
+                        \Log::info('Menyimpan data cutting:', $data);
+                        
+                        $cutting = Cutting::create($data);
+                        
+                        if ($cutting->exists) {
+                            $savedCount++;
+                        } else {
+                            throw new \Exception('Gagal menyimpan data ke database');
+                        }
                     }
                 }
             }
@@ -245,11 +255,12 @@ class CuttingByP extends Component
             
         } catch (\Illuminate\Validation\ValidationException $e) {
             DB::rollBack();
-            $this->dispatch('show-error', 'Validasi gagal: ' . $e->getMessage());
+            $errors = $e->validator->errors()->all();
+            $this->dispatch('show-error', 'Validasi gagal: ' . implode(', ', $errors));
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::error('Gagal menyimpan data cutting: ' . $e->getMessage());
-            $this->dispatch('show-error', 'Gagal menyimpan data: ' . $e->getMessage());
+            \Log::error('Error saat menyimpan data cutting: ' . $e->getMessage());
+            $this->dispatch('show-error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
