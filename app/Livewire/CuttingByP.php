@@ -17,20 +17,8 @@ class CuttingByP extends Component
     public $cuttings = [];                      //tabel cutting
     public $session_tgl_cutting;
     public $session_tgl_injek_co;
-    public $total_berat1 = 0;
-    public $total_berat2 = 0;
-    public $total_berat3 = 0;
-    public $total_berat4 = 0;
-    public $total_berat5 = 0;
-    public $total_berat6 = 0;
-    public $total_berat7 = 0;
-    public $total_pcs1 = 0; 
-    public $total_pcs2 = 0;
-    public $total_pcs3 = 0;
-    public $total_pcs4 = 0;
-    public $total_pcs5 = 0;
-    public $total_pcs6 = 0;
-    public $total_pcs7 = 0;
+    public $total_berat = [];
+    public $total_pcs = [];
     public $penerimaan_ikan;                    //tabel penerimaan
     public $penerimaan_id;
     public $selectedTanggalPenerimaan;
@@ -63,6 +51,7 @@ class CuttingByP extends Component
         $this->session_tgl_injek_co = null;
         $this->rows = [];
         $this->addRow();
+        $this->updatedRows();
         $this->total_berat1 = 0;
         $this->total_berat2 = 0;
         $this->total_berat3 = 0;
@@ -124,22 +113,27 @@ class CuttingByP extends Component
 
     public function updatedRows()
     {
-        //kg
-        $this->total_berat1 = collect($this->rows)->sum(fn($row) => (float)$row['berat_produk1'] ?? 0);
-        $this->total_berat2 = collect($this->rows)->sum(fn($row) => (float)$row['berat_produk2'] ?? 0);
-        $this->total_berat3 = collect($this->rows)->sum(fn($row) => (float)$row['berat_produk3'] ?? 0);
-        $this->total_berat4 = collect($this->rows)->sum(fn($row) => (float)$row['berat_produk4'] ?? 0);
-        $this->total_berat5 = collect($this->rows)->sum(fn($row) => (float)$row['berat_produk5'] ?? 0);
-        $this->total_berat6 = collect($this->rows)->sum(fn($row) => (float)$row['berat_produk6'] ?? 0);
-        $this->total_berat7 = collect($this->rows)->sum(fn($row) => (float)$row['berat_produk7'] ?? 0);
-        //pcs  
-        $this->total_pcs1 = collect($this->rows)->sum(fn($row) => (int)$row['total_produk1'] ?? 0);
-        $this->total_pcs2 = collect($this->rows)->sum(fn($row) => (int)$row['total_produk2'] ?? 0);
-        $this->total_pcs3 = collect($this->rows)->sum(fn($row) => (int)$row['total_produk3'] ?? 0);
-        $this->total_pcs4 = collect($this->rows)->sum(fn($row) => (int)$row['total_produk4'] ?? 0);
-        $this->total_pcs5 = collect($this->rows)->sum(fn($row) => (int)$row['total_produk5'] ?? 0);
-        $this->total_pcs6 = collect($this->rows)->sum(fn($row) => (int)$row['total_produk6'] ?? 0);
-        $this->total_pcs7 = collect($this->rows)->sum(fn($row) => (int)$row['total_produk7'] ?? 0);
+        for($i = 1; $i <= 7; $i++) {
+            $this->total_berat[$i] = 0;
+            $this->total_pcs[$i] = 0;
+        }
+        foreach ($this->rows as $row) {
+            for($i = 1; $i <= 7; $i++) {
+                $this->total_berat[$i] += (float) ($row['berat_produk' . $i] ?? 0);
+                $this->total_pcs[$i] += (int) ($row['total_produk' . $i] ?? 0);
+            }
+        }
+    }
+
+    public function update($propertyName) {
+        \Log::info('Update Property:', [
+            'propertyName' => $propertyName,
+            'rows' => $this->rows,
+        ]);
+
+        if (str_starts_with($propertyName, 'rows.')) {
+            $this->updatedRows();
+        }
     }
 
     public function removeRow($index)

@@ -135,6 +135,7 @@
         .excel-table td {
             border: 1px solid hsl(0, 100.00%, 0.40%);
             padding: 2px 4px;
+            vertical-align: middle;
         }
         .excel-input {
             width: 100%;
@@ -144,6 +145,10 @@
             font-family: 'Arial Narrow', sans-serif;
             border: 1px solid hsl(0, 89.20%, 7.30%);
             border-radius: 3px;
+        }
+        .excel-input:focus {
+            border-color: hsl(0, 89.20%, 7.30%);
+            box-shadow: none;
         }
         .excel-table select {
             height: 22px;
@@ -187,7 +192,7 @@
                                                 <option value="" class="text-center" style="font-weight: bold;">-- Produk --</option>
                                                 @foreach($kategori_byproduk_ct as $produk)
                                                     <option value="{{ $produk->kategori_byproduk_ct_id }}" class="text-center">
-                                                        {{ $produk->nama_byproduk_ct }}
+                                                        {{ $produk->nama_produk }}
                                                     </option>
                                                 @endforeach
                                         </select>
@@ -204,143 +209,58 @@
                     </thead>
 
                     <tbody>
-                        @php
-                            $rowsCollection = collect($rows ?? []);
-                            $total_berat1 = $rowsCollection->sum(fn($r) => (float)($r['berat_produk1'] ?? 0));
-                            $total_berat2 = $rowsCollection->sum(fn($r) => (float)($r['berat_produk2'] ?? 0));
-                            $total_berat3 = $rowsCollection->sum(fn($r) => (float)($r['berat_produk3'] ?? 0));
-                            $total_berat4 = $rowsCollection->sum(fn($r) => (float)($r['berat_produk4'] ?? 0));
-                            $total_berat5 = $rowsCollection->sum(fn($r) => (float)($r['berat_produk5'] ?? 0));
-                            $total_berat6 = $rowsCollection->sum(fn($r) => (float)($r['berat_produk6'] ?? 0));
-                            $total_berat7 = $rowsCollection->sum(fn($r) => (float)($r['berat_produk7'] ?? 0));
-                            
-
-                            $this->total_pcs1 = $rowsCollection->sum(function($row) {
-                                $total = 0;
-                                for ($i = 1; $i <= 7; $i++) {
-                                    $total += (int)($row['total_produk' . $i] ?? 0);
-                                }
-                                return $total;
-                            });
-                            $this->total_pcs2 = $rowsCollection->sum(function($row) {
-                                $total = 0;
-                                for ($i = 1; $i <= 7; $i++) {
-                                    $total += (int)($row['total_produk' . $i] ?? 0);
-                                }
-                                return $total;
-                            });
-                            $this->total_pcs3 = $rowsCollection->sum(function($row) {
-                                $total = 0;
-                                for ($i = 1; $i <= 7; $i++) {
-                                    $total += (int)($row['total_produk' . $i] ?? 0);
-                                }
-                                return $total;
-                            });
-                            $this->total_pcs4 = $rowsCollection->sum(function($row) {
-                                $total = 0;
-                                for ($i = 1; $i <= 7; $i++) {
-                                    $total += (int)($row['total_produk' . $i] ?? 0);
-                                }
-                                return $total;
-                            });
-                            $this->total_pcs5 = $rowsCollection->sum(function($row) {
-                                $total = 0;
-                                for ($i = 1; $i <= 7; $i++) {
-                                    $total += (int)($row['total_produk' . $i] ?? 0);
-                                }
-                                return $total;
-                            });
-                            $this->total_pcs6 = $rowsCollection->sum(function($row) {
-                                $total = 0;
-                                for ($i = 1; $i <= 7; $i++) {
-                                    $total += (int)($row['total_produk' . $i] ?? 0);
-                                }
-                                return $total;
-                            });
-                            $this->total_pcs7 = $rowsCollection->sum(function($row) {
-                                $total = 0;
-                                for ($i = 1; $i <= 7; $i++) {
-                                    $total += (int)($row['total_produk' . $i] ?? 0);
-                                }
-                                return $total;
-                            });
-                        @endphp
-
-                        @if(isset($rows) && count($rows) > 0)
-                            @foreach($rows as $index => $row)
-                                <tr>
+                        @foreach($rows as $index => $row)
+                            <tr>
                                 {{-- No. Batch --}}
-                                    <td>
-                                        <input type="text" 
-                                            wire:model="rows.{{ $index }}.no_batch" 
-                                            class="excel-input text-center"
-                                            placeholder="No Batch" 
+                                <td>
+                                    <input type="text" 
+                                        wire:model="rows.{{ $index }}.no_batch" 
+                                        class="excel-input text-center"
+                                        placeholder="No Batch" 
                                             required>
                                             @error('rows.{{ $index }}.no_batch')
                                                 <div class="text-danger small">{{ $message }}</div>
                                             @enderror
-                                    </td>
+                                </td>
                                 {{-- Berat & Total Produk --}}
-                                    @for ($i = 1; $i <= 7; $i++)
-                                        @if(!empty($selectedKategoriByproduk[$i]))
-                                            <td>
-                                                <input type="number" step="0.1" 
-                                                    wire:model="rows.{{ $index }}.berat_produk{{ $i }}"
-                                                    class="excel-input text-center"
-                                                    placeholder="Kg"
-                                                    required>
-                                                        @error('rows.{{ $index }}.berat_produk{{ $i }}')
-                                                            <div class="text-danger small">{{ $message }}</div>
-                                                        @enderror
-                                                </td>
-                                            <td>
-                                                <input type="number" 
-                                                    wire:model="rows.{{ $index }}.total_produk{{ $i }}"
-                                                    class="excel-input text-center"
-                                                    placeholder="Pcs"
-                                                    required>
-                                                        @error('rows.{{ $index }}.total_produk{{ $i }}')
-                                                            <div class="text-danger small">{{ $message }}</div>
-                                                        @enderror
-                                            </td>
-                                        @else
-                                            <td></td>
-                                            <td></td>
-                                        @endif
-                                    @endfor
+                                @for ($i = 1; $i <= 7; $i++)
+                                    <td>
+                                        <input type="number" step="0.1" 
+                                                wire:model.live="rows.{{ $index }}.berat_produk{{ $i }}"
+                                                wire:change="updatedRows"
+                                                class="excel-input text-center"
+                                                placeholder="Kg">
+                                    </td>
+                                    <td>
+                                        <input type="number" 
+                                                wire:model.live="rows.{{ $index }}.total_produk{{ $i }}"
+                                                wire:change="updatedRows"
+                                                class="excel-input text-center"
+                                                placeholder="Pcs">
+                                    </td>
+                                @endfor
                                 {{-- aksi --}}
-                                        <td>
-                                            <button class="btn btn-danger btn-sm py-0"
-                                                wire:click="removeRow({{ $index }})"
-                                                style="font-size:.7rem; height:30px; width:30px;">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </td>
-                                </tr>
-                            @endforeach
-                        @endif
-
-                        @if(isset($rows) && count($rows) > 0)
+                                <td>
+                                    <button class="btn btn-danger btn-sm py-0"
+                                        wire:click="removeRow({{ $index }})"
+                                        style="font-size:.7rem; height:30px; width:30px;">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                    <tfoot>
+                        {{-- Total --}}
                             <tr class="table-secondary fw-bold excel-input text-center" style="background-color:rgb(121, 173, 246);">
                                 <td>Total</td>
-                                <td>{{ number_format($total_berat1, 2) }} kg</td>
-                                <td>{{ $total_pcs1 }} pcs</td>
-                                <td>{{ number_format($total_berat2, 2) }} kg</td>
-                                <td>{{ $total_pcs2 }} pcs</td>
-                                <td>{{ number_format($total_berat3, 2) }} kg</td>
-                                <td>{{ $total_pcs3 }} pcs</td>
-                                <td>{{ number_format($total_berat4, 2) }} kg</td>
-                                <td>{{ $total_pcs4 }} pcs</td>
-                                <td>{{ number_format($total_berat5, 2) }} kg</td>
-                                <td>{{ $total_pcs5 }} pcs</td>
-                                <td>{{ number_format($total_berat6, 2) }} kg</td>
-                                <td>{{ $total_pcs6 }} pcs</td>
-                                <td>{{ number_format($total_berat7, 2) }} kg</td>
-                                <td>{{ $total_pcs7 }} pcs</td>
+                                @for ($i = 1; $i <= 7; $i++)
+                                    <td>{{ number_format($total_berat[$i] ?? 0, 2) }} kg</td>
+                                    <td>{{ number_format($total_pcs[$i] ?? 0, 0) }} pcs</td>
+                                @endfor
                                 <td></td>
                             </tr>
-                        @endif
-                    </tbody>
+                    </tfoot>
                 </table>
             </div>
         </div>
