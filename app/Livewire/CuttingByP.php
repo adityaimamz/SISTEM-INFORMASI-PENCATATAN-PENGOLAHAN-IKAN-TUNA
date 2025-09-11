@@ -7,13 +7,12 @@ use App\Models\Penerimaan_ikan;
 use App\Models\Supplier;
 use App\Models\KategoriByprodukCt;
 use Livewire\Component;
-
-
+use Illuminate\Support\Facades\DB;
 
 class CuttingByP extends Component
 {
 
-// Properti untuk form input dan filter
+    // Properti untuk form input dan filter
     public $cuttings = [];                      //tabel cutting
     public $session_tgl_cutting;
     public $session_tgl_injek_co;
@@ -38,19 +37,18 @@ class CuttingByP extends Component
     public $rows = [];
     public $data = [];
     
-// Properties for editing
+    // Properties for editing
     public $cutting_id;
     public $edit_tgl_cutting;
     public $edit_tgl_injek_co;
 
-// Insialisasi data
+    // Insialisasi data
     public function mount()
     {        
         $this->cuttings = collect();                    //tabel cutting
         $this->session_tgl_cutting = null;
         $this->session_tgl_injek_co = null;
         $this->rows = [];
-        $this->addRow();
         $this->calculateTotals();
         $this->total_berat1 = 0;
         $this->total_berat2 = 0;
@@ -98,14 +96,14 @@ class CuttingByP extends Component
     }
     //memuat data- data yang ada pada penerimaan ikan
 
-//add, update, remove row
+    //add, update, remove row
 
     public function addRow()
     {
         $newRow = ['no_batch' => ''];
         for ($i = 1; $i <= 7; $i++) {
-            $newRow['berat_produk' . $i] = 0;
-            $newRow['total_produk' . $i] = 0;
+            $newRow['berat_produk' . $i] = '';
+            $newRow['total_produk' . $i] = '';
         }
         $this->rows[] = $newRow;
         $this->calculateTotals();
@@ -154,52 +152,116 @@ class CuttingByP extends Component
 
     public function saveAll()
     {
-        if(!$this->penerimaan_id) {
-            session()->flash('error', 'Penerimaan ID tidak boleh kosong');
-            return;
-        }
+        try {
+            // Validasi input
+            $validated = $this->validate([
+                'penerimaan_id' => 'required|exists:penerimaan_ikan,penerimaan_id',
+                'session_tgl_cutting' => 'required|date',
+                'session_tgl_injek_co' => 'required|date|after_or_equal:session_tgl_cutting',
+            ], [
+                'penerimaan_id.required' => 'Penerimaan harus dipilih',
+                'session_tgl_cutting.required' => 'Tanggal cutting harus diisi',
+                'session_tgl_injek_co.required' => 'Tanggal injek CO harus diisi',
+                'session_tgl_injek_co.after_or_equal' => 'Tanggal injek CO harus setelah atau sama dengan tanggal cutting',
+            ]);
 
-        if(empty(array_filter($this->selectedKategoriByproduk))) {
-            session()->flash('error', 'Tidak Ada Produk');
-            return;
-        }
-
-        foreach ($this->rows as $row) {
-            $berat_produk = [];
-            $total_produk = [];
-
-            for($i = 1; $i <= 7; $i++) {
-                $berat_produk[$i] = (float) ($row['berat_produk' . $i] ?? 0);
-                $total_produk[$i] = (int) ($row['total_produk' . $i] ?? 0);
-            }
-
-            $data = [
-                'penerimaan_id' => $this->penerimaan_id,
-                'berat_produk' => $berat_produk,
-                'total_produk' => $total_produk,
-                'tgl_cutting' => $this->edit_tgl_cutting,
-                'tgl_injek_co' => $this->edit_tgl_injek_co,
-                'kategori_byproduk_id' => $this->selectedKategoriByproduk,
-            ];
-
-            try {
-                if(isset($row['cutting_id']) && $row['cutting_id'] != '') {
-                    $cutting = Cutting::find($row['cutting_id']);
-                    if($cutting) {
-                        $cutting->update($data);
-                    }
-                } else {
-                    $data['cutting_id'] = (string) \Illuminate\Support\Str::uuid();
-                    Cutting::query()->create($data);
-                }
-            } catch (\Exception $e) {
-                session()->flash('error', 'Gagal menyimpan data: ' . $e->getMessage());
-                \Log::error('Gagal menyimpan data cutting: ' . $e->getMessage());
+            // Validasi minimal satu produk dipilih
+            if(empty(array_filter($this->selectedKategoriByproduk))) {
+                $this->dispatch('show-error', 'Silakan pilih minimal satu produk');
                 return;
             }
+
+            // Validasi ada data yang diisi
+            $hasData = false;
+            foreach ($this->rows as $row) {
+                for($i = 1; $i <= 7; $i++) {
+                    if(!empty($row['berat_produk' . $i]) || !empty($row['total_produk' . $i])) {
+                        $hasData = true;
+                        break 2;
+                    }
+                }
+            }
+
+            if(!$hasData) {
+                $this->dispatch('show-error', 'Tidak ada data yang akan disimpan');
+                return;
+            }
+
+            // Proses penyimpanan
+            DB::beginTransaction();
+            $savedCount = 0;
+
+            foreach ($this->rows as $row) {
+                $berat_produk = [];
+                $total_produk = [];
+                $hasRowData = false;
+
+                // Siapkan data untuk setiap produk
+                for($i = 1; $i <= 7; $i++) {
+                    $berat = !empty($row['berat_produk' . $i]) ? (float)$row['berat_produk' . $i] : 0;
+                    $total = !empty($row['total_produk' . $i]) ? (int)$row['total_produk' . $i] : 0;
+                    
+                    if($berat > 0 || $total > 0) {
+                        $hasRowData = true;
+                    }
+                    
+                    $berat_produk[$i] = $berat;
+                    $total_produk[$i] = $total;
+                }
+
+                // Hanya simpan jika ada data yang valid
+                if($hasRowData) {
+                    // Simpan setiap produk terpilih sebagai baris terpisah
+                    foreach ($this->selectedKategoriByproduk as $kategoriId) {
+                        if (empty($kategoriId)) continue;
+                        
+                        $data = [
+                            'penerimaan_id' => $this->penerimaan_id,
+                            'tgl_cutting' => $this->session_tgl_cutting,
+                            'tgl_injek_co' => $this->session_tgl_injek_co,
+                            'kategori_byproduk_id' => $kategoriId,
+                            'berat_produk' => $berat_produk,
+                            'total_produk' => $total_produk,
+                            'no_batch' => $row['no_batch'] ?? null,
+                        ];
+
+                        Cutting::create($data);
+                        $savedCount++;
+                    }
+                }
+            }
+
+            if ($savedCount === 0) {
+                throw new \Exception('Tidak ada data yang berhasil disimpan');
+            }
+
+            DB::commit();
+            
+            // Reset form
+            $this->resetForm();
+            
+            // Tampilkan pesan sukses
+            $this->dispatch('show-success', 'Data berhasil disimpan. Total data: ' . $savedCount);
+            
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            DB::rollBack();
+            $this->dispatch('show-error', 'Validasi gagal: ' . $e->getMessage());
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::error('Gagal menyimpan data cutting: ' . $e->getMessage());
+            $this->dispatch('show-error', 'Gagal menyimpan data: ' . $e->getMessage());
         }
-        session()->flash('message', 'Data berhasil disimpan');
-        $this->filterData();
+    }
+
+    protected function resetForm()
+    {
+        $this->rows = [];
+        $this->addRow();
+        $this->penerimaan_id = null;
+        $this->selectedKategoriByproduk = [
+            1 => null, 2 => null, 3 => null, 4 => null, 
+            5 => null, 6 => null, 7 => null
+        ];
     }
 
     public function loadCuttingForEdit($id)

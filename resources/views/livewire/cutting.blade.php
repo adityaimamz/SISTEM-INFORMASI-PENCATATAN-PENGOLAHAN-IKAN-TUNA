@@ -298,14 +298,40 @@
 
         <script>
             document.addEventListener('livewire:init', () => {
+                // Menangani penutupan modal
                 Livewire.on('closeModal', () => {
                     const modal = bootstrap.Modal.getInstance(document.getElementById('tambahDataModal'));
                     if (modal) {
                         modal.hide();
                     }
                 });
+
+                // Menangani pesan error
+                Livewire.on('show-error', (message) => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: message,
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#dc3545',
+                    });
+                });
+
+                // Menangani pesan sukses
+                Livewire.on('show-success', (message) => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Sukses!',
+                        text: message,
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#28a745',
+                    });
+                });
             });
         </script>
     </div>
 </div>
-    
+
+@push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@endpush

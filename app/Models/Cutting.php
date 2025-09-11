@@ -11,7 +11,8 @@ class Cutting extends Model
 
     protected $table  = 'cuttings';
     protected $primaryKey = 'cutting_id';
-    public $incrementing = false;
+    public $incrementing = true;
+    public $timestamps = false;
 
 
     protected $fillable = [
@@ -26,6 +27,8 @@ class Cutting extends Model
     ];
 
     protected $casts = [
+        'tgl_cutting' => 'date',
+        'tgl_injek_co' => 'date',
         'berat_produk' => 'array',
         'total_produk' => 'array',
     ];
