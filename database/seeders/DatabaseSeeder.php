@@ -10,6 +10,7 @@ use App\Models\KategoriByprodukCt;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,75 +19,72 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Nonaktifkan foreign key check sementara
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
+        // Kosongkan tabel
+        User::truncate();
+        Grade::truncate();
+        Supplier::truncate();
+        KategoriBeratPenerimaan::truncate();
+        KategoriByprodukCt::truncate();
+
+        // Aktifkan foreign key check
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
+        // Buat data user
         User::create([
             'name' => 'Admin',
             'email' => 'admin@gmail.com',
             'role_id' => '1',
             'password' => Hash::make('admin123'),
+            'email_verified_at' => now(),
         ]);
+        
         User::create([
             'name' => 'Pimpinan',
             'email' => 'superadmin@gmail.com',
             'role_id' => '3',
             'password' => Hash::make('superadmin'),
+            'email_verified_at' => now(),
         ]);
 
-        //Grade::factory(3)->create();
+        // Buat data grade
+        $grades = [
+            ['grade' => 'B/C'],
+            ['grade' => 'D'],
+            ['grade' => 'Lokal'],
+        ];
+        Grade::insert($grades);
 
-        Grade::create([
-            'grade' => 'B/C',
-        ]);
-        Grade::create([
-            'grade' => 'D',
-        ]);
-        Grade::create([
-            'grade' => 'Lokal',
-        ]);
+        // Buat data kategori berat penerimaan
+        $kategoriBerat = [
+            ['kategori_berat' => '20 UP'],
+            ['kategori_berat' => '20 DOWN'],
+            ['kategori_berat' => '30 UP'],
+        ];
+        KategoriBeratPenerimaan::insert($kategoriBerat);
 
-        //KategoriBeratPenerimaan::factory(3)->create();
-
-        KategoriBeratPenerimaan::create([
-            'kategori_berat' => '20 UP',
-        ]);
-        KategoriBeratPenerimaan::create([
-            'kategori_berat' => '20 DOWN',
-        ]);
-        KategoriBeratPenerimaan::create([
-            'kategori_berat' => '30 UP',
-        ]);
-
-        //Supplier::factory(1)->create();
-
+        // Buat data supplier
         Supplier::create([
-            'supplier_id' => 01,
+            'supplier_id' => 1,
             'nama_supplier' => 'BPM',
             'alamat' => 'Jakarta Barat',
         ]);
         
-        //Kategori_byproduk_ct::factory(3)->create();
+        // Buat data kategori byproduk
+        $byproducts = [
+            ['nama_produk' => 'Kama'],
+            ['nama_produk' => 'Belly'],
+            ['nama_produk' => 'TM (Tetelan Merah)'],
+            ['nama_produk' => 'D. Kepala'],
+            ['nama_produk' => 'D. Pipi'],
+            ['nama_produk' => 'D. Kerok'],
+            ['nama_produk' => 'Iga Kerok'],
+            ['nama_produk' => 'O-toro'],
+        ];
+        KategoriByprodukCt::insert($byproducts);
 
-        KategoriByprodukCt::create([
-            'nama_produk' => 'Kama',
-        ]);
-        KategoriByprodukCt::create([
-            'nama_produk' => 'Belly',
-        ]);
-        KategoriByprodukCt::create([
-            'nama_produk' => 'TM (Tetelan Merah)',
-        ]);
-        KategoriByprodukCt::create([
-            'nama_produk' => 'D. Kepala',
-        ]); 
-        KategoriByprodukCt::create([
-            'nama_produk' => 'D. Pipi',
-        ]); 
-        KategoriByprodukCt::create([
-            'nama_produk' => 'D. Kerok',
-        ]); 
-        KategoriByprodukCt::create([
-            'nama_produk' => 'Iga Kerok',
-        ]); 
+        $this->command->info('Database seeded successfully!');
     }
 }

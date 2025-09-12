@@ -27,13 +27,28 @@ class Cutting extends Model
     protected $casts = [
         'tgl_cutting' => 'date:Y-m-d',
         'tgl_injek_co' => 'date:Y-m-d',
-        'berat_produk' => 'array',
-        'total_produk' => 'array',
+        'berat_produk' => 'json',
+        'total_produk' => 'json',
     ];
 
-    public function penerimaan_ikan()
+    protected static function boot()
     {
-        return $this->belongsTo(Penerimaan_ikan::class, 'penerimaan_id', 'penerimaan_id');
+        parent::boot();
+
+        static::saving(function ($model) {
+            // Pastikan data yang disimpan valid
+            if (is_array($model->berat_produk)) {
+                $model->berat_produk = array_map('floatval', $model->berat_produk);
+            }
+            if (is_array($model->total_produk)) {
+                $model->total_produk = array_map('intval', $model->total_produk);
+            }
+        });
+    }
+
+    public function penerimaan_ikans()
+    {
+        return $this->belongsTo(Penerimaan_ikans::class, 'penerimaan_id', 'penerimaan_id');
     }
     
     public function kategori_byproduk()
