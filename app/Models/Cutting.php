@@ -31,6 +31,8 @@ class Cutting extends Model
         'total_produk' => 'json',
     ];
 
+    protected $with = ['penerimaan', 'kategori_byproduk'];
+
     protected static function boot()
     {
         parent::boot();
@@ -46,12 +48,23 @@ class Cutting extends Model
         });
     }
 
+    public function penerimaan()
+    {
+        return $this->belongsTo(Penerimaan_ikan::class, 'penerimaan_id');
+    }
+
     public function penerimaan_ikan()
     {
-        return $this->belongsTo(Penerimaan_ikan::class, 'penerimaan_id', 'penerimaan_id');
+        return $this->belongsTo(Penerimaan_ikan::class, 'penerimaan_id');
     }
     
     public function kategori_byproduk()
+    {
+        return $this->belongsTo(KategoriByprodukCt::class, 'kategori_byproduk_id', 'kategori_byproduk_id');
+    }
+    
+    // Alias untuk kompatibilitas dengan kode yang menggunakan kategoriByproduk
+    public function kategoriByproduk()
     {
         return $this->belongsTo(KategoriByprodukCt::class, 'kategori_byproduk_id', 'kategori_byproduk_id');
     }

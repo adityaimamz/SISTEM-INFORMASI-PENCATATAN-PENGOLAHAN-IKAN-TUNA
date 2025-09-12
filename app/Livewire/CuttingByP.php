@@ -37,6 +37,15 @@ class CuttingByP extends Component
     public $rows = [];
     public $data = [];
     
+    // Property untuk filter
+    public $filter_tgl_cutting_from;
+    public $filter_tgl_cutting_to;
+    public $filter_tgl_injek_co_from;
+    public $filter_tgl_injek_co_to;
+    public $filter_tgl_penerimaan_from;
+    public $filter_tgl_penerimaan_to;
+    public $filter_jenis_penerimaan;
+    
     // Properties for editing
     public $cutting_id;
     public $edit_tgl_cutting;
@@ -44,37 +53,128 @@ class CuttingByP extends Component
 
     // Insialisasi data
     public function mount()
-    {        
-        $this->cuttings = collect();                    //tabel cutting
-        $this->session_tgl_cutting = null;
-        $this->session_tgl_injek_co = null;
-        $this->rows = [];
-        $this->calculateTotals();
-        $this->total_berat1 = 0;
-        $this->total_berat2 = 0;
-        $this->total_berat3 = 0;
-        $this->total_berat4 = 0;
-        $this->total_berat5 = 0;
-        $this->total_berat6 = 0;
-        $this->total_berat7 = 0;
-        $this->total_pcs1 = 0;
-        $this->total_pcs2 = 0;
-        $this->total_pcs3 = 0;
-        $this->total_pcs4 = 0;
-        $this->total_pcs5 = 0;
-        $this->total_pcs6 = 0;
-        $this->total_pcs7 = 0;
-        $this->penerimaan_id = null;                                 //tabel penerimaan
+    {
+        // Inisialisasi variabel yang diperlukan
+        $this->kategori_byproduk_ct = KategoriByprodukCt::all();
         $this->penerimaan_ikan = Penerimaan_ikan::with('supplier')
             ->orderBy('tgl_penerimaan', 'desc')
             ->get();
-        $this->selectedTanggalPenerimaan = null;
-        $this->filteredPenerimaan = collect();
-        $this->kategori_byproduk_ct = KategoriByprodukCt::all();     //tabel produk
+            
         $this->selectedKategoriByproduk = [
             1 => null, 2 => null, 3 => null, 4 => null, 
             5 => null, 6 => null, 7 => null
         ];
+        
+        $this->rows = [];
+        $this->filteredPenerimaan = collect();
+        $this->addRow();
+        
+        // Inisialisasi session jika ada di URL
+        if (request()->has('tgl_cutting')) {
+            $this->session_tgl_cutting = request('tgl_cutting');
+        }
+        if (request()->has('tgl_injek_co')) {
+            $this->session_tgl_injek_co = request('tgl_injek_co');
+        }
+        if (request()->has('penerimaan_id')) {
+            $this->penerimaan_id = request('penerimaan_id');
+            $this->selectedTanggalPenerimaan = request('penerimaan_id');
+        }
+        
+        // Load data jika semua filter terisi
+        if ($this->session_tgl_cutting && $this->session_tgl_injek_co && $this->penerimaan_id) {
+            $this->loadData();
+        } else {
+            $this->reset(['rows']);
+            $this->addRow();
+        }
+    }
+
+    // Fungsi untuk memuat data yang sudah ada di database
+    public function loadData()
+    {
+        try {
+            // Reset rows terlebih dahulu
+            $this->reset(['rows']);
+            
+            // Ambil data dari database berdasarkan filter
+            $cuttings = Cutting::with(['penerimaan', 'kategoriByproduk'])
+                ->where('tgl_cutting', $this->session_tgl_cutting)
+                ->where('tgl_injek_co', $this->session_tgl_injek_co)
+                ->where('penerimaan_id', $this->penerimaan_id)
+                ->get();
+            
+            // Inisialisasi array untuk menyimpan data per produk
+            $productsData = [];
+            
+            // Kelompokkan data berdasarkan kategori_byproduk_id
+            foreach ($cuttings as $item) {
+                $produkId = $item->kategori_byproduk_id;
+                
+                if (!isset($productsData[$produkId])) {
+                    $productsData[$produkId] = [
+                        'kategori_byproduk_id' => $produkId,
+                        'berat' => 0,
+                        'total' => 0,
+                        'no_batch' => $item->no_batch // Ambil no_batch pertama yang ditemukan
+                    ];
+                }
+                
+                // Akumulasikan berat dan total
+                $productsData[$produkId]['berat'] += $item->berat_kg;
+                $productsData[$produkId]['total'] += $item->total_pcs;
+            }
+
+            //set selectedKategoriByproduk
+            foreach ($productsData as $produk) {
+                $index = array_search($produk['kategori_byproduk_id'], array_column($this->kategori_byproduk_ct->toArray(), 'kategori_byproduk_id')) + 1;
+                if ($index > 0) {
+                    $this->selectedKategoriByproduk[$index] = $produk['kategori_byproduk_id'];
+                }
+            }
+            
+            // Konversi ke format rows yang diharapkan
+            foreach ($productsData as $produk) {
+                $row = [
+                    'no_batch' => $produk['no_batch'],
+                    'kategori_byproduk_id' => []
+                ];
+                
+                // Temukan urutan produk berdasarkan kategori_byproduk_id
+                $urutan = array_search($produk['kategori_byproduk_id'], $this->selectedKategoriByproduk);
+                if ($urutan === false) {
+                    $urutan = 1; // Default ke kolom pertama jika tidak ditemukan
+                }
+                
+                // Inisialisasi array untuk menyimpan data produk (1-7)
+                for ($i = 1; $i <= 7; $i++) {
+                    if ($i == $urutan) {
+                        $row['berat_produk' . $i] = $produk['berat'];
+                        $row['total_produk' . $i] = $produk['total'];
+                        $row['kategori_byproduk_id'][$i] = $produk['kategori_byproduk_id'];
+                    } else {
+                        $row['berat_produk' . $i] = 0;
+                        $row['total_produk' . $i] = 0;
+                        $row['kategori_byproduk_id'][$i] = null;
+                    }
+                }
+                
+                $this->rows[] = $row;
+            }
+            
+            // Jika tidak ada data, tambahkan baris kosong
+            if (count($this->rows) === 0) {
+                $this->addRow();
+            }
+            
+            // Hitung total
+            $this->calculateTotals();
+            
+        } catch (\Exception $e) {
+            \Log::error('Error in loadData: ' . $e->getMessage());
+            $this->rows = [];
+            $this->addRow();
+        }
     }
 
     //memuat data- data yang ada pada penerimaan ikan
@@ -322,8 +422,124 @@ class CuttingByP extends Component
         $this->filterData();
     }
 
+    // Method untuk mengambil,filter & reset data yang ada
+    public function applyFilters()
+    {
+        $query = Cutting::query()
+            ->join('penerimaan_ikan', 'cutting.penerimaan_id', '=', 'penerimaan_ikan.penerimaan_id')
+            ->select('cuttings.*');
+
+        if ($this->filter_tgl_cutting_from) {
+            $query->whereDate('cuttings.tgl_cutting', '>=', $this->filter_tgl_cutting_from);
+        }
+
+        if ($this->filter_tgl_cutting_to) {
+            $query->whereDate('cuttings.tgl_cutting', '<=', $this->filter_tgl_cutting_to);
+        }
+
+        if ($this->filter_tgl_injek_co_from) {
+            $query->whereDate('cuttings.tgl_injek_co', '>=', $this->filter_tgl_injek_co_from);
+        }
+
+        if ($this->filter_tgl_injek_co_to) {
+            $query->whereDate('cuttings.tgl_injek_co', '<=', $this->filter_tgl_injek_co_to);
+        }
+
+        if ($this->filter_tgl_penerimaan_from) {
+            $query->whereDate('penerimaan_ikan.tgl_penerimaan', '>=', $this->filter_tgl_penerimaan_from);
+        }
+
+        if ($this->filter_tgl_penerimaan_to) {
+            $query->whereDate('penerimaan_ikan.tgl_penerimaan', '<=', $this->filter_tgl_penerimaan_to);
+        }
+
+        if ($this->filter_jenis_penerimaan) {
+            $query->where('penerimaan_ikan.jenis_penerimaan', $this->filter_jenis_penerimaan);
+        }
+
+        return $query->orderBy('cuttings.created_at', 'desc')->get();
+    }
+    
+    public function resetFilters()
+    {
+        $this->filter_tgl_cutting_from = now()->format('Y-m-d');
+        $this->filter_tgl_cutting_to = now()->format('Y-m-d');
+        $this->filter_tgl_injek_co_from = now()->format('Y-m-d');
+        $this->filter_tgl_injek_co_to = now()->format('Y-m-d');
+        $this->filter_tgl_penerimaan_from = now()->format('Y-m-d');
+        $this->filter_tgl_penerimaan_to = now()->format('Y-m-d');
+        $this->filter_jenis_penerimaan = '';
+
+        $this->applyFilters();
+    }
+
+    protected function getFilteredData()
+    {
+        $query = Cutting::with(['penerimaan_ikan.supplier']);
+
+        //filter tanggal cutting
+        if ($this->filter_tgl_cutting_from && $this->filter_tgl_cutting_to) {
+            $query->whereBetween('tgl_cutting', [
+                $this->filter_tgl_cutting_from . ' 00:00:00', 
+                $this->filter_tgl_cutting_to . ' 23:59:59'
+            ]);
+        }
+        //filter tanggal injek co
+        if ($this->filter_tgl_injek_co_from && $this->filter_tgl_injek_co_to) {
+            $query->whereBetween('tgl_injek_co', [
+                $this->filter_tgl_injek_co_from . ' 00:00:00', 
+                $this->filter_tgl_injek_co_to . ' 23:59:59'
+            ]);
+        }
+        //filter tanggal penerimaan
+        if ($this->filter_tgl_penerimaan_from && $this->filter_tgl_penerimaan_to) {
+            $query->whereBetween('penerimaan_ikan.tgl_penerimaan', [
+                $this->filter_tgl_penerimaan_from . ' 00:00:00', 
+                $this->filter_tgl_penerimaan_to . ' 23:59:59'
+            ]);
+
+            if ($this->filter_jenis_penerimaan) {
+                $query->where('penerimaan_ikan.jenis_penerimaan', $this->filter_jenis_penerimaan);
+            }
+        }
+
+        return $query->orderBy('tgl_cutting', 'desc')->get   ();
+    }
+    
+    // Method untuk filter data
+    public function filterData()
+    {
+        $query = Cutting::with(['penerimaan.supplier', 'kategoriByproduk']);
+
+        // Filter berdasarkan tanggal cutting
+        if ($this->session_tgl_cutting) {
+            $query->whereDate('tgl_cutting', $this->session_tgl_cutting);
+        }
+
+        // Filter berdasarkan tanggal injek co
+        if ($this->session_tgl_injek_co) {
+            $query->whereDate('tgl_injek_co', $this->session_tgl_injek_co);
+        }
+
+        // Filter berdasarkan tanggal penerimaan
+        if ($this->selectedTanggalPenerimaan) {
+            $penerimaanIds = Penerimaan_ikan::where('penerimaan_id', $this->selectedTanggalPenerimaan)
+                ->pluck('penerimaan_id');
+            $query->whereIn('penerimaan_id', $penerimaanIds);
+        }
+
+        // Filter berdasarkan jenis penerimaan
+        if ($this->penerimaan_id) {
+            $query->where('penerimaan_id', $this->penerimaan_id);
+        }
+
+        $this->cuttings = $query->orderBy('created_at', 'desc')->get();
+    }
+
     public function render()
     {
+        $this->filterData();
+        
         return view('livewire.cutting', [
             'cuttings' => $this->cuttings,
             'session_tgl_cutting' => $this->session_tgl_cutting,
@@ -332,5 +548,30 @@ class CuttingByP extends Component
             'penerimaan_ikan' => $this->penerimaan_ikan,
             'kategori_byproduk_ct' => KategoriByprodukCt::all(),
         ]);
-    }   
+    }
+
+    // Update method updatedPenerimaanId untuk memuat data saat penerimaan_id berubah
+    public function updatedPenerimaanId($value)
+    {
+        if ($this->session_tgl_cutting && $this->session_tgl_injek_co && $this->penerimaan_id) {
+            $this->loadData();
+        } else {
+            $this->reset(['rows']);
+            $this->addRow();
+        }
+    }
+    
+    // Update method updatedSessionTglInjekCo untuk reset data jika tanggal berubah
+    public function updatedSessionTglInjekCo($value)
+    {
+        $this->reset(['selectedTanggalPenerimaan', 'penerimaan_id', 'rows']);
+        $this->addRow();
+    }
+    
+    // Update method updatedSessionTglCutting untuk reset data jika tanggal berubah
+    public function updatedSessionTglCutting($value)
+    {
+        $this->reset(['session_tgl_injek_co', 'selectedTanggalPenerimaan', 'penerimaan_id', 'rows']);
+        $this->addRow();
+    }
 }

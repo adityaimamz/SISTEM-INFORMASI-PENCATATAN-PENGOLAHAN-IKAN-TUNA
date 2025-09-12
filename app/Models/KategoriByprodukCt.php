@@ -11,9 +11,10 @@ class KategoriByprodukCt extends Model
 
     protected $primaryKey = 'kategori_byproduk_id';
     protected $guarded = [];
+    public $timestamps = false;
 
-    public function kategoriByprodukCt()
+    public function cuttings()
     {
-        return $this->hasMany(Cutting::class);
+        return $this->hasMany(Cutting::class, 'kategori_byproduk_id');
     }
 }
