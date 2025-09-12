@@ -187,15 +187,18 @@
                                 @for($i = 1; $i <= 7; $i++)
                                         <th colspan="2">
                                             <select wire:model.live="selectedKategoriByproduk.{{ $i }}" 
-                                                    class="excel-input @error('selectedKategoriByproduk.{{ $i }}') is-invalid @enderror" 
-                                                    required style="font-size:.8rem; height:30px; background-color:rgb(121, 173, 246);">
+                                                    class="excel-input @error('selectedKategoriByproduk.'.$i) is-invalid @enderror" 
+                                                    style="font-size:.8rem; height:30px; background-color:rgb(121, 173, 246);">
                                                     <option value="" class="text-center" style="font-weight: bold;">-- Produk --</option>
                                                     @foreach($kategori_byproduk_ct as $produk)
-                                                        <option value="{{ $produk->kategori_byproduk_ct_id }}" class="text-center">
+                                                        <option value="{{ $produk->kategori_byproduk_id }}" class="text-center">
                                                             {{ $produk->nama_produk }}
                                                         </option>
                                                     @endforeach
                                             </select>
+                                            @error('selectedKategoriByproduk.'.$i)
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </th>
                                 @endfor
                                 <th rowspan="2" style="width: 40px;">Aksi</th>
@@ -225,14 +228,14 @@
                                     {{-- Berat & Total Produk --}}
                                     @for ($i = 1; $i <= 7; $i++)
                                         <td>
-                                            <input type="number" step="0.1" 
+                                            <input type="number" step="0.01" 
                                                     wire:model.live="rows.{{ $index }}.berat_produk{{ $i }}"
                                                     wire:change="calculateTotals"
                                                     class="excel-input text-center"
                                                     placeholder="Kg">
                                         </td>
                                         <td>
-                                            <input type="number" 
+                                            <input type="number" step="1" 
                                                     wire:model.live="rows.{{ $index }}.total_produk{{ $i }}"
                                                     wire:change="calculateTotals"
                                                     class="excel-input text-center"

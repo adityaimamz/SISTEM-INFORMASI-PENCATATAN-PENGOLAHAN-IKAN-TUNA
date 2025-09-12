@@ -46,9 +46,9 @@ class Cutting extends Model
         });
     }
 
-    public function penerimaan_ikans()
+    public function penerimaan_ikan()
     {
-        return $this->belongsTo(Penerimaan_ikans::class, 'penerimaan_id', 'penerimaan_id');
+        return $this->belongsTo(Penerimaan_ikan::class, 'penerimaan_id', 'penerimaan_id');
     }
     
     public function kategori_byproduk()

@@ -71,7 +71,10 @@ class CuttingByP extends Component
         $this->selectedTanggalPenerimaan = null;
         $this->filteredPenerimaan = collect();
         $this->kategori_byproduk_ct = KategoriByprodukCt::all();     //tabel produk
-        $this->selectedKategoriByproduk = null;
+        $this->selectedKategoriByproduk = [
+            1 => null, 2 => null, 3 => null, 4 => null, 
+            5 => null, 6 => null, 7 => null
+        ];
     }
 
     //memuat data- data yang ada pada penerimaan ikan
@@ -153,114 +156,119 @@ class CuttingByP extends Component
     public function saveAll()
     {
         try {
-            // Validasi input
+            // Debug input data
+            \Log::info('Data yang diterima:', [
+                'penerimaan_id' => $this->penerimaan_id,
+                'selectedKategoriByproduk' => $this->selectedKategoriByproduk,
+                'rows' => $this->rows,
+                'session_tgl_cutting' => $this->session_tgl_cutting,
+                'session_tgl_injek_co' => $this->session_tgl_injek_co,
+            ]);
+
+            // Validasi input dasar
             $this->validate([
-                'penerimaan_id' => 'required|exists:penerimaan_ikan,penerimaan_id',
+                'penerimaan_id' => 'required',
                 'session_tgl_cutting' => 'required|date',
                 'session_tgl_injek_co' => 'required|date|after_or_equal:session_tgl_cutting',
-                'rows.*.no_batch' => 'required|string|max:50',
+                'rows.*.no_batch' => 'nullable|string|max:50',
+                'selectedKategoriByproduk' => 'nullable|array',
             ], [
                 'penerimaan_id.required' => 'Penerimaan harus dipilih',
                 'session_tgl_cutting.required' => 'Tanggal cutting harus diisi',
                 'session_tgl_injek_co.required' => 'Tanggal injek CO harus diisi',
                 'session_tgl_injek_co.after_or_equal' => 'Tanggal injek CO harus setelah atau sama dengan tanggal cutting',
-                'rows.*.no_batch.required' => 'No. Batch harus diisi',
             ]);
 
-            // Validasi minimal satu produk dipilih
-            if(empty(array_filter($this->selectedKategoriByproduk))) {
-                $this->dispatch('show-error', 'Silakan pilih minimal satu produk');
-                return;
-            }
-
-            // Validasi ada data yang diisi
-            $hasData = false;
-            foreach ($this->rows as $row) {
-                for($i = 1; $i <= 7; $i++) {
-                    if(!empty($row['berat_produk' . $i]) || !empty($row['total_produk' . $i])) {
-                        $hasData = true;
-                        break 2;
-                    }
-                }
-            }
-
-            if(!$hasData) {
-                $this->dispatch('show-error', 'Tidak ada data yang akan disimpan');
-                return;
-            }
-
-            // Proses penyimpanan
             DB::beginTransaction();
             $savedCount = 0;
-
-            foreach ($this->rows as $row) {
-                $berat_produk = [];
-                $total_produk = [];
-                $hasRowData = false;
-
-                // Siapkan data untuk setiap produk
-                for($i = 1; $i <= 7; $i++) {
-                    $berat = !empty($row['berat_produk' . $i]) ? (float)str_replace(',', '.', $row['berat_produk' . $i]) : 0;
-                    $total = !empty($row['total_produk' . $i]) ? (int)$row['total_produk' . $i] : 0;
-                    
-                    if($berat > 0 || $total > 0) {
-                        $hasRowData = true;
-                    }
-                    
-                    $berat_produk[$i] = $berat;
-                    $total_produk[$i] = $total;
+            $hasAnyData = false;
+            
+            // Pastikan rows adalah array
+            $rows = is_array($this->rows) ? $this->rows : [];
+            
+            foreach ($rows as $rowIndex => $row) {
+                // Pastikan selectedKategoriByproduk adalah array
+                $selectedProducts = is_array($this->selectedKategoriByproduk ?? null) ? 
+                                 array_filter($this->selectedKategoriByproduk) : [];
+                
+                if (empty($selectedProducts)) {
+                    \Log::warning('Tidak ada produk yang dipilih untuk baris: ' . $rowIndex);
+                    continue;
                 }
 
-                // Hanya simpan jika ada data yang valid
-                if($hasRowData) {
-                    // Simpan setiap produk terpilih sebagai baris terpisah
-                    foreach ($this->selectedKategoriByproduk as $kategoriId) {
-                        if (empty($kategoriId)) continue;
-                        
-                        $data = [
-                            'penerimaan_id' => $this->penerimaan_id,
-                            'tgl_cutting' => $this->session_tgl_cutting,
-                            'tgl_injek_co' => $this->session_tgl_injek_co,
-                            'kategori_byproduk_id' => $kategoriId,
-                            'berat_produk' => json_encode($berat_produk),
-                            'total_produk' => json_encode($total_produk),
-                            'no_batch' => $row['no_batch'] ?? null,
-                        ];
-
-                        // Debug data sebelum disimpan
-                        \Log::info('Menyimpan data cutting:', $data);
-                        
-                        $cutting = Cutting::create($data);
-                        
-                        if ($cutting->exists) {
-                            $savedCount++;
-                        } else {
-                            throw new \Exception('Gagal menyimpan data ke database');
-                        }
+                foreach ($selectedProducts as $kategoriId) {
+                    if (empty($kategoriId)) continue;
+                    
+                    // Ambil nilai berat dan total produk untuk produk ini
+                    $beratKey = 'berat_produk' . $kategoriId;
+                    $pcsKey = 'total_produk' . $kategoriId;
+                    
+                    // Ambil nilai dari row
+                    $berat_produk = !empty($row[$beratKey]) ? [$row[$beratKey]] : [];
+                    $total_produk = !empty($row[$pcsKey]) ? [$row[$pcsKey]] : [];
+                    
+                    // Debug data yang akan diproses
+                    \Log::debug('Memproses data:', [
+                        'rowIndex' => $rowIndex,
+                        'kategoriId' => $kategoriId,
+                        'berat_produk' => $berat_produk,
+                        'total_produk' => $total_produk,
+                        'has_berat' => !empty(array_filter($berat_produk)),
+                        'has_total' => !empty(array_filter($total_produk))
+                    ]);
+                    
+                    // Skip jika tidak ada data yang diisi
+                    if (empty(array_filter($berat_produk)) && empty(array_filter($total_produk))) {
+                        continue;
                     }
+
+                    $hasAnyData = true;
+                    
+                    // Siapkan data untuk disimpan
+                    $data = [
+                        'penerimaan_id' => $this->penerimaan_id,
+                        'tgl_cutting' => $this->session_tgl_cutting,
+                        'tgl_injek_co' => $this->session_tgl_injek_co,
+                        'kategori_byproduk_id' => $kategoriId,
+                        'no_batch' => $row['no_batch'] ?? null,
+                    ];
+
+                    // Tambahkan berat_produk dan total_produk
+                    $data['berat_produk'] = !empty(array_filter($berat_produk)) ? 
+                                          json_encode($berat_produk) : json_encode([]);
+                    $data['total_produk'] = !empty(array_filter($total_produk)) ? 
+                                          json_encode($total_produk) : json_encode([]);
+
+                    // Debug data sebelum disimpan
+                    \Log::info('Menyimpan data cutting:', $data);
+                    
+                    // Simpan data
+                    $cutting = Cutting::create($data);
+                    
+                    if (!$cutting->exists) {
+                        throw new \Exception('Gagal menyimpan data ke database');
+                    }
+                    
+                    $savedCount++;
                 }
             }
 
-            if ($savedCount === 0) {
-                throw new \Exception('Tidak ada data yang berhasil disimpan');
+            if (!$hasAnyData) {
+                // Tampilkan pesan yang lebih informatif
+                $message = 'Tidak ada data yang akan disimpan. ';
+                $message .= 'Pastikan Anda telah memilih minimal satu produk dan mengisi berat atau total produk.';
+                throw new \Exception($message);
             }
 
             DB::commit();
             
-            // Reset form
+            $this->dispatch('show-success', 'Data berhasil disimpan! Total data: ' . $savedCount);
             $this->resetForm();
             
-            // Tampilkan pesan sukses
-            $this->dispatch('show-success', 'Data berhasil disimpan. Total data: ' . $savedCount);
-            
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            DB::rollBack();
-            $errors = $e->validator->errors()->all();
-            $this->dispatch('show-error', 'Validasi gagal: ' . implode(', ', $errors));
         } catch (\Exception $e) {
             DB::rollBack();
             \Log::error('Error saat menyimpan data cutting: ' . $e->getMessage());
-            $this->dispatch('show-error', 'Terjadi kesalahan: ' . $e->getMessage());
+            $this->dispatch('show-error', 'Gagal menyimpan data: ' . $e->getMessage());
         }
     }
 
