@@ -26,13 +26,8 @@ class CuttingByP extends Component
     public $selectedSupplier;
     public $kategori_byproduk_ct = [];          //tabel produk
     public $selectedKategoriByproduk = [
-        1 => null,
-        2 => null,
-        3 => null,
-        4 => null,
-        5 => null,
-        6 => null,
-        7 => null,
+        1 => null, 2 => null, 3 => null, 
+        4 => null, 5 => null, 6 => null, 7 => null,
     ];
     public $rows = [];
     public $data = [];
@@ -94,76 +89,76 @@ class CuttingByP extends Component
     public function loadData()
     {
         try {
-            // Reset rows terlebih dahulu
+            // Reset data sebelumnya
             $this->reset(['rows']);
             
-            // Ambil data dari database berdasarkan filter
-            $cuttings = Cutting::with(['penerimaan', 'kategoriByproduk'])
+            // Ambil data dari database
+            $cuttings = Cutting::with('kategoriByproduk')
                 ->where('tgl_cutting', $this->session_tgl_cutting)
                 ->where('tgl_injek_co', $this->session_tgl_injek_co)
                 ->where('penerimaan_id', $this->penerimaan_id)
                 ->get();
             
-            // Inisialisasi array untuk menyimpan data per produk
-            $productsData = [];
+            // Debug: Tampilkan data yang diambil
+            \Log::info('Data Cutting:', $cuttings->toArray());
             
-            // Kelompokkan data berdasarkan kategori_byproduk_id
-            foreach ($cuttings as $item) {
-                $produkId = $item->kategori_byproduk_id;
-                
-                if (!isset($productsData[$produkId])) {
-                    $productsData[$produkId] = [
-                        'kategori_byproduk_id' => $produkId,
-                        'berat' => 0,
-                        'total' => 0,
-                        'no_batch' => $item->no_batch // Ambil no_batch pertama yang ditemukan
-                    ];
+            // Reset selectedKategoriByproduk
+            $this->selectedKategoriByproduk = array_fill(1, 7, null);
+            
+            // Kelompokkan data berdasarkan no_batch
+            $groupedData = [];
+            foreach ($cuttings as $cutting) {
+                $batch = $cutting->no_batch;
+                if (!isset($groupedData[$batch])) {
+                    $groupedData[$batch] = [];
                 }
-                
-                // Akumulasikan berat dan total
-                $productsData[$produkId]['berat'] += $item->berat_kg;
-                $productsData[$produkId]['total'] += $item->total_pcs;
-            }
-
-            //set selectedKategoriByproduk
-            foreach ($productsData as $produk) {
-                $index = array_search($produk['kategori_byproduk_id'], array_column($this->kategori_byproduk_ct->toArray(), 'kategori_byproduk_id')) + 1;
-                if ($index > 0) {
-                    $this->selectedKategoriByproduk[$index] = $produk['kategori_byproduk_id'];
-                }
+                $groupedData[$batch][] = $cutting;
             }
             
-            // Konversi ke format rows yang diharapkan
-            foreach ($productsData as $produk) {
+            // Buat rows untuk setiap batch
+            foreach ($groupedData as $batch => $items) {
                 $row = [
-                    'no_batch' => $produk['no_batch'],
+                    'no_batch' => $batch,
                     'kategori_byproduk_id' => []
                 ];
                 
-                // Temukan urutan produk berdasarkan kategori_byproduk_id
-                $urutan = array_search($produk['kategori_byproduk_id'], $this->selectedKategoriByproduk);
-                if ($urutan === false) {
-                    $urutan = 1; // Default ke kolom pertama jika tidak ditemukan
+                // Inisialisasi semua kolom produk dengan nilai default
+                for ($i = 1; $i <= 7; $i++) {
+                    $row['berat_produk' . $i] = 0;
+                    $row['total_produk' . $i] = 0;
+                    $row['kategori_byproduk_id'][$i] = null;
                 }
                 
-                // Inisialisasi array untuk menyimpan data produk (1-7)
-                for ($i = 1; $i <= 7; $i++) {
-                    if ($i == $urutan) {
-                        $row['berat_produk' . $i] = $produk['berat'];
-                        $row['total_produk' . $i] = $produk['total'];
-                        $row['kategori_byproduk_id'][$i] = $produk['kategori_byproduk_id'];
-                    } else {
-                        $row['berat_produk' . $i] = 0;
-                        $row['total_produk' . $i] = 0;
-                        $row['kategori_byproduk_id'][$i] = null;
+                // Isi data untuk setiap item dalam batch
+                foreach ($items as $item) {
+                    $urutan = $item->urutan_produk ?? 1;
+                    if ($urutan >= 1 && $urutan <= 7) {
+                        // Handle JSON string untuk berat_produk dan total_produk
+                        $berat = is_string($item->berat_produk) ? 
+                            json_decode($item->berat_produk, true)[0] ?? 0 : 
+                            (is_array($item->berat_produk) ? ($item->berat_produk[0] ?? 0) : $item->berat_produk);
+                            
+                        $total = is_string($item->total_produk) ? 
+                            json_decode($item->total_produk, true)[0] ?? 0 : 
+                            (is_array($item->total_produk) ? ($item->total_produk[0] ?? 0) : $item->total_produk);
+                        
+                        $row['berat_produk' . $urutan] = (float)$berat;
+                        $row['total_produk' . $urutan] = (int)$total;
+                        $row['kategori_byproduk_id'][$urutan] = $item->kategori_byproduk_id;
+                        
+                        // Set selectedKategoriByproduk
+                        $this->selectedKategoriByproduk[$urutan] = $item->kategori_byproduk_id;
                     }
                 }
                 
                 $this->rows[] = $row;
             }
             
+            // Debug: Tampilkan rows yang akan ditampilkan
+            \Log::info('Rows yang akan ditampilkan:', $this->rows);
+            
             // Jika tidak ada data, tambahkan baris kosong
-            if (count($this->rows) === 0) {
+            if (empty($this->rows)) {
                 $this->addRow();
             }
             
