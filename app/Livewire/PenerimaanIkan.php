@@ -6,34 +6,72 @@ use App\Models\Penerimaan_Ikan;
 use App\Models\Supplier;
 use App\Models\Grade;
 use App\Models\KategoriBeratPenerimaan;
+use App\Models\Cutting;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class PenerimaanIkan extends Component
 {
-    // Properti untuk form input dan filter
-    public $session_date;
-    public $session_tgl_bongkar;
-    public $session_supplier;
-    public $session_jenis_penerimaan;
-    public $session_no_bak;
-    public $selected_grade_id;
-    public $selected_kategori_berat_id;
-    public $penerimaanIkans = [];
+    // Properti untuk menyimpan data
+    public $rows = [];
+    public $penerimaan_id = null;  
+    public $session_date = null;
+    public $session_tgl_bongkar = null;
+    public $session_supplier = null;
+    public $session_jenis_penerimaan = null;
+    public $session_no_bak = null;
+    public $selected_grade_id = null;
+    public $selected_kategori_berat_id = null;
+    
+    // Properti untuk form input
     public $suppliers = [];
     public $grades = [];
-    public $kategoriBerats = [];
-    public $no_ikan = [];
-    public $combinations = [];
-    public $rows = [];
-    public $data = []; // Menambahkan properti $data yang hilang
+    public $kategori_berat = [];
+    public $penerimaanIkans = [];
+    public $data = [];
 
+    // Inisialisasi komponen
     public function mount()
     {
-        $this->grades = Grade::all();
-        $this->kategoriBerats = KategoriBeratPenerimaan::all();
         $this->suppliers = Supplier::all();
-        $this->addRow(); // Tambahkan baris kosong saat pertama kali load
-        $this->resetForm();
+        $this->grades = Grade::all();
+        $this->kategori_berat = KategoriBeratPenerimaan::all();
+        $this->loadData();  
+    }
+
+    // Load Data
+    public function loadData()
+    {
+        try {
+            $this->rows = [];
+            // Gunakan relasi yang benar
+            $query = Penerimaan_Ikan::with(['grade', 'kategoriBeratPenerimaan']);
+            
+            // Hanya filter jika nilai filter tidak null
+            if (!empty($this->penerimaan_id)) {
+                $query->where('penerimaan_id', $this->penerimaan_id);
+            }
+            
+            if (!empty($this->session_date)) {
+                $query->where('tgl_penerimaan', $this->session_date);
+            }
+            
+            $penerimaans = $query->orderBy('penerimaan_id', 'desc')->get();
+            
+            foreach ($penerimaans as $penerimaan) {
+                $this->rows[] = [
+                    'penerimaan_id' => $penerimaan->penerimaan_id,
+                    'grade_id' => $penerimaan->grade_id,
+                    'kategori_berat_id' => $penerimaan->kategori_berat_id,
+                    'berat_ikan' => $penerimaan->berat_ikan,
+                    'suhu_ikan' => $penerimaan->suhu_ikan,
+                    'no_ikan' => $penerimaan->no_ikan,
+                ];
+            }
+            
+        } catch (\Exception $e) {
+            \Log::error('Error loading data: ' . $e->getMessage());
+            session()->flash('error', 'Gagal memuat data: ' . $e->getMessage());
+        }
     }
 
     public function addRow()
@@ -63,7 +101,7 @@ class PenerimaanIkan extends Component
             $this->rows = array_values($this->rows);
         }
     }
-// Method updated dan reset Form saat filter berubah
+
     protected $listeners = [
         'refreshComponent' => '$refresh',
         'updateFilter' => 'filterData',
@@ -107,8 +145,6 @@ class PenerimaanIkan extends Component
         ]);
     }
 
-
-// Method saveAll
     public function saveAll()
     {
         \Log::info('Menyimpan Data', [
@@ -169,7 +205,7 @@ class PenerimaanIkan extends Component
             }
         }
             $this->reset(['rows','session_no_bak', 'selected_grade_id']);
-            $this->addRow(); // Tambahkan baris kosong setelah simpan
+            $this->addRow(); 
             
             session()->flash('message', 'Data berhasil disimpan!');
 
@@ -179,13 +215,12 @@ class PenerimaanIkan extends Component
         }
     }
 
-// Method kombinasi grade dan kategori berat
     public function generateCombination()
     {
         $this->combinations = [];
 
         foreach ($this->grades as $grade) {
-            foreach ($this->kategoriBerats as $kategoriBerat) {
+            foreach ($this->kategori_berat as $kategoriBerat) {
                 $this->combinations[] = [
                     'grade_id' => $grade->grade_id,
                     'grade' => $grade->grade,
@@ -197,8 +232,6 @@ class PenerimaanIkan extends Component
         }
     }
 
-
-// Method filter data
     public function filterData()
     {
         try {
@@ -263,116 +296,10 @@ class PenerimaanIkan extends Component
             $this->data = [];
             $this->penerimaanIkans = [];
             $this->rows = [];
-            session()->flash('error', 'Gagal filter data: ' . $e->getMessage()); // Inisialisasi $data dengan array kosong jika error
+            session()->flash('error', 'Gagal filter data: ' . $e->getMessage()); 
         }
     }
 
-// Load Data
-    public function loadData()
-    {
-        try {
-            $this->rows = [];
-            $cutting = Cutting::when($this->session_tgl_cutting, function($query){
-                $query->where('tgl_cutting', $this->session_tgl_cutting);
-            })
-            ->when($this->session_tgl_injek_co, function($query){
-                $query->where('tgl_injek_co', $this->session_tgl_injek_co);
-            })
-            ->when($this->penerimaan_id, function($query){
-                $query->where('penerimaan_id', $this->penerimaan_id);
-            })
-            ->get()
-            ->groupBy('no_batch');
-            
-            foreach ($cutting as $batch => $items) {
-                $this->rows[] = [
-                    'cutting_id' => $items->first()->cutting_id,
-                    'no_batch' => $batch,
-                    'total_pcs' => $items->sum('pcs'),
-                    'total_berat' => $items->sum('berat'),
-                ];
-                //inisialisasi array
-                for ($i=1; $i <= 7; $i++) {
-                    $row['berat_produk' . $i] = 0;
-                    $row['total_produk' . $i] = 0;
-                }
-
-                foreach ($items as $item) {
-                    $urutan = $item->urutan_produk ?? 1;
-                    if ($urutan > 1 && $urutan < 7) {
-                        $row['berat_produk' . $urutan] = (float)$item->berat_produk[0] ?? 0;
-                        $row['total_produk' . $urutan] = (int)$item->total_produk[0] ?? 0;
-                    }
-                }
-
-                $this->rows[] = $row;
-            }
-
-            if(strpos($this->selected_grade_id, '_') === false) {
-                throw new \Exception('Invalid grade_id format');
-            }
-            
-            if (!$this->session_date || !$this->session_tgl_bongkar || 
-            !$this->session_supplier || !$this->session_jenis_penerimaan || 
-            !$this->session_no_bak || !$this->selected_grade_id || 
-            !$this->selected_kategori_berat_id) {
-            return;
-            }
-        
-            list($grade_id, $kategori_berat_id) = explode('_', $this->selected_grade_id);
-            $query = Penerimaan_Ikan::where('tgl_penerimaan', $this->session_date)
-                    ->where('tgl_bongkar', $this->session_tgl_bongkar)
-                    ->where('supplier_id', $this->session_supplier)
-                    ->where('jenis_penerimaan', $this->session_jenis_penerimaan)
-                    ->where('no_bak', $this->session_no_bak)
-                    ->where('grade_id', $grade_id)
-                    ->where('kategori_berat_id', $kategori_berat_id)
-                    ->orderBy('no_ikan', 'asc') //urutan input dari terlama ke terbaru
-                    ->get();
-
-            $data = $query->get();
-
-            if ($data->isNotEmpty()) {
-                foreach ($data as $item) {
-                    $this->rows[] = [
-                        'penerimaan_id' => $item->penerimaan_id,
-                        'grade_id' => $item->grade_id,
-                        'kategori_berat_id' => $item->kategori_berat_id,
-                        'berat_ikan' => $item->berat_ikan,
-                        'suhu_ikan' => $item->suhu_ikan,
-                        'no_ikan' => $item->no_ikan,
-                    ];
-                }
-            } else {
-                $this->addRow();
-            }
-        } catch (\Exception $e) {
-            \Log::error('Error in loadData: ' . $e->getMessage());
-            $this->rows = [];
-        }
-    }
-    
-
-// Method render
-    public function render() 
-    {
-        return view('livewire.penerimaan-ikan', [
-            'penerimaanIkans' => $this->penerimaanIkans,
-            'data' => $this->data,
-            'session_date' => $this->session_date,
-            'session_tgl_bongkar' => $this->session_tgl_bongkar,
-            'suppliers' => $this->suppliers,
-            'session_supplier' => $this->session_supplier,
-            'session_jenis_penerimaan' => $this->session_jenis_penerimaan,
-            'grades' => $this->grades,
-            'kategori_berat' => $this->kategoriBerats,
-            'session_no_bak' => $this->session_no_bak,
-            'records' => PenerimaanIkan::all(),
-        ])->layout('layouts.app');
-    }
-
-
-// Method print
     public function print()
     {
         try {
@@ -447,5 +374,25 @@ class PenerimaanIkan extends Component
             //session()->flash('error', 'Gagal mencetak: ' . $e->getMessage());
         }
     
+    }
+
+    public function render() 
+    {
+        // Pastikan data sudah dimuat dengan relasi yang benar
+        $this->kategori_berat = KategoriBeratPenerimaan::all();
+        
+        return view('livewire.penerimaan-ikan', [
+            'penerimaanIkans' => $this->penerimaanIkans,
+            'data' => $this->data,
+            'session_date' => $this->session_date,
+            'session_tgl_bongkar' => $this->session_tgl_bongkar,
+            'suppliers' => $this->suppliers,
+            'session_supplier' => $this->session_supplier,
+            'session_jenis_penerimaan' => $this->session_jenis_penerimaan,
+            'grades' => $this->grades,
+            'kategori_berat' => $this->kategori_berat,
+            'session_no_bak' => $this->session_no_bak,
+            'records' => Penerimaan_Ikan::with(['grade', 'kategoriBeratPenerimaan'])->get(),
+        ])->layout('layouts.app');
     }
 }

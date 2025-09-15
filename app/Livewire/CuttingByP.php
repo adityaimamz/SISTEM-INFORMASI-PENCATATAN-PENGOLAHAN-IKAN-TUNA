@@ -94,7 +94,7 @@ class CuttingByP extends Component
             // Reset data sebelumnya
             $this->rows = [];
             
-            // Ambil data dari database
+            // Ambil data dari database dengan relasi yang diperlukan
             $query = Cutting::with(['kategori_byproduk', 'penerimaan']);
             
             // Filter berdasarkan form input
@@ -109,37 +109,47 @@ class CuttingByP extends Component
             if ($this->session_tgl_injek_co) {
                 $query->where('tgl_injek_co', $this->session_tgl_injek_co);
             }
-            
+
             // Ambil data dan kelompokkan berdasarkan no_batch
             $cuttings = $query->orderBy('no_batch')
                             ->orderBy('kategori_byproduk_id')
                             ->get();
-            
-            // Kelompokkan data berdasarkan no_batch
+
+            // Format data untuk ditampilkan
             $groupedData = [];
+            
             foreach ($cuttings as $cutting) {
                 $noBatch = $cutting->no_batch;
+                
                 if (!isset($groupedData[$noBatch])) {
                     $groupedData[$noBatch] = [
                         'no_batch' => $noBatch,
                         'tgl_cutting' => $cutting->tgl_cutting,
                         'tgl_injek_co' => $cutting->tgl_injek_co,
-                        'items' => []
+                        'produk' => []
                     ];
                 }
-                $groupedData[$noBatch]['items'][] = $cutting;
+                
+                // Pastikan nilai berat dan total adalah single value, bukan array
+                $berat = is_array($cutting->berat_produk) ? $cutting->berat_produk[0] : $cutting->berat_produk;
+                $total = is_array($cutting->total_produk) ? $cutting->total_produk[0] : $cutting->total_produk;
+                
+                // Tambahkan data produk ke dalam array produk
+                $groupedData[$noBatch]['produk'][] = [
+                    'berat' => (float) $berat,
+                    'total' => (int) $total,
+                    'nama' => $cutting->kategori_byproduk->nama_produk ?? 'Produk Tidak Diketahui'
+                ];
             }
             
-            // Konversi ke format yang diharapkan oleh view
+            // Konversi ke array dan reset keys
             $this->rows = array_values($groupedData);
             
-            // Jika tidak ada data, tambahkan baris kosong
-            if (empty($this->rows)) {
-                $this->addRow();
-            }
+            // Debug: Tampilkan data yang akan dikirim ke view
+            \Log::info('Data yang akan ditampilkan:', $this->rows);
             
         } catch (\Exception $e) {
-            Log::error('Error loading data: ' . $e->getMessage());
+            \Log::error('Error loading data: ' . $e->getMessage());
             session()->flash('error', 'Gagal memuat data: ' . $e->getMessage());
         }
     }
