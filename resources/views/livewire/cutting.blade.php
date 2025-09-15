@@ -232,6 +232,7 @@
                                 <td>
                                     <input type="text" 
                                         wire:model="rows.{{ $index }}.no_batch" 
+                                        wire:model.defer="rows.{{ $index }}.no_batch"
                                         class="excel-input text-center"
                                         placeholder="No Batch" 
                                             required>
@@ -244,6 +245,7 @@
                                     <td>
                                         <input type="number" step="0.01" 
                                                 wire:model.live="rows.{{ $index }}.berat_produk{{ $i }}"
+                                                wire:model.defer="rows.{{ $index }}.berat_produk{{ $i }}"
                                                 wire:change="calculateTotals"
                                                 class="excel-input text-center"
                                                 placeholder="Kg">
@@ -251,6 +253,7 @@
                                     <td>
                                         <input type="number" step="1" 
                                                 wire:model.live="rows.{{ $index }}.total_produk{{ $i }}"
+                                                wire:model.defer="rows.{{ $index }}.total_produk{{ $i }}"
                                                 wire:change="calculateTotals"
                                                 class="excel-input text-center"
                                                 placeholder="Pcs">
@@ -287,6 +290,7 @@
     <div class="card-footer text-end py-1 px-2">
         <button type="submit" 
             class="btn btn-primary btn-sm py-0 px-2" 
+            wire:click="saveAll"
             wire:loading.attr="disabled"
             wire:target="saveAll"
             style="font-size: 0.7rem; height: 30px;">
