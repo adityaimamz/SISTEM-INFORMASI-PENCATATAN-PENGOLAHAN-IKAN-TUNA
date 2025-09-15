@@ -271,6 +271,42 @@ class PenerimaanIkan extends Component
     public function loadData()
     {
         try {
+            $this->rows = [];
+            $cutting = Cutting::when($this->session_tgl_cutting, function($query){
+                $query->where('tgl_cutting', $this->session_tgl_cutting);
+            })
+            ->when($this->session_tgl_injek_co, function($query){
+                $query->where('tgl_injek_co', $this->session_tgl_injek_co);
+            })
+            ->when($this->penerimaan_id, function($query){
+                $query->where('penerimaan_id', $this->penerimaan_id);
+            })
+            ->get()
+            ->groupBy('no_batch');
+            
+            foreach ($cutting as $batch => $items) {
+                $this->rows[] = [
+                    'cutting_id' => $items->first()->cutting_id,
+                    'no_batch' => $batch,
+                    'total_pcs' => $items->sum('pcs'),
+                    'total_berat' => $items->sum('berat'),
+                ];
+                //inisialisasi array
+                for ($i=1; $i <= 7; $i++) {
+                    $row['berat_produk' . $i] = 0;
+                    $row['total_produk' . $i] = 0;
+                }
+
+                foreach ($items as $item) {
+                    $urutan = $item->urutan_produk ?? 1;
+                    if ($urutan > 1 && $urutan < 7) {
+                        $row['berat_produk' . $urutan] = (float)$item->berat_produk[0] ?? 0;
+                        $row['total_produk' . $urutan] = (int)$item->total_produk[0] ?? 0;
+                    }
+                }
+
+                $this->rows[] = $row;
+            }
 
             if(strpos($this->selected_grade_id, '_') === false) {
                 throw new \Exception('Invalid grade_id format');
@@ -294,7 +330,6 @@ class PenerimaanIkan extends Component
                     ->orderBy('no_ikan', 'asc') //urutan input dari terlama ke terbaru
                     ->get();
 
-            $this->rows = [];
             $data = $query->get();
 
             if ($data->isNotEmpty()) {

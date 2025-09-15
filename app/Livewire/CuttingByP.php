@@ -235,17 +235,24 @@ class CuttingByP extends Component
 
     public function removeRow($index)
     {
-        if (isset($this->rows[$index])) {
-            if (isset($this->rows[$index]['cutting_id'])) {
-                try { 
-                    Cutting::where('cutting_id', $this->rows[$index]['cutting_id'])->delete();
-                    session()->flash('message', 'Data berhasil dihapus');
-                } catch (\Exception $e) {
-                    session()->flash('error', 'Gagal menghapus data: ' . $e->getMessage());
-                    return;
+        try {
+            if (isset($this->rows[$index])) {
+                $no_batch = $this->rows[$index]['no_batch'] ?? null;
+                if ($no_batch) {
+                    $deletRows = Cutting::where('no_batch', $no_batch)->delete();
+
+                    if ($deletRows > 0) {
+                        unset($this->rows[$index]);
+                        $this->rows = array_values($this->rows);
+                        session()->flash('message', 'Data berhasil dihapus');
+
+                        $this->loadData();
+                    }
                 }
             }
-            unset($this->rows[$index]);
+        } catch (\Exception $e) {
+            session()->flash('error', 'Gagal menghapus data: ' . $e->getMessage());
+            return;
         }
     }
 
