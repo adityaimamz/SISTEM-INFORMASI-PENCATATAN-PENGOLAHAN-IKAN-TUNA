@@ -72,11 +72,10 @@ class KategoriByprodukCtController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($kategori_byproduk_ct)
+    public function destroy($kategori_byproduk_id)
     {
-        $kategori = KategoriByprodukCt::findOrFail($kategori_byproduk_ct);
+        $kategori = KategoriByprodukCt::findOrFail($kategori_byproduk_id);
         $kategori->delete();
-
         return redirect()->route('kategori-byproduk-ct.index')->with('success', 'Kategori By Produk Cutting berhasil dihapus.');
     }
 }

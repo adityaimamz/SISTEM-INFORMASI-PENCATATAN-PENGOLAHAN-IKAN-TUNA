@@ -2,188 +2,169 @@
 
 @section('content')
     <div id="main">
-        <header class="mb-3">
-            <a href="#" class="burger-btn d-block d-xl-none">
-                <i class="bi bi-justify fs-3"></i>
-            </a>
-        </header>
-
         <div class="page-heading">
             <div class="page-title">
                 <div class="row">
-                    <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Akun</h3>
-                        <p class="text-subtitle text-muted">Silahkan kelola data akun</p>
-                    </div>
-                    <div class="col-12 col-md-6 order-md-2 order-first">
-                        <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">{{ Request::segment(1) }}</li>
-                            </ol>
-                        </nav>
+                    <div class="col-12">
+                        <h3>PT BAHARI PRIMA MANUNGGAL</h3>
+                        <p class="text-subtitle text-muted">Data Akun</p>
                     </div>
                 </div>
             </div>
+
             <section class="section">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title">
-                            Tambah Akun Karyawan
-                        </h5>
-                        <button type="button" class="btn btn-outline-primary block" data-bs-toggle="modal" data-bs-target="#tambahAkunModal">
-                            Tambah Akun
+                <div class="card" style="border-radius: 10px; overflow: hidden;">
+                    <div class="card-header" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);">
+                        <h4 class="card-title text-white">Daftar Akun</h4>
+                        <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#tambahAkunModal">
+                            <i class="bi bi-plus-circle"></i> Tambah Akun
                         </button>
-                        
-                        <!-- Vertically Centered modal Modal -->
-                        <div class="modal fade" id="tambahAkunModal" tabindex="-1" role="dialog" aria-labelledby="tambahAkunModalTitle" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-                                <div class="modal-content">
-                        
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="tambahAkunModalTitle">Tambah Akun</h5>
-                                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                            <i data-feather="x"></i>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form method="POST" action="{{ route('akun.store') }}" enctype="multipart/form-data" class="mt-0">
-                                            @csrf
-                                            <div class="form-group">
-                                                <label for="name">Nama</label>
-                                                <input type="text" name="name" class="form-control border-primary" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="email">Email</label>
-                                                <input type="email" name="email" class="form-control border-primary" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="password">Password</label>
-                                                <input type="password" name="password" class="form-control border-primary" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="role_id">Jabatan</label>
-                                                <select name="role_id" class="form-control border-primary" required>
-                                                    <option value="3">Kepala Produksi Cutting</option>
-                                                    <option value="4">Kepala Produksi Service</option>
-                                                    <option value="5">Kepala Produksi Packing</option>
-                                                </select>
-                                            </div>
-
-                                            <button type="submit" class="btn btn-primary ms-1">
-                                                <span class="d-none d-sm-block">Submit</span>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-
                     </div>
+                    
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table" id="table1">
-                                <thead>
+                            <table class="table table-hover" id="table1">
+                                <thead class="bg-light">
                                     <tr>
-                                        <th>No</th>
+                                        <th style="width: 50px;">No</th>
+                                        <th>Nama</th>
                                         <th>Email</th>
-                                        <th>Name</th>
                                         <th>Role</th>
-                                        <th>Action</th>
+                                        <th class="text-center" style="width: 120px;">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($data as $item)
-                                        <tr>
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $item->email }}</td>
-                                            <td>{{ $item->name }}</td>
-                                            <td>{{ $item->role_id == 1 ? 'Pimpinan' : ($item->role_id == 2 ? 'Admin' : ($item->role_id == 3 ? 'Kepala Produksi Cutting' : ($item->role_id == 4 ? 'Kepala Produksi Service' : 'Kepala Produksi Packing'))) }}</td>
-                                            <td>
-                                                <button type="button" class="btn btn-outline-primary block" data-bs-toggle="modal" data-bs-target="#editAkunModal{{ $item->id }}">
-                                                    Edit akun
-                                                </button>
-                                                <button type="button" class="btn btn-outline-danger block" data-bs-toggle="modal" data-bs-target="#hapusAkunModal{{ $item->id }}">
-                                                    Hapus akun
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <!-- Modal Edit Akun -->
-                                        <div class="modal fade" id="editAkunModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="editAkunModalTitle{{ $item->id }}" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="editAkunModalTitle{{ $item->id }}">Edit Akun</h5>
-                                                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                                            <i data-feather="x"></i>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <form method="POST" action="{{ route('akun.update', $item->id) }}" enctype="multipart/form-data" class="mt-0">
-                                                            @csrf
-                                                            @method('PUT')
-                                                            <div class="form-group">
-                                                                <label for="name">Nama</label>
-                                                                <input type="text" name="name" class="form-control border-primary" value="{{ $item->name }}" required>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label for="email">Email</label>
-                                                                <input type="email" name="email" class="form-control border-primary" value="{{ $item->email }}" required>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label for="password">Password (Biarkan kosong jika tidak ingin mengubah)</label>
-                                                                <input type="password" name="password" class="form-control border-primary">
-                                                            </div>
-                                                            <button type="submit" class="btn btn-primary ms-1">
-                                                                <span class="d-none d-sm-block">Update</span>
-                                                            </button>
-                                                        </form>
-                                                    </div>
+                                    <tr style="background: linear-gradient(to right, #f9f9f9 0%, #f0f7ff 100%);">
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $item->name }}</td>
+                                        <td>{{ $item->email }}</td>
+                                        <td>{{ $item->role_id == 1 ? 'Pimpinan' : ($item->role_id == 2 ? 'Admin' : ($item->role_id == 3 ? 'Kepala Produksi Cutting' : ($item->role_id == 4 ? 'Kepala Produksi Service' : 'Kepala Produksi Packing'))) }}</td>
+                                        <td class="text-center">
+                                            <button class="btn btn-sm btn-warning" data-bs-toggle="modal" 
+                                                data-bs-target="#editAkunModal{{ $item->id }}">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger" data-bs-toggle="modal" 
+                                                data-bs-target="#hapusAkunModal{{ $item->id }}">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Edit Modal -->
+                                    <div class="modal fade" id="editAkunModal{{ $item->id }}" tabindex="-1" role="dialog" 
+                                        aria-labelledby="editAkunModalLabel{{ $item->id }}" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header" style="background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);">
+                                                    <h5 class="modal-title text-white" id="editAkunModalLabel{{ $item->id }}">Edit Akun</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form method="POST" action="{{ route('akun.update', $item->id) }}">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <div class="mb-3">
+                                                            <label for="name" class="form-label">Nama</label>
+                                                            <input type="text" class="form-control" id="name" 
+                                                                name="name" value="{{ $item->name }}" required>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="email" class="form-label">Email</label>
+                                                            <input type="email" class="form-control" id="email" 
+                                                                name="email" value="{{ $item->email }}" required>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="password" class="form-label">Password (Kosongkan jika tidak ingin mengubah)</label>
+                                                            <input type="password" class="form-control" id="password" 
+                                                                name="password">
+                                                        </div>
+                                                        <div class="d-flex justify-content-end">
+                                                            <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Batal</button>
+                                                            <button type="submit" class="btn btn-primary">Simpan</button>
+                                                        </div>
+                                                    </form>
                                                 </div>
                                             </div>
                                         </div>
-                                
-                                        <!-- Modal Hapus Akun -->
-                                        <div class="modal fade" id="hapusAkunModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="hapusAkunModalTitle{{ $item->id }}" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="hapusAkunModalTitle{{ $item->id }}">Hapus Akun</h5>
-                                                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                                            <i data-feather="x"></i>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <p>Apakah Anda yakin ingin menghapus akun ini?</p>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
-                                                            <span class="d-none d-sm-block">Close</span>
-                                                        </button>
-                                                        <form method="POST" action="{{ route('akun.destroy', $item->id) }}" class="d-inline">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="btn btn-danger ms-1">
-                                                                <span class="d-none d-sm-block">Hapus</span>
-                                                            </button>
-                                                        </form>
-                                                    </div>
+                                    </div>
+
+                                    <!-- Delete Modal -->
+                                    <div class="modal fade" id="hapusAkunModal{{ $item->id }}" tabindex="-1" role="dialog" 
+                                        aria-labelledby="hapusAkunModalLabel{{ $item->id }}" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);">
+                                                    <h5 class="modal-title text-white" id="hapusAkunModalLabel{{ $item->id }}">Hapus Akun</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>Apakah Anda yakin ingin menghapus akun <strong>{{ $item->name }}</strong>?</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <form method="POST" action="{{ route('akun.destroy', $item->id) }}" class="d-inline">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Batal</button>
+                                                        <button type="submit" class="btn btn-danger">Hapus</button>
+                                                    </form>
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
                                     @endforeach
                                 </tbody>
-                                
                             </table>
                         </div>
                     </div>
                 </div>
-
             </section>
-            <!-- Basic Tables end -->
-
         </div>
+    </div>
 
+    <!-- Modal Tambah -->
+    <div class="modal fade" id="tambahAkunModal" tabindex="-1" role="dialog" 
+        aria-labelledby="tambahAkunModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);">
+                    <h5 class="modal-title text-white" id="tambahAkunModalTitle">Tambah Akun</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="{{ route('akun.store') }}">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Nama</label>
+                            <input type="text" class="form-control" id="name" 
+                                name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" 
+                                name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" 
+                                name="password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="role_id" class="form-label">Jabatan</label>
+                            <select name="role_id" class="form-select" required>
+                                <option value="3">Kepala Produksi Cutting</option>
+                                <option value="4">Kepala Produksi Service</option>
+                                <option value="5">Kepala Produksi Packing</option>
+                            </select>
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection

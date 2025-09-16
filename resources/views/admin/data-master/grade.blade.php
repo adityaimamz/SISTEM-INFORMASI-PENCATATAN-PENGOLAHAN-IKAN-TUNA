@@ -2,156 +2,116 @@
 
 @section('content')
     <div id="main">
-        <header class="mb-3">
-            <a href="#" class="burger-btn d-block d-xl-none">
-                <i class="bi bi-justify fs-3"></i>
-            </a>
-        </header>
-
         <div class="page-heading">
-            <h3>Data Grade Penerimaan</h3>
-            <p class="text-subtitle text-muted">Silahkan kelola data grade penerimaan</p>
-        </div>
-
-        <section class="section">
-            <div class="card">
-                <div class="card-header">
-                    <button type="button" class="btn btn-outline-primary rounded-pill"
-                        data-bs-toggle="modal" data-bs-target="#tambahIkanModal">
-                        <i class="bi bi-plus-circle-fill"></i> Tambah
-                    </button>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-bordered" id="table2">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Grade</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($grades as $item)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $item->grade }}</td>
-                                        <td>
-                                            <button type="button" class="btn btn-outline-primary rounded-pill"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#editIkanModal{{ $item->id }}">
-                                                <i class="bi bi-pencil-fill"></i> 
-                                            </button>
-                                            <button type="button" class="btn btn-outline-danger rounded-pill"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#hapusIkanModal{{ $item->id }}">
-                                                <i class="bi bi-trash-fill"></i> 
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <!-- Modal Edit Ikan -->
-                                    <div class="modal fade" id="editIkanModal{{ $item->id }}" tabindex="-1"
-                                        role="dialog" aria-labelledby="editIkanModalTitle{{ $item->id }}"
-                                        aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
-                                            role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="editIkanModalTitle{{ $item->id }}">
-                                                        Edit Grade Penerimaan</h5>
-                                                    <button type="button" class="close" data-bs-dismiss="modal"
-                                                        aria-label="Close">
-                                                        <i data-feather="x"></i>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <form method="POST" action="{{ route('grade.update', $item->id) }}"
-                                                        enctype="multipart/form-data" class="mt-0">
-                                                        @csrf
-                                                        @method('PUT')
-                                                        <div class="form-group">
-                                                            <label for="grade">Grade Penerimaan</label>
-                                                            <input type="text" name="grade"
-                                                                class="form-control border-primary"
-                                                                value="{{ $item->grade }}" required>
-                                                        </div>
-                                                        <button type="submit" class="btn btn-primary ms-1">
-                                                            <span class="d-none d-sm-block">Update</span>
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Modal Hapus Ikan -->
-                                    <div class="modal fade" id="hapusIkanModal{{ $item->id }}" tabindex="-1"
-                                        role="dialog" aria-labelledby="hapusIkanModalTitle{{ $item->id }}"
-                                        aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
-                                            role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title"
-                                                        id="hapusIkanModalTitle{{ $item->id }}">Hapus Grade Penerimaan</h5>
-                                                    <button type="button" class="close" data-bs-dismiss="modal"
-                                                        aria-label="Close">
-                                                        <i data-feather="x"></i>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <p>Apakah Anda yakin ingin menghapus grade penerimaan ini?</p>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-light-secondary"
-                                                        data-bs-dismiss="modal">
-                                                        <span class="d-none d-sm-block">Close</span>
-                                                    </button>
-                                                    <form method="POST"
-                                                        action="{{ route('grade.destroy', $item->id) }}"
-                                                        class="d-inline">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger ms-1">
-                                                            <span class="d-none d-sm-block">Hapus</span>
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </tbody>
-                        </table>
+            <div class="page-title">
+                <div class="row">
+                    <div class="col-12">
+                        <h3>PT BAHARI PRIMA MANUNGGAL</h3>
+                        <p class="text-subtitle text-muted">Data grade penerimaan</p>
                     </div>
                 </div>
             </div>
-        </section>
 
-        <!-- Vertically Centered modal Modal -->
-        <div class="modal fade" id="tambahIkanModal" tabindex="-1" role="dialog"
-            aria-labelledby="tambahIkanModalTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="tambahIkanModalTitle">Tambah Grade Penerimaan</h5>
-                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                            <i data-feather="x"></i>
+            <section class="section">
+                <div class="card" style="border-radius: 10px; overflow: hidden;">
+                    <div class="card-header" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);">
+                        <h4 class="card-title text-white">Daftar Grade</h4>
+                        <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#tambahIkanModal">
+                            <i class="bi bi-plus-circle"></i> Tambah
                         </button>
                     </div>
-                    <div class="modal-body">
-                        <form method="POST" action="{{ route('grade.store') }}"
-                            enctype="multipart/form-data" class="mt-0">
-                            @csrf
-                            <div class="form-group">
-                                <label for="grade">Grade Penerimaan</label>
-                                <input type="text" name="grade" class="form-control border-primary" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary ms-1">
-                                <span class="d-none d-sm-block">Submit</span>
-                            </button>
-                        </form>
+                    
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="table2">
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th style="width: 50px;">No</th>
+                                        <th>Grade</th>
+                                        <th class="text-center" style="width: 100px;">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($grades as $item)
+                                    <tr style="background: linear-gradient(to right, #f9f9f9 0%, #f0f7ff 100%);">
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $item->grade }}</td>
+                                        <td class="text-center">
+                                            <button class="btn btn-sm btn-warning" data-bs-toggle="modal" 
+                                                data-bs-target="#editIkanModal{{ $item->id }}">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <form action="{{ route('grade.destroy', $item->id) }}" 
+                                                method="POST" class="d-inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-danger" 
+                                                    onclick="return confirm('Yakin ingin menghapus?')">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Edit Modal -->
+                                    <div class="modal fade" id="editIkanModal{{ $item->id }}" tabindex="-1" role="dialog" 
+                                        aria-labelledby="editIkanModalLabel{{ $item->id }}" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header" style="background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);">
+                                                    <h5 class="modal-title text-white" id="editIkanModalLabel{{ $item->id }}">Edit Grade</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form action="{{ route('grade.update', $item->id) }}" method="POST">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <div class="mb-3">
+                                                            <label for="grade" class="form-label">Grade</label>
+                                                            <input type="text" class="form-control" id="grade" 
+                                                                name="grade" value="{{ $item->grade }}" required>
+                                                        </div>
+                                                        <div class="d-flex justify-content-end">
+                                                            <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Batal</button>
+                                                            <button type="submit" class="btn btn-primary">Simpan</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Modal Tambah -->
+    <div class="modal fade" id="tambahIkanModal" tabindex="-1" role="dialog" 
+        aria-labelledby="tambahIkanModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);">
+                    <h5 class="modal-title text-white" id="tambahIkanModalTitle">Tambah Grade</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="{{ route('grade.store') }}">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="grade" class="form-label">Grade</label>
+                            <input type="text" class="form-control" id="grade" 
+                                name="grade" required>
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

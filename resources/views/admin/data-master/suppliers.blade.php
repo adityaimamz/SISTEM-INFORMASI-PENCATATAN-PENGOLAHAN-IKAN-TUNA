@@ -2,192 +2,140 @@
 
 @section('content')
     <div id="main">
-        <header class="mb-3">
-            <a href="#" class="burger-btn d-block d-xl-none">
-                <i class="bi bi-justify fs-3"></i>
-            </a>
-        </header>
-
         <div class="page-heading">
             <div class="page-title">
                 <div class="row">
-                    <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Supplier</h3>
-                        <p class="text-subtitle text-muted">Silahkan kelola data supplier</p>
-                    </div>
-                    <div class="col-12 col-md-6 order-md-2 order-first">
-                        <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">{{ Request::segment(1) }}</li>
-                            </ol>
-                        </nav>
+                    <div class="col-12">
+                        <h3>PT BAHARI PRIMA MANUNGGAL</h3>
+                        <p class="text-subtitle text-muted">Data Supplier</p>
                     </div>
                 </div>
             </div>
+
             <section class="section">
-                <div class="card">
-                    <div class="card-header">
-                        <button type="button" class="btn btn-success btn-icon me-2" data-bs-toggle="modal" data-bs-target="#tambahSupplierModal">
+                <div class="card" style="border-radius: 10px; overflow: hidden;">
+                    <div class="card-header" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);">
+                        <h4 class="card-title text-white">Daftar Supplier</h4>
+                        <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#tambahSupplierModal">
                             <i class="bi bi-plus-circle"></i> Tambah
-                        </button>                    
-                        <!-- Vertically Centered modal Modal -->
-                        <div class="modal fade" id="tambahSupplierModal" tabindex="-1" role="dialog" aria-labelledby="tambahSupplierModalTitle" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="tambahSupplierModalTitle">Tambah Supplier</h5>
-                                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                            <i data-feather="x"></i>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form action="{{ route('suppliers.store') }}" method="POST" enctype="multipart/form-data" class="mt-0">
-                                            @csrf
-                                            <div class="form-group">
-                                                <label for="supplier_id">Kode Supplier</label>
-                                                <input type="text" name="supplier_id" class="form-control border-primary" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="nama_supplier">Nama Supplier</label>
-                                                <input type="text" name="nama_supplier" class="form-control border-primary" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="alamat">Asal Daerah</label>
-                                                <textarea name="alamat" class="form-control border-primary" required></textarea>
-                                            </div>
-                                            <button type="submit" class="btn btn-primary ms-1">
-                                                <span class="d-none d-sm-block">Submit</span>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        </button>
                     </div>
+                    
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-bordered">
-                                <thead>
+                            <table class="table table-hover" id="table2">
+                                <thead class="bg-light">
                                     <tr>
-                                        <th>No</th>
+                                        <th style="width: 50px;">No</th>
                                         <th>Kode Supplier</th>
                                         <th>Nama Supplier</th>
-                                        <th>Alamat</th>
-                                        <th>Action</th>
+                                        <th>Asal Daerah</th>
+                                        <th class="text-center" style="width: 100px;">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($suppliers as $item)
-                                        <tr>
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td>{{ str_pad($item->supplier_id, 2, '0', STR_PAD_LEFT) }}</td>
-                                            <td>{{ $item->nama_supplier }}</td>
-                                            <td>{{ $item->alamat }}</td>
-                                            <td>
-                                                <!-- Tombol Edit -->
-                                                <button type="button" class="btn btn-warning btn-sm"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#editSupplierModal{{ $item->supplier_id }}">
-                                                    Edit
+                                    <tr style="background: linear-gradient(to right, #f9f9f9 0%, #f0f7ff 100%);">
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ str_pad($item->supplier_id, 2, '0', STR_PAD_LEFT) }}</td>
+                                        <td>{{ $item->nama_supplier }}</td>
+                                        <td>{{ $item->alamat }}</td>
+                                        <td class="text-center">
+                                            <button class="btn btn-sm btn-warning" data-bs-toggle="modal" 
+                                                data-bs-target="#editSupplierModal{{ $item->supplier_id }}">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <form action="{{ route('suppliers.destroy', $item->supplier_id) }}" 
+                                                method="POST" class="d-inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-danger" 
+                                                    onclick="return confirm('Yakin ingin menghapus?')">
+                                                    <i class="bi bi-trash"></i>
                                                 </button>
+                                            </form>
+                                        </td>
+                                    </tr>
 
-                                                 <!-- Tombol Hapus -->
-                                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
-                                                    data-bs-target="#hapusSupplierModal{{ $item->supplier_id }}">
-                                                    Hapus
-                                                </button>
-                                            </td>
-                                        </tr>
-
-                                        <!-- Modal Edit Supplier -->
-                                        <div class="modal fade" id="editSupplierModal{{ $item->supplier_id }}" tabindex="-1"
-                                            aria-labelledby="editSupplierModalTitle{{ $item->supplier_id }}" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="editSupplierModalTitle{{ $item->supplier_id }}">
-                                                            Edit Supplier
-                                                        </h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <form method="POST" action="{{ route('suppliers.update', $item->supplier_id) }}">
-                                                            @csrf
-                                                            @method('PUT')
-
-                                                            <div class="form-group mb-3">
-                                                                <label for="supplier_id_{{ $item->supplier_id }}">Kode Supplier</label>
-                                                                <input type="text" name="supplier_id"
-                                                                    id="supplier_id_{{ $item->supplier_id }}"
-                                                                    class="form-control border-primary"
-                                                                    value="{{ str_pad($item->supplier_id, 2, '0', STR_PAD_LEFT) }}" required>
-                                                            </div>
-
-                                                            <div class="form-group mb-3">
-                                                                <label for="nama_supplier_{{ $item->supplier_id }}">Nama Supplier</label>
-                                                                <input type="text" name="nama_supplier"
-                                                                    id="nama_supplier_{{ $item->supplier_id }}"
-                                                                    class="form-control border-primary"
-                                                                    value="{{ $item->nama_supplier }}" required>
-                                                            </div>
-
-                                                            <div class="form-group mb-3">
-                                                                <label for="alamat_{{ $item->supplier_id }}">Alamat</label>
-                                                                <textarea name="alamat" id="alamat_{{ $item->supplier_id }}"
-                                                                    class="form-control border-primary" required>{{ $item->alamat }}</textarea>
-                                                            </div>
-
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
-                                                                    Close
-                                                                </button>
-                                                                <button type="submit" class="btn btn-primary">
-                                                                    Update
-                                                                </button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
+                                    <!-- Edit Modal -->
+                                    <div class="modal fade" id="editSupplierModal{{ $item->supplier_id }}" tabindex="-1" role="dialog" 
+                                        aria-labelledby="editSupplierModalLabel{{ $item->supplier_id }}" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header" style="background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);">
+                                                    <h5 class="modal-title text-white" id="editSupplierModalLabel{{ $item->supplier_id }}">Edit Supplier</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form action="{{ route('suppliers.update', $item->supplier_id) }}" method="POST">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <div class="mb-3">
+                                                            <label for="supplier_id" class="form-label">Kode Supplier</label>
+                                                            <input type="text" class="form-control" id="supplier_id" 
+                                                                name="supplier_id" value="{{ str_pad($item->supplier_id, 2, '0', STR_PAD_LEFT) }}" required>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="nama_supplier" class="form-label">Nama Supplier</label>
+                                                            <input type="text" class="form-control" id="nama_supplier" 
+                                                                name="nama_supplier" value="{{ $item->nama_supplier }}" required>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="alamat" class="form-label">Asal Daerah</label>
+                                                            <textarea class="form-control" id="alamat" name="alamat" required>{{ $item->alamat }}</textarea>
+                                                        </div>
+                                                        <div class="d-flex justify-content-end">
+                                                            <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Batal</button>
+                                                            <button type="submit" class="btn btn-primary">Simpan</button>
+                                                        </div>
+                                                    </form>
                                                 </div>
                                             </div>
                                         </div>
-     
-                                        <!-- Modal Hapus Supplier -->
-                                        <div class="modal fade" id="hapusSupplierModal{{ $item->supplier_id }}" tabindex="-1"
-                                            aria-labelledby="hapusSupplierModalTitle{{ $item->supplier_id }}" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="hapusSupplierModalTitle{{ $item->supplier_id }}">
-                                                            Hapus Supplier
-                                                        </h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <p>Apakah Anda yakin ingin menghapus supplier <strong>{{ $item->nama_supplier }}</strong>?</p>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
-                                                            Batal
-                                                        </button>
-                                                        <form method="POST" action="{{ route('suppliers.destroy', $item->supplier_id) }}" class="d-inline">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="btn btn-danger">Hapus</button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    </div>
                                     @endforeach
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
-
             </section>
-            <!-------------------------------------------- Basic Tables end -------------------------------------------->
+        </div>
+    </div>
+
+    <!-- Modal Tambah -->
+    <div class="modal fade" id="tambahSupplierModal" tabindex="-1" role="dialog" 
+        aria-labelledby="tambahSupplierModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);">
+                    <h5 class="modal-title text-white" id="tambahSupplierModalTitle">Tambah Supplier</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="{{ route('suppliers.store') }}">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="supplier_id" class="form-label">Kode Supplier</label>
+                            <input type="text" class="form-control" id="supplier_id" 
+                                name="supplier_id" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nama_supplier" class="form-label">Nama Supplier</label>
+                            <input type="text" class="form-control" id="nama_supplier" 
+                                name="nama_supplier" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="alamat" class="form-label">Asal Daerah</label>
+                            <textarea class="form-control" id="alamat" name="alamat" required></textarea>
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 @endsection
