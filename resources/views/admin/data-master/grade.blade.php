@@ -9,7 +9,7 @@
         </header>
 
         <div class="page-heading">
-            <h3>Data Master Grade Penerimaan</h3>
+            <h3>Data Grade Penerimaan</h3>
             <p class="text-subtitle text-muted">Silahkan kelola data grade penerimaan</p>
         </div>
 

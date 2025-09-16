@@ -94,11 +94,11 @@
                         </li>
 
                         <li class="submenu-item {{ Request::is('grade') ? 'active' : '' }} ">
-                            <a href="/grade" class="submenu-link">Data Grade</a>
+                            <a href="/grade" class="submenu-link">Data Grade Penerimaan</a>
                         </li>
 
                         <li class="submenu-item {{ Request::is('kategori_berat_penerimaan') ? 'active' : '' }} ">
-                            <a href="/kategori_berat_penerimaan" class="submenu-link">Kategori Berat Penerimaan</a>
+                            <a href="/kategori_berat_penerimaan" class="submenu-link">Data Sizing Penerimaan</a>
 
                         </li>
 
@@ -111,7 +111,7 @@
                 <li class="sidebar-item  has-sub">
                     <a href="#" class='sidebar-link'>
                         <i class="bi bi-stack"></i>
-                        <span>Transaksi</span>
+                        <span>Proses Produksi</span>
                     </a>
 
                     <ul class="submenu ">
@@ -123,7 +123,12 @@
 
                         <li class="submenu-item  {{ Request::is('cutting') ? 'active' : '' }}">
                             <a href="/cutting" class="submenu-link">Cutting by Produk</a>
+                        
+                        </li>
 
+                        <li class="submenu-item  {{ Request::is('cutting_loin') ? 'active' : '' }}">
+                            <a href="/cutting_loin" class="submenu-link">Cutting by Loin</a>
+                        
                         </li>
 
                         <li class="submenu-item {{ Request::is('service') ? 'active' : '' }} ">

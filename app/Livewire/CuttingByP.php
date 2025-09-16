@@ -91,10 +91,9 @@ class CuttingByP extends Component
     public function loadData()
     {
         try {
-            // Reset data sebelumnya
             $this->rows = [];
             
-            // Ambil data dari database dengan relasi yang diperlukan
+            // Ambil data dari database
             $query = Cutting::with(['kategori_byproduk', 'penerimaan']);
             
             // Filter berdasarkan form input
@@ -110,12 +109,12 @@ class CuttingByP extends Component
                 $query->where('tgl_injek_co', $this->session_tgl_injek_co);
             }
 
-            // Ambil data dan kelompokkan berdasarkan no_batch
+            // Ambil data dan urutkan berdasarkan no_batch dan kategori
             $cuttings = $query->orderBy('no_batch')
                             ->orderBy('kategori_byproduk_id')
                             ->get();
 
-            // Format data untuk ditampilkan
+            // Kelompokkan data berdasarkan no_batch
             $groupedData = [];
             
             foreach ($cuttings as $cutting) {
@@ -134,16 +133,54 @@ class CuttingByP extends Component
                 $berat = is_array($cutting->berat_produk) ? $cutting->berat_produk[0] : $cutting->berat_produk;
                 $total = is_array($cutting->total_produk) ? $cutting->total_produk[0] : $cutting->total_produk;
                 
-                // Tambahkan data produk ke dalam array produk
+                // Tambahkan data produk
                 $groupedData[$noBatch]['produk'][] = [
+                    'kategori_id' => $cutting->kategori_byproduk_id,
+                    'nama' => $cutting->kategori_byproduk->nama_produk ?? 'Produk Tidak Diketahui',
                     'berat' => (float) $berat,
-                    'total' => (int) $total,
-                    'nama' => $cutting->kategori_byproduk->nama_produk ?? 'Produk Tidak Diketahui'
+                    'total' => (int) $total
                 ];
             }
             
-            // Konversi ke array dan reset keys
-            $this->rows = array_values($groupedData);
+            // Format data sesuai yang diharapkan view
+            $formattedRows = [];
+            
+            foreach ($groupedData as $batch) {
+                $row = [
+                    'no_batch' => $batch['no_batch'],
+                    'tgl_cutting' => $batch['tgl_cutting'],
+                    'tgl_injek_co' => $batch['tgl_injek_co']
+                ];
+                
+                // Inisialisasi semua kolom produk
+                for ($i = 1; $i <= 7; $i++) {
+                    $row['berat_produk' . $i] = null;
+                    $row['total_produk' . $i] = null;
+                    // Inisialisasi kategori yang dipilih
+                    $this->selectedKategoriByproduk[$i] = null;
+                }
+                
+                // Isi data produk
+                foreach ($batch['produk'] as $index => $produk) {
+                    $urutan = $index + 1;
+                    if ($urutan <= 7) { // Maksimal 7 kolom produk
+                        $row['berat_produk' . $urutan] = $produk['berat'];
+                        $row['total_produk' . $urutan] = $produk['total'];
+                        
+                        // Set selectedKategoriByproduk untuk dropdown
+                        $this->selectedKategoriByproduk[$urutan] = $produk['kategori_id'];
+                    }
+                }
+                
+                $formattedRows[] = $row;
+            }
+            
+            $this->rows = $formattedRows;
+            
+            // Jika tidak ada data, tambahkan baris kosong
+            if (empty($this->rows)) {
+                $this->addRow();
+            }
             
             // Debug: Tampilkan data yang akan dikirim ke view
             \Log::info('Data yang akan ditampilkan:', $this->rows);
@@ -513,13 +550,86 @@ class CuttingByP extends Component
         $this->filterData();
         
         return view('livewire.cutting', [
-            'cuttings' => $this->cuttings,
+            'cuttings' => $this->rows,
             'session_tgl_cutting' => $this->session_tgl_cutting,
             'session_tgl_injek_co' => $this->session_tgl_injek_co,
             'selectedSupplier' => $this->selectedSupplier,
             'penerimaan_ikan' => $this->penerimaan_ikan,
-            'kategori_byproduk_ct' => KategoriByprodukCt::all(),
+            'kategori_byproduk' => KategoriByprodukCt::all(),
+            'groupedCuttings' => $this->groupCuttingsByProduct(), // Menambahkan data yang sudah dikelompokkan
+            'produkList' =>KategoriByprodukCt::all()
         ]);
+    }
+
+    // Method baru untuk mengelompokkan data cutting berdasarkan produk
+    protected function groupCuttingsByProduct()
+    {
+        $grouped = [];
+        
+        foreach ($this->rows as $row) {
+            // Pastikan row memiliki no_batch
+            if (empty($row['no_batch'])) continue;
+            
+            $noBatch = $row['no_batch'];
+            
+            if (!isset($grouped[$noBatch])) {
+                $grouped[$noBatch] = [
+                    'no_batch' => $noBatch,
+                    'tgl_cutting' => $row['tgl_cutting'] ?? null, // Gunakan null coalescing operator
+                    'tgl_injek_co' => $row['tgl_injek_co'] ?? null, // Gunakan null coalescing operator
+                    'produk' => []
+                ];
+            }
+            
+            // Tambahkan produk yang memiliki nilai
+            for ($i = 1; $i <= 7; $i++) {
+                $beratKey = 'berat_produk' . $i;
+                $totalKey = 'total_produk' . $i;
+                
+                // Cek apakah ada nilai yang akan ditambahkan
+                $hasBerat = isset($row[$beratKey]) && $row[$beratKey] !== null;
+                $hasTotal = isset($row[$totalKey]) && $row[$totalKey] !== null;
+                
+                if ($hasBerat || $hasTotal) {
+                    $kategoriId = $this->selectedKategoriByproduk[$i] ?? null;
+                    
+                    // Cari apakah produk dengan kategori_id yang sama sudah ada
+                    $existingIndex = array_search(
+                        $kategoriId,
+                        array_column($grouped[$noBatch]['produk'], 'kategori_id')
+                    );
+                    
+                    if ($existingIndex !== false) {
+                        // Update data yang sudah ada
+                        if ($hasBerat) {
+                            $grouped[$noBatch]['produk'][$existingIndex]['berat'] += (float)$row[$beratKey];
+                        }
+                        if ($hasTotal) {
+                            $grouped[$noBatch]['produk'][$existingIndex]['total'] += (int)$row[$totalKey];
+                        }
+                    } else if ($kategoriId) {
+                        // Tambahkan data baru
+                        $grouped[$noBatch]['produk'][] = [
+                            'kategori_id' => $kategoriId,
+                            'nama' => $this->getProductName($kategoriId),
+                            'berat' => $hasBerat ? (float)$row[$beratKey] : 0,
+                            'total' => $hasTotal ? (int)$row[$totalKey] : 0
+                        ];
+                    }
+                }
+            }
+        }
+        
+        return $grouped;
+    }
+    
+    // Method untuk mendapatkan nama produk berdasarkan ID
+    protected function getProductName($kategoriId)
+    {
+        if (!$kategoriId) return 'Produk Tidak Diketahui';
+        
+        $product = KategoriByprodukCt::find($kategoriId);
+        return $product ? $product->nama_produk : 'Produk Tidak Diketahui';
     }
 
     // Update method updatedPenerimaanId untuk memuat data saat penerimaan_id berubah

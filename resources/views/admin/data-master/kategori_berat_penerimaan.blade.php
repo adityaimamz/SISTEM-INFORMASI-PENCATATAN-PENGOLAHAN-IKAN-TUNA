@@ -12,7 +12,8 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Data Master Berat Penerimaan</h3>
+                        <h3>Data Size Penerimaan</h3>
+                        <p class="text-subtitle text-muted">Silahkan kelola data sizing penerimaan</p>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -72,7 +73,7 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th>No</th>
-                                        <th>Kategori Berat</th>
+                                        <th>Size Ikan</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
