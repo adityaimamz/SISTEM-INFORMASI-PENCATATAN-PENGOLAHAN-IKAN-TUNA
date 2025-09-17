@@ -80,7 +80,8 @@
                             @php
                                 $jenis = $penerimaan->jenis_penerimaan;
                                 $supplier = $penerimaan->supplier->nama_supplier ?? 'Tidak ada supplier';
-                                $displayText = $jenis . ' - ' . $supplier;
+                                $alamat = $penerimaan->supplier->alamat ?? 'Tidak ada alamat';
+                                $displayText = $jenis . '  ' . $alamat . '  ' . $supplier;
                             @endphp
                             <option value="{{ $penerimaan->penerimaan_id }}">
                                 {{ $displayText }}
