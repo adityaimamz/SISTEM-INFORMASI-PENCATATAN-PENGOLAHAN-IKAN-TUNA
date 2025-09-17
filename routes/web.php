@@ -9,6 +9,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\KategoriBeratPenerimaanController;
 use App\Http\Controllers\KategoriBeratCuttingController;
 use App\Http\Controllers\GradeController;
+use App\Http\Controllers\GradeLController;
 use App\Http\Controllers\PackingController;
 use App\Http\Controllers\PenerimaanIkanController;
 use App\Http\Controllers\ProdukKeluarController;
@@ -54,6 +55,7 @@ Route::middleware('is_admin')->group(function () {
     Route::resource('akun', AccountController::class);
     Route::resource('kategori', KategoriController::class);
     Route::resource('grade', GradeController::class);
+    Route::resource('gradel', GradeLController::class);
     Route::resource('kategori_berat_penerimaan', KategoriBeratPenerimaanController::class);
     Route::resource('kategori_berat_cutting', KategoriBeratCuttingController::class);
     Route::resource('kategori-byproduk-ct', KategoriByprodukCtController::class)

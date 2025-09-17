@@ -49,13 +49,16 @@ class DatabaseSeeder extends Seeder
             'email_verified_at' => now(),
         ]);
 
-        // Buat data grade
+        // Buat data grade penerimaan
         $grades = [
             ['grade' => 'B/C'],
             ['grade' => 'D'],
             ['grade' => 'Lokal'],
         ];
         Grade::insert($grades);
+
+        //Buat data grade/sizing Loin
+        
 
         // Buat data kategori berat penerimaan
         $kategoriBerat = [
@@ -74,16 +77,18 @@ class DatabaseSeeder extends Seeder
         
         // Buat data kategori byproduk
         $byproducts = [
-            ['nama_produk' => 'Kama'],
             ['nama_produk' => 'Belly'],
-            ['nama_produk' => 'TM (Tetelan Merah)'],
             ['nama_produk' => 'D. Kepala'],
             ['nama_produk' => 'D. Pipi'],
             ['nama_produk' => 'D. Kerok'],
             ['nama_produk' => 'Iga Kerok'],
+            ['nama_produk' => 'Kama'],
             ['nama_produk' => 'O-toro'],
+            ['nama_produk' => 'TM (Tetelan Merah)'],
         ];
         KategoriByprodukCt::insert($byproducts);
+
+        //Buat 
 
         $this->command->info('Database seeded successfully!');
     }
