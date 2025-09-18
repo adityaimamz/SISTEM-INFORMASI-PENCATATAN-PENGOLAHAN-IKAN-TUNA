@@ -37,7 +37,7 @@
                         </div>
                 </div>
                 <div class="card-body">
-                    @livewire('cuttingl')
+                    @livewire('cutting-by-l')
                 </div>
             </section>
         </div>

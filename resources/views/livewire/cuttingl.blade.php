@@ -32,11 +32,7 @@
                         <div class="invalid-feedback small">{{ $message }}</div>
                     @enderror
                 </div>  
-                
             </div>
-            
         </div>
-        
     </div>
-    
 </div>

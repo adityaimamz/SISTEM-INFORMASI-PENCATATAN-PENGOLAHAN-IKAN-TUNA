@@ -140,6 +140,7 @@ Route::get('/stok-keluar-pdf', [ProdukKeluarController::class, 'stokKeluarPdf'])
 Route::get('/grading', \App\Livewire\GradingProses::class)->name('grading.index')->middleware('auth');
 Route::resource('penerimaan_ikan', PenerimaanIkanController::class)->middleware('auth');
 Route::resource('cutting', CuttingController::class)->middleware('auth');
+Route::resource('cuttingl', CuttingLController::class)->middleware('auth');
 Route::resource('kategori-byproduk-ct', KategoriByprodukCtController::class)
     ->parameters(['kategori-byproduk-ct' => 'kategori_byproduk_id'])
     ->names('kategori-byproduk-ct')
