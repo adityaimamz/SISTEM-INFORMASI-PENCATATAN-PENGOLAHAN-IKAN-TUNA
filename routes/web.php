@@ -132,7 +132,6 @@ Route::get('/get-supplier-by-batch/{no_batch}', function ($no_batch) {
 
 Route::get('/penerimaan-ikan-pdf', [PenerimaanIkanController::class, 'penerimaanIkanPdf'])->name('penerimaan-ikan.pdf');
 Route::get('/cutting-pdf', [CuttingController::class, 'cuttingPdf'])->name('cutting.pdf');
-Route::get('/cuttingl-pdf', [CuttingLController::class, 'cuttingLPdf'])->name('cuttingl.pdf');
 Route::get('/kategori-byproduk-ct-pdf', [KategoriByprodukCtController::class, 'kategoriByprodukCtPdf'])->name('kategori-byproduk-ct.pdf');
 Route::get('/service-pdf', [ServiceController::class, 'servicePdf'])->name('service.pdf');
 Route::get('/packing-pdf', [PackingController::class, 'packingPdf'])->name('packing.pdf');
@@ -141,7 +140,9 @@ Route::get('/stok-keluar-pdf', [ProdukKeluarController::class, 'stokKeluarPdf'])
 Route::get('/grading', \App\Livewire\GradingProses::class)->name('grading.index')->middleware('auth');
 Route::resource('penerimaan_ikan', PenerimaanIkanController::class)->middleware('auth');
 Route::resource('cutting', CuttingController::class)->middleware('auth');
-Route::resource('cuttingls', CuttingLController::class)->middleware('auth');
+Route::resource('cutting-loin', \App\Http\Controllers\CuttingLController::class)
+    ->parameters(['cutting-loin' => 'cuttingl'])
+    ->middleware('auth');
 Route::resource('kategori-byproduk-ct', KategoriByprodukCtController::class)
     ->parameters(['kategori-byproduk-ct' => 'kategori_byproduk_id'])
     ->names('kategori-byproduk-ct')
