@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CuttingController;
-use App\Http\Controllers\CuttingLController;
 use App\Http\Controllers\KodeTraceController;
 use App\Http\Controllers\KategoriByprodukCtController;
 use App\Http\Controllers\KategoriController;
@@ -19,7 +18,6 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\NoContainersController;
 use App\Models\Cutting;
-use App\Models\CuttingByL;
 use App\Models\Packing;
 use App\Models\StokCS;
 use App\Models\Kategori_produk;
@@ -140,9 +138,6 @@ Route::get('/stok-keluar-pdf', [ProdukKeluarController::class, 'stokKeluarPdf'])
 Route::get('/grading', \App\Livewire\GradingProses::class)->name('grading.index')->middleware('auth');
 Route::resource('penerimaan_ikan', PenerimaanIkanController::class)->middleware('auth');
 Route::resource('cutting', CuttingController::class)->middleware('auth');
-Route::resource('cutting-loin', \App\Http\Controllers\CuttingLController::class)
-    ->parameters(['cutting-loin' => 'cuttingl'])
-    ->middleware('auth');
 Route::resource('kategori-byproduk-ct', KategoriByprodukCtController::class)
     ->parameters(['kategori-byproduk-ct' => 'kategori_byproduk_id'])
     ->names('kategori-byproduk-ct')
