@@ -134,6 +134,10 @@
                             <a href="/cutting" class="submenu-link">Cutting by Produk</a>
                         </li>
 
+                        <li class="submenu-item  {{ Request::is('cuttingl') ? 'active' : '' }}">
+                            <a href="/cuttingl" class="submenu-link">Cutting by Loin</a>
+                        </li>
+
                         <li class="submenu-item {{ Request::is('service') ? 'active' : '' }} ">
                             <a href="/service" class="submenu-link">Service</a>
                         </li>

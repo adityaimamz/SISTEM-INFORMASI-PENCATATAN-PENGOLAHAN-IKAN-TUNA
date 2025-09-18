@@ -50,7 +50,7 @@ class CuttingLController extends Controller
                 ->make(true);
         }
 
-        return view('admin.transaksi.cutting-loin.index');
+        return view('admin.transaksi.cuttingl.index');
     }
 
     public function create()
@@ -63,7 +63,7 @@ class CuttingLController extends Controller
 
         $gradeSizes = GradeSizing::all();
         
-        return view('admin.transaksi.cutting-loin.create', compact('penerimaan', 'gradeSizes'));
+        return view('admin.transaksi.cuttingl.create', compact('penerimaan', 'gradeSizes'));
     }
 
     public function store(Request $request)
@@ -88,7 +88,7 @@ class CuttingLController extends Controller
             DB::table('cutting_ls')->insert($data);
 
             DB::commit();
-            return redirect()->route('cutting-loin.index')
+            return redirect()->route('cuttingl.index')
                 ->with('success', 'Data berhasil disimpan');
 
         } catch (\Exception $e) {
@@ -105,7 +105,7 @@ class CuttingLController extends Controller
         $penerimaan = Penerimaan_ikan::with('supplier')->get();
         $gradeSizes = GradeSizing::all();
         
-        return view('admin.transaksi.cutting-loin.edit', compact('data', 'penerimaan', 'gradeSizes'));
+        return view('admin.transaksi.cuttingl.edit', compact('data', 'penerimaan', 'gradeSizes'));
     }
 
     public function update(Request $request, $id)
@@ -131,7 +131,7 @@ class CuttingLController extends Controller
                 ->update($data);
 
             DB::commit();
-            return redirect()->route('cutting-loin.index')
+            return redirect()->route('cuttingl.index')
                 ->with('success', 'Data berhasil diperbarui');
 
         } catch (\Exception $e) {
@@ -151,7 +151,7 @@ class CuttingLController extends Controller
             $data->delete();
 
             DB::commit();
-            return redirect()->route('cutting-loin.index')
+            return redirect()->route('cuttingl.index')
                 ->with('success', 'Data berhasil dihapus');
 
         } catch (\Exception $e) {
