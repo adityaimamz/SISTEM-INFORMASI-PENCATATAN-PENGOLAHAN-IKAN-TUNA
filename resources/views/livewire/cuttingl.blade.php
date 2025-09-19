@@ -218,6 +218,13 @@
                             <th colspan="1" style="width: 30px;">Berat</th>
                         </tr>
                     </thead>
+
+                    <tbody>
+                            
+
+
+
+                    </tbody>
                 </table>
             </div>
         </div>
