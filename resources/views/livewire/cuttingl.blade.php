@@ -183,9 +183,44 @@
         <button class="btn btn-sm btn-success py-0 px-1 mb-2" wire:click="addRow" style="font-size: 0.8rem;">
             <i class="bi bi-plus-circle"></i> <span>Tambah</span>
         </button>
-
-
-
+        <div class="card shadow-sm mb-2">
+            <div class="table-responsive">
+                <table class="excel-table">
+                    <thead class="table-light text-center align-middle" style="background-color:rgb(121, 173, 246);">
+                        <tr>
+                            <th rowspan="4" style="width: 5px;">No</th>
+                            <th colspan="9" style="width: 200px;">No. Batch</th>
+                            <th rowspan="4" style="width: 5px;">Aksi</th>
+                        </tr>
+                        <tr>
+                            <th colspan="3" style="width: 30px;">Cutting</th>
+                            <th colspan="3" style="width: 30px;">RM Service</th>
+                            <th colspan="3" style="width: 30px;">Hasil Service</th>
+                        </tr>
+                        <tr>
+                            <th colspan="3" style="width: 30px;">Grade</th>
+                            <th colspan="1" style="width: 30px;">Grade</th>
+                            <th colspan="1" style="width: 30px;">Grade</th>
+                            <th colspan="1" style="width: 30px;">Grade</th>
+                            <th colspan="1" style="width: 30px;">Grade</th>
+                            <th colspan="1" style="width: 30px;">Grade</th>
+                            <th colspan="1" style="width: 30px;">Grade</th>
+                        </tr>
+                        <tr>
+                            <th colspan="1" style="width: 30px;">Berat</th>
+                            <th colspan="1" style="width: 30px;">Suhu Loin</th>
+                            <th colspan="1" style="width: 30px;">No. Loin</th>
+                            <th colspan="1" style="width: 30px;">Berat</th>
+                            <th colspan="1" style="width: 30px;">Berat</th>
+                            <th colspan="1" style="width: 30px;">Berat</th>
+                            <th colspan="1" style="width: 30px;">Berat</th>
+                            <th colspan="1" style="width: 30px;">Berat</th>
+                            <th colspan="1" style="width: 30px;">Berat</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
  
