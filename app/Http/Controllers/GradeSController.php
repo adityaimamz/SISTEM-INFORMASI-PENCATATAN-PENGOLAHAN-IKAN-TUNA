@@ -16,39 +16,29 @@ class GradeSController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'grade_service' => 'required|string|max:20|unique:grade_services,grade_service',
+        $request->validate([
+            'grading' => 'required',
         ]);
-
-        GradeService::create($validated);
         
-        return redirect()
-            ->route('gradeservice.index')
-            ->with('success', 'Grade Service created successfully');
+        GradeService::create([
+            'grading' => $request->grading,
+        ]);
+        
+        return redirect()->route('grade_service.index')->with('success', 'Grade Service created successfully');
     }
 
     public function update(Request $request, string $id)
     {
-        $gradeService = GradeService::findOrFail($id);
-        
-        $validated = $request->validate([
-            'grade_service' => 'required|string|max:20|unique:grade_services,grade_service,'.$id.',grade_service_id',
+            GradeService::find($id)->update([
+            'grading' => $request->grading,
         ]);
-
-        $gradeService->update($validated);
         
-        return redirect()
-            ->route('gradeservice.index')
-            ->with('success', 'Grade Service updated successfully');
+        return redirect()->route('grade_service.index')->with('success', 'Grade Service updated successfully');
     }
 
     public function destroy(string $id)
     {
-        $gradeService = GradeService::findOrFail($id);
-        $gradeService->delete();
-        
-        return redirect()
-            ->route('gradeservice.index')
-            ->with('success', 'Grade Service deleted successfully');
+        GradeService::find($id)->delete();
+        return redirect()->route('grade_service.index')->with('success', 'Grade Service deleted successfully');
     }
 }

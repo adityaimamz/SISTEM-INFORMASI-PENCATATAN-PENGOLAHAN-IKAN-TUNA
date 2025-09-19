@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('grade_services', function (Blueprint $table) {
             $table->id('grade_service_id');
-            $table->char('grade_service', 20);
+            $table->char('grading', 50);
             $table->timestamps();
         });
     }

@@ -76,17 +76,17 @@ class DatabaseSeeder extends Seeder
 
         //Buat data grade service
         $gradeservice = [
-            ['grade_service' => 'AAA'],
-            ['grade_service' => 'AAA+'],
-            ['grade_service' => 'AAA-'],
-            ['grade_service' => 'AA'],
-            ['grade_service' => 'AA+'],
-            ['grade_service' => 'AA-'],
-            ['grade_service' => 'Delta'],
-            ['grade_service' => 'Sashi'],
-            ['grade_service' => 'Parasit'],
-            ['grade_service' => 'Bau'],
-            ['grade_service' => 'Histamin'],
+            ['grading' => 'AAA'],
+            ['grading' => 'AAA+'],
+            ['grading' => 'AAA-'],
+            ['grading' => 'AA'],
+            ['grading' => 'AA+'],
+            ['grading' => 'AA-'],
+            ['grading' => 'Delta'],
+            ['grading' => 'Sashi'],
+            ['grading' => 'Parasit'],
+            ['grading' => 'Bau'],
+            ['grading' => 'Histamin'],
         ];
         GradeService::insert($gradeservice);
             
