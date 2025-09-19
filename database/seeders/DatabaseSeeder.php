@@ -51,13 +51,45 @@ class DatabaseSeeder extends Seeder
 
         // Buat data grade penerimaan
         $grades = [
+            ['grade' => 'A'],
             ['grade' => 'B/C'],
             ['grade' => 'D'],
-            ['grade' => 'Lokal'],
         ];
         Grade::insert($grades);
 
         //Buat data grade/sizing Loin
+        $gradel = [
+            ['grade_sizing' => 'A 3kg Up'],
+            ['grade_sizing' => 'A 3kg Down'],
+            ['grade_sizing' => 'B/C 3kg Up'],
+            ['grade_sizing' => 'B/C 3kg Down'],
+            ['grade_sizing' => 'C 3kg Up'],
+            ['grade_sizing' => 'C 3kg Down'],
+            ['grade_sizing' => 'D All Size'],
+            ['grade_sizing' => 'Mixed Grade'],
+            ['grade_sizing' => 'Loin Natural Lokal'],
+            ['grade_sizing' => 'Loin Sashi'],
+            ['grade_sizing' => 'Loin Bau'],
+            ['grade_sizing' => 'Loin Parasit'],
+        ];
+        Grade::insert($gradel);
+
+        //Buat data grade service
+        $gradeservice = [
+            ['grade_service' => 'AAA'],
+            ['grade_service' => 'AAA+'],
+            ['grade_service' => 'AAA-'],
+            ['grade_service' => 'AA'],
+            ['grade_service' => 'AA+'],
+            ['grade_service' => 'AA-'],
+            ['grade_service' => 'Delta'],
+            ['grade_service' => 'Sashi'],
+            ['grade_service' => 'Parasit'],
+            ['grade_service' => 'Bau'],
+            ['grade_service' => 'Histamin'],
+        ];
+        GradeService::insert($gradeservice);
+            
         
 
         // Buat data kategori berat penerimaan

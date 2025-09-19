@@ -113,6 +113,10 @@
                             <a href="/gradel" class="submenu-link">Grade/Sizing Loin</a>
                         </li>
 
+                        <li class="submenu-item {{ Request::is('grade_service') ? 'active' : '' }} ">
+                            <a href="/grade_service" class="submenu-link">Grade Service</a>
+                        </li>
+
                         <li class="submenu-item {{ Request::is('kategori_byproduk_ct') ? 'active' : '' }} ">
                             <a href="/kategori-byproduk-ct" class="submenu-link">By Produk</a>
                         </li>
