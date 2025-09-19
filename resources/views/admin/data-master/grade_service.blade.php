@@ -25,12 +25,11 @@
                             <table class="table table-hover" id="table2">
                                 <thead class="bg-light">
                                     <tr>
-                                        <th style=width: 50px;>No<th>
-                                        <th>Grade<th>
-                                        <th class=text-center style=width: 100px;>Aksi<th>
+                                        <th style="width: 50px;">No</th>
+                                        <th>Grade</th>
+                                        <th class=text-center style=width: 100px;>Aksi</th>
                                     </tr>
                                 </thead>
-
                                 <tbody>
                                     @foreach($gradeServices as $gradeService)
                                     <tr style="background: linear-gradient(to right, #f9f9f9 0%, #f0f7ff 100%);">
@@ -69,7 +68,8 @@
                                                         <div class="modal-body">
                                                             <div class="mb-3">
                                                                 <label for="grade_service_edit{{ $gradeService->grade_service_id }}" class="form-label">Grade Service</label>
-                                                                <input type="text" class="form-control" id="grade_service_edit{{ $gradeService->grade_service_id }}" name="grading" value="{{ $gradeService->grading }}" required>
+                                                                <input type="text" class="form-control" id="grade_service_edit{{ $gradeService->grade_service_id }}" 
+                                                                    name="grading" value="{{ $gradeService->grading }}" required>
                                                             </div>
                                                         </div>
                                                         <div class="d-flex justify-content-end">
@@ -100,20 +100,19 @@
                     <h5 class="modal-title text-white" id="tambahGradeServiceModalLabel">Tambah Grading</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <form action="{{ route('grade_service.store') }}" method="POST">
-                        @csrf
+                <form action="{{ route('grade_service.store') }}" method="POST">
+                    @csrf
+                    <div class="modal-body">
                         <div class="mb-3">
                             <label for="grading" class="form-label">Grade Service</label>
-                            <input type="text" class="form-control" id="grading" 
-                                name="grading" required>
+                            <input type="text" class="form-control" id="grading" name="grading" required>
                         </div>
-                        <div class="d-flex justify-content-end">
-                            <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Batal</button>
-                            <button type="submit" class="btn btn-primary">Simpan</button>
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

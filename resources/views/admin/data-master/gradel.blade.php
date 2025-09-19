@@ -23,7 +23,7 @@
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table table-striped" id="table1">
-                                <thead class="bg-light">
+                                <thead class="bg-light"> 
                                     <tr>
                                         <th style="width: 50px;">No</th>
                                         <th>Grade/Sizing</th>
@@ -51,6 +51,8 @@
                                             </form>
                                         </td>
                                     </tr>
+
+                                    <!-- Edit Modal -->
                                     <div class="modal fade" id="editGradeModal{{ $grade->grade_size_id }}" tabindex="-1" role="dialog" 
                                         aria-labelledby="editGradeModalLabel{{ $grade->grade_size_id }}" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered">
