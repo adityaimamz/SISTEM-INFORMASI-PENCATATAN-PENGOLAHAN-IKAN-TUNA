@@ -24,6 +24,7 @@ return new class extends Migration
             $table->foreignId('grade_service_id')
                     ->constrained('grade_services')
                     ->onDelete('cascade');
+            $table->string('no_batch');
             $table->float('berat_loin');
             $table->float('suhu_loin');
             $table->unsignedBigInteger('penerimaan_id');

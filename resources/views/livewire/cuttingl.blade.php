@@ -198,10 +198,86 @@
                             <th colspan="3" style="width: 30px;">Hasil Service</th>
                         </tr>
                         <tr>
-                            <th colspan="3" style="width: 30px;">Grade</th>
-                            <th colspan="1" style="width: 30px;">Grade</th>
-                            <th colspan="1" style="width: 30px;">Grade</th>
-                            <th colspan="1" style="width: 30px;">Grade</th>
+
+                        {{-- Size/Grade --}}
+                        @php
+                            $selectedSizingLoin = $selectedSizingLoin ?? [''];
+                            $sizingLoin = $sizingLoin ?? [];
+                        @endphp
+                        
+                        @for($i = 0; $i < count($selectedSizingLoin); $i++)
+                            <th colspan="3" style="width: 30px;">
+                                <select wire:model.live="selectedSizingLoin.{{ $i }}"
+                                    class="excel-input @error('selectedSizingLoin.{{ $i }}') is-invalid @enderror"
+                                    style="font-size: .8rem; height: 30px; background-color:rgb(121, 173, 246);">
+                                    <option value="" class="text-center" style="font-weight: bold;">-- Size/Grade --</option>
+                                    @foreach ($sizingLoin as $sizing)
+                                        <option value="{{ $sizing['grade_size_id'] ?? $sizing->grade_size_id ?? '' }}" class="text-center">
+                                            {{ $sizing['grade_sizing'] ?? $sizing->grade_sizing ?? '' }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('selectedSizingLoin.{{ $i }}')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                            </th>
+                        @endfor 
+
+                        {{-- Grade Service RM Service --}}
+                        @php
+                            $selectedGradingService = $selectedGradingService ?? [''];
+                            $gradingService = $gradingService ?? [];
+                        @endphp
+
+                        @for($i = 0; $i < count($selectedGradingService); $i++)
+                            <th colspan="1" style="width: 30px;">
+                                <select wire:model.live="selectedGradingService.{{ $i }}"
+                                    class="excel-input @error('selectedGradingService.{{ $i }}') is-invalid @enderror"
+                                    style="font-size: .8rem; height: 30px; background-color:rgb(121, 173, 246);">
+                                    <option value="" class="text-center" style="font-weight: bold;">-- Grade --</option>
+                                    @foreach ($gradingService as $gradeService)
+                                        <option value="{{ $gradeService['grade_size_id'] ?? $gradeService->grade_size_id ?? '' }}" class="text-center">
+                                            {{ $gradeService['grading'] ?? $gradeService->grading ?? '' }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('selectedGradingService.{{ $i }}')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                            </th>
+                        
+                            <th colspan="1" style="width: 30px;">
+                                <select wire:model.live="selectedGradingService.{{ $i }}"
+                                    class="excel-input @error('selectedGradingService.{{ $i }}') is-invalid @enderror"
+                                    style="font-size: .8rem; height: 30px; background-color:rgb(121, 173, 246);">
+                                    <option value="" class="text-center" style="font-weight: bold;">-- Grade --</option>
+                                    @foreach ($gradingService as $gradeService)
+                                        <option value="{{ $gradeService['grade_size_id'] ?? $gradeService->grade_size_id ?? '' }}" class="text-center">
+                                            {{ $gradeService['grading'] ?? $gradeService->grading ?? '' }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('selectedGradingService.{{ $i }}')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                            </th>
+                       
+                            <th colspan="1" style="width: 30px;">
+                                <select wire:model.live="selectedGradingService.{{ $i }}"
+                                    class="excel-input @error('selectedGradingService.{{ $i }}') is-invalid @enderror"
+                                    style="font-size: .8rem; height: 30px; background-color:rgb(121, 173, 246);">
+                                    <option value="" class="text-center" style="font-weight: bold;">-- Grade --</option>
+                                    @foreach ($gradingService as $gradeService)
+                                        <option value="{{ $gradeService['grade_size_id'] ?? $gradeService->grade_size_id ?? '' }}" class="text-center">
+                                            {{ $gradeService['grading'] ?? $gradeService->grading ?? '' }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('selectedGradingService.{{ $i }}')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                            </th>
+                        @endfor
                             <th colspan="1" style="width: 30px;">Grade</th>
                             <th colspan="1" style="width: 30px;">Grade</th>
                             <th colspan="1" style="width: 30px;">Grade</th>

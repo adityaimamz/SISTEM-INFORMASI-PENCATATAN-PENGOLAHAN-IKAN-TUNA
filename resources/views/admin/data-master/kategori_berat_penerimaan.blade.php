@@ -7,7 +7,7 @@
                 <div class="row">
                     <div class="col-12">
                         <h3>PT BAHARI PRIMA MANUNGGAL</h3>
-                        <p class="text-subtitle text-muted">Data sizing penerimaan</p>
+                        <p class="text-subtitle text-muted">Data size penerimaan</p>
                     </div>
                 </div>
             </div>
@@ -15,7 +15,7 @@
             <section class="section">
                 <div class="card" style="border-radius: 10px; overflow: hidden;">
                     <div class="card-header" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);">
-                        <h4 class="card-title text-white">Daftar Size</h4>
+                        <h4 class="card-title text-white">Daftar Sizing</h4>
                         <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#tambahKategoriBeratModal">
                             <i class="bi bi-plus-circle"></i> Tambah
                         </button>

@@ -114,7 +114,7 @@
                         </li>
 
                         <li class="submenu-item {{ Request::is('grade_service') ? 'active' : '' }} ">
-                            <a href="/grade_service" class="submenu-link">Grade Service</a>
+                            <a href="/grade_service" class="submenu-link">Grading RM Service</a>
                         </li>
 
                         <li class="submenu-item {{ Request::is('kategori_byproduk_ct') ? 'active' : '' }} ">

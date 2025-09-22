@@ -15,7 +15,7 @@
             <section class="section">
                 <div class="card" style="border-radius: 10px; overflow: hidden;">
                     <div class="card-header" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);">
-                        <h4 class="card-title text-white">Daftar Grade</h4>
+                        <h4 class="card-title text-white">Daftar Grading Penerimaan</h4>
                         <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#tambahIkanModal">
                             <i class="bi bi-plus-circle"></i> Tambah
                         </button>
@@ -26,7 +26,7 @@
                                 <thead class="bg-light">
                                     <tr>
                                         <th style="width: 50px;">No</th>
-                                        <th>Grade</th>
+                                        <th>Grading</th>
                                         <th class="text-center" style="width: 100px;">Aksi</th>
                                     </tr>
                                 </thead>

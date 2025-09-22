@@ -9,9 +9,9 @@ class GradeService extends Model
 {
     use HasFactory;
 
-    public $timestamps = false;
-
     protected $table = 'grade_services';
     protected $primaryKey = 'grade_service_id';
     protected $fillable = ['grading'];
+    public $timestamps = false;
+
 }
