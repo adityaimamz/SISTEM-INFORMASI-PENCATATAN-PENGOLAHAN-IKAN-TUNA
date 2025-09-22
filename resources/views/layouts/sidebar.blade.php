@@ -117,6 +117,10 @@
                             <a href="/grade_service" class="submenu-link">Grading RM Service</a>
                         </li>
 
+                        <li class="submenu-item {{ Request::is('grade_hservice') ? 'active' : '' }} ">
+                            <a href="/grade_hservice" class="submenu-link">Grade/Sizing Service</a>
+                        </li>
+
                         <li class="submenu-item {{ Request::is('kategori_byproduk_ct') ? 'active' : '' }} ">
                             <a href="/kategori-byproduk-ct" class="submenu-link">By Produk</a>
                         </li>
