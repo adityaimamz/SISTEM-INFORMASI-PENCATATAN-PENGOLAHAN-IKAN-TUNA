@@ -27,7 +27,7 @@
                                     <tr>
                                         <th style="width: 50px;">No</th>
                                         <th>Grade/Sizing</th>
-                                        <th class=text-center style=width: 100px;>Aksi</th>
+                                        <th class="text-center" style="width: 100px;">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -35,7 +35,7 @@
                                     <tr style="background: linier-gradient(to right, #f9f9f9 0%, #f0f7ff 100%);">
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $gradeHService->grade_hservice }}</td>
-                                        <td class="text-center">
+                                        <td class="text-center" style="width: 100px;">
                                             <button class="btn btn-sm bt-warning" data-bs-toggle="modal" 
                                                 data-bs-target="#editGradeHServiceModal{{ $gradeHService->grade_servicehs_id }}">
                                                 <i class="bi bi-pencil"></i>
@@ -66,7 +66,7 @@
                                                         @csrf
                                                         @method('PUT')
                                                         <div class="mb-3">
-                                                            <label for="grade_hservice_edit{{ $gradeHService->grade_servicehs_id }}">Grade Hasil Service</label>
+                                                            <label for="grade_hservice_edit{{ $gradeHService->grade_servicehs_id }}" class="form-label" >Grade Hasil Service</label>
                                                             <input type="text" class="form-control" id="grade_hservice_edit{{ $gradeHService->grade_servicehs_id }}"
                                                                 name="grade_hservice" value="{{ $gradeHService->grade_hservice }}" required>
                                                         </div>
