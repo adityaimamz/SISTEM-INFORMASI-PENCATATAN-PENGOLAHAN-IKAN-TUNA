@@ -16,7 +16,7 @@ class GradeHController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'grade_servicehs' => 'required',
+            'grade_servicehs' => 'required|string|max:255',
         ]);
         
         GradeHService::create([

@@ -11,6 +11,6 @@ class GradeHService extends Model
 
     protected $table = 'grade_servicehs';
     protected $primaryKey = 'grade_servicehs_id';
-    protected $fillable = ['grading'];
+    protected $fillable = ['grade_servicehs'];
     public $timestamps = false;
 }

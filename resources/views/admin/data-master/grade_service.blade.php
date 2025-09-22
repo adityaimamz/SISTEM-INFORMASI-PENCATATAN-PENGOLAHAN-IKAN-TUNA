@@ -92,7 +92,7 @@
     </div>
 
     <!-- Modal Tambah -->
-     <div class="modal fade" id="tambahGradeServiceModal" tabindex="-1" role="dialog" 
+    <div class="modal fade" id="tambahGradeServiceModal" tabindex="-1" role="dialog" 
         aria-labelledby="tambahGradeServiceModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
