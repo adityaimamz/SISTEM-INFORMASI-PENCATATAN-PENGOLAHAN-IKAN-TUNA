@@ -7,6 +7,8 @@ use App\Models\Grade;
 use App\Models\Supplier;
 use App\Models\KategoriBeratPenerimaan;
 use App\Models\KategoriByprodukCt;
+use App\Models\GradeL;
+use App\Models\GradeService;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -72,7 +74,7 @@ class DatabaseSeeder extends Seeder
             ['grade_sizing' => 'Loin Bau'],
             ['grade_sizing' => 'Loin Parasit'],
         ];
-        Grade::insert($gradel);
+        GradeL::insert($gradel);
 
         //Buat data grade service
         $gradeservice = [
