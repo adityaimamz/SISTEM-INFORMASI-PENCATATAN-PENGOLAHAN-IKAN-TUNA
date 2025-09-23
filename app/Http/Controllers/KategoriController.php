@@ -7,21 +7,6 @@ use App\Models\Kategori;
 
 class KategoriController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-       
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -62,10 +47,6 @@ class KategoriController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // $request->validate([
-        //     'kategori' => 'required|string|max:255',
-        //     'grade' => 'required|string|max:255',
-        // ]);
 
         $kategori = Kategori::findOrFail($id);
         $data = [
