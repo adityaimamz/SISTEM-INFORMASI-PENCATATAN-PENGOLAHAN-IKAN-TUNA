@@ -51,6 +51,13 @@ class DatabaseSeeder extends Seeder
             'email_verified_at' => now(),
         ]);
 
+        // Buat data supplier
+        Supplier::create([
+            'supplier_id' => 1,
+            'nama_supplier' => 'BPM',
+            'alamat' => 'Jakarta Barat',
+        ]);
+
         // Buat data grade penerimaan
         $grades = [
             ['grade' => 'A'],
@@ -58,6 +65,14 @@ class DatabaseSeeder extends Seeder
             ['grade' => 'D'],
         ];
         Grade::insert($grades);
+
+        // Buat data kategori berat penerimaan
+        $kategoriBerat = [
+            ['kategori_berat' => '20 UP'],
+            ['kategori_berat' => '20 DOWN'],
+            ['kategori_berat' => '30 UP'],
+        ];
+        KategoriBeratPenerimaan::insert($kategoriBerat);
 
         //Buat data grade/sizing Loin
         $gradel = [
@@ -91,24 +106,7 @@ class DatabaseSeeder extends Seeder
             ['grading' => 'Histamin'],
         ];
         GradeService::insert($gradeservice);
-            
-        
 
-        // Buat data kategori berat penerimaan
-        $kategoriBerat = [
-            ['kategori_berat' => '20 UP'],
-            ['kategori_berat' => '20 DOWN'],
-            ['kategori_berat' => '30 UP'],
-        ];
-        KategoriBeratPenerimaan::insert($kategoriBerat);
-
-        // Buat data supplier
-        Supplier::create([
-            'supplier_id' => 1,
-            'nama_supplier' => 'BPM',
-            'alamat' => 'Jakarta Barat',
-        ]);
-        
         // Buat data kategori byproduk
         $byproducts = [
             ['nama_produk' => 'Belly'],
@@ -121,8 +119,6 @@ class DatabaseSeeder extends Seeder
             ['nama_produk' => 'TM (Tetelan Merah)'],
         ];
         KategoriByprodukCt::insert($byproducts);
-
-        //Buat 
 
         $this->command->info('Database seeded successfully!');
     }

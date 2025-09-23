@@ -14,8 +14,20 @@ return new class extends Migration
         Schema::create('penerimaan_ikans', function (Blueprint $table): void {
             $table->bigIncrements('penerimaan_id');
             $table->unsignedBigInteger('supplier_id');
-            $table->foreignId('grade_id')->constrained('grades')->onDelete('cascade');
-            $table->foreignId('kategori_berat_id')->constrained('kategori_berat_penerimaans')->onDelete('cascade');
+            $table->foreign('supplier_id')
+                    ->references('supplier_id')
+                    ->on('suppliers')
+                    ->onDelete('cascade');
+            $table->unsignedBigInteger('grade_id');
+            $table->foreign('grade_id')
+                    ->references('grade_id')
+                    ->on('grades')
+                    ->onDelete('cascade');
+            $table->unsignedBigInteger('kategori_berat_id');
+            $table->foreign('kategori_berat_id')
+                    ->references('kategori_berat_id')
+                    ->on('kategori_berat_penerimaans')
+                    ->onDelete('cascade');
             $table->float('berat_ikan');
             $table->date('tgl_penerimaan');
             $table->date('tgl_bongkar');
@@ -23,15 +35,6 @@ return new class extends Migration
             $table->string('no_bak')->nullable();
             $table->string('no_ikan');
             $table->timestamps();
-
-            $table->foreign('supplier_id')
-                  ->references('supplier_id')
-                  ->on('suppliers')
-                  ->onDelete('cascade');
-        });
-
-        Schema::table('penerimaan_ikans', function (Blueprint $table): void {
-            $table->string('jenis_penerimaan', 50)->nullable()->after('supplier_id')->comment('Fresh GG atau Frozen WR');
         });
     }
 
@@ -40,10 +43,11 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('penerimaan_ikans', function (Blueprint $table): void {
-            $table->dropColumn('jenis_penerimaan');
-        });
-        
+        Schema::table('penerimaan_ikans', function (Blueprint $table) {
+            $table->dropForeign(['supplier_id']);
+            $table->dropForeign(['grade_id']);
+            $table->dropForeign(['kategori_berat_id']);
+        }); 
         Schema::dropIfExists('penerimaan_ikans');
     }
 };

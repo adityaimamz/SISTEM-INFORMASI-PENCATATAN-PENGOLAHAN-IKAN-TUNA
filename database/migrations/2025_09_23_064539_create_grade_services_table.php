@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('stok_c_s', function (Blueprint $table) {
-            $table->integer('stock_id');
-            $table->integer('p_masuk_id')->unsigned();
-            $table->integer('p_keluar_id')->unsigned();
-            $table->string('tipe_stok');
-            $table->integer('pcs');
+        Schema::create('grade_services', function (Blueprint $table) {
+            $table->bigIncrements('grade_service_id');
+            $table->string('grading', 20);
             $table->timestamps();
         });
     }
@@ -26,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('stok_c_s');
+        Schema::dropIfExists('grade_services');
     }
 };
