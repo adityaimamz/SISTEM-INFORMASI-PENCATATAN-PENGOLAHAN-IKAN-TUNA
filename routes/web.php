@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/login', [LoginController::class, 'store'])->name('login.store');
 
 //GET
+Route::get('/', [LoginController::class, 'index'])->name('login');
 Route::get('/login', [LoginController::class, 'index'])->name('login');
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/suppliers/{supplier}/edit', [SupplierController::class, 'edit'])->name('suppliers.edit');
