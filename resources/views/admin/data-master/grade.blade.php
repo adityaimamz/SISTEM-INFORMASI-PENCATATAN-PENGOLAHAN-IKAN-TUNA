@@ -31,16 +31,16 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($grades as $item)
+                                    @foreach ($grades as $grade)
                                     <tr style="background: linear-gradient(to right, #f9f9f9 0%, #f0f7ff 100%);">
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $item->grade }}</td>
-                                        <td class="text-center">
+                                        <td>{{ $grade->grade }}</td>
+                                        <td class="text-center" style="width: 100px;">
                                             <button class="btn btn-sm btn-warning" data-bs-toggle="modal" 
-                                                data-bs-target="#editIkanModal{{ $item->id }}">
+                                                data-bs-target="#editIkanModal{{ $grade->grade_id }}">
                                                 <i class="bi bi-pencil"></i>
                                             </button>
-                                            <form action="{{ route('grade.destroy', $item->id) }}" 
+                                            <form action="{{ route('grade.destroy', $grade->grade_id) }}" 
                                                 method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
@@ -53,22 +53,22 @@
                                     </tr>
 
                                     <!-- Edit Modal -->
-                                    <div class="modal fade" id="editIkanModal{{ $item->id }}" tabindex="-1" role="dialog" 
-                                        aria-labelledby="editIkanModalLabel{{ $item->id }}" aria-hidden="true">
+                                    <div class="modal fade" id="editIkanModal{{ $grade->grade_id }}" tabindex="-1" role="dialog" 
+                                        aria-labelledby="editIkanModalLabel{{ $grade->grade_id }}" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered">
                                             <div class="modal-content">
                                                 <div class="modal-header" style="background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);">
-                                                    <h5 class="modal-title text-white" id="editIkanModalLabel{{ $item->id }}">Edit Grade</h5>
+                                                    <h5 class="modal-title text-white" id="editIkanModalLabel{{ $grade->grade_id }}">Edit Grade</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <form action="{{ route('grade.update', $item->id) }}" method="POST">
+                                                    <form action="{{ route('grade.update', $grade->grade_id) }}" method="POST">
                                                         @csrf
                                                         @method('PUT')
                                                         <div class="mb-3">
                                                             <label for="grade" class="form-label">Grade</label>
                                                             <input type="text" class="form-control" id="grade" 
-                                                                name="grade" value="{{ $item->grade }}" required>
+                                                                name="grade" value="{{ $grade->grade }}" required>
                                                         </div>
                                                         <div class="d-flex justify-content-end">
                                                             <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Batal</button>

@@ -35,7 +35,7 @@ class Penerimaan_Ikan extends Model
 
     public function grade()
     {
-        return $this->belongsTo(Grade::class, 'grade_id');
+        return $this->belongsTo(Grade::class, 'grade_id', 'grade_id');
     }
 
     public function kategoriBeratPenerimaan()

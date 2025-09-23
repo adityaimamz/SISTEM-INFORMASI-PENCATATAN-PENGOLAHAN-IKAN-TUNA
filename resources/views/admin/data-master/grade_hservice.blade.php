@@ -99,7 +99,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('grade_hservice.store') }}" method="POST">
+                    <form method="POST" action="{{ route('grade_hservice.store') }}">
                         @csrf
                         <div class="mb-3">
                             <label for="grade_servicehs" class="form-label">Grade Hasil Service</label>

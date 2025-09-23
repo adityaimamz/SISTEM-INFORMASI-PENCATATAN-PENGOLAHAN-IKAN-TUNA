@@ -38,7 +38,7 @@ class GradeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $grade_id)
     {
         //
     }
@@ -46,17 +46,19 @@ class GradeController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(string $grade_id)
     {
-        
+        $grade = Grade::findOrFail($grade_id);
+        return view('admin.data-master.grade-edit', compact('grade'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $grade_id)
     {
-        Grade::find($id)->update([
+        $grade = Grade::findOrFail($grade_id);
+        $grade->update([
             'grade' => $request->grade,
         ]);
         return redirect()->route('grade.index')->with('success', 'Grade updated successfully');
@@ -65,9 +67,14 @@ class GradeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($grade_id)
     {
-        Grade::find($id)->delete();
-        return redirect()->route('grade.index')->with('success', 'Grade deleted successfully');
+        try {
+            $grade = Grade::findOrFail($grade_id);
+            $grade->delete();
+            return redirect()->route('grade.index')->with('success', 'Grade deleted successfully');
+        } catch (\Exception $e) {
+            return redirect()->route('grade.index')->with('error', 'Grade deleted failed');
+        }
     }
 }

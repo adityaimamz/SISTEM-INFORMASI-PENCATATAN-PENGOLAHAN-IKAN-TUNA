@@ -40,6 +40,9 @@ Route::put('/suppliers/{supplier}', [SupplierController::class, 'update'])->name
 //RESOURCE
 Route::resource('suppliers', SupplierController::class)->middleware('auth');
 Route::resource('penerimaan_ikan', PenerimaanIkanController::class)->middleware('auth');
+Route::resource('grade', GradeController::class)
+    ->parameters(['grade' => 'grade:grade_id'])
+    ->middleware('auth');
 Route::resource('cutting', CuttingController::class)->middleware('auth');
 Route::resource('cuttingl', CuttingLController::class)->middleware('auth');
 Route::resource('kategori-byproduk-ct', KategoriByprodukCtController::class)

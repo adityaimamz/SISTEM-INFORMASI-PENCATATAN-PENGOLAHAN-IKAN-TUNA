@@ -9,7 +9,11 @@ class Grade extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id'];
+    protected $primaryKey = 'grade_id';
+    protected $keyType = 'int';
+    public $incrementing = true;
+
+    protected $guarded = ['grade_id'];
 
     public function penerimaan_ikans()
     {
