@@ -16,7 +16,6 @@ use App\Http\Controllers\PenerimaanIkanController;
 use App\Http\Controllers\SupplierController;
 use App\Models\Cutting;
 use App\Models\CuttingL;
-use App\Models\StokCS;
 use App\Models\Penerimaan_ikan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -51,24 +50,7 @@ Route::resource('kategori-byproduk-ct', KategoriByprodukCtController::class)
 //MIDDLEWARE ADMIN
 Route::middleware('is_admin')->group(function () {
     Route::get('/admin', function () {
-        $stokCS = StokCS::all();
-
-        $totalMasuk = DB::table('stok_c_s')
-            ->where('tipe_stok', 'Stok Masuk')
-            ->sum('pcs');
-
-        $totalKeluar = DB::table('stok_c_s')
-            ->where('tipe_stok', 'Stok Keluar')
-            ->sum('pcs');
-
-        $grandtotal = $totalMasuk - $totalKeluar;
-
-        // $totalStok = $totalMasuk - $totalKeluar;
-        return view('admin.dashboard', [
-            'totalStok' => $grandtotal,
-            'totalMasuk' => $totalMasuk,
-            'totalKeluar' => $totalKeluar,
-        ]);
+        return view('admin.dashboard');
     });
     //Resource admin
     Route::resource('akun', AccountController::class);
@@ -88,24 +70,7 @@ Route::middleware('is_admin')->group(function () {
 //MIDDLEWARE KARYAWAN
 Route::middleware('is_karyawan')->group(function () {
     Route::get('/karyawan', function () {
-        $stokCS = StokCS::all();
-        $packing = Packing::all();
-
-        $totalMasuk = DB::table('stok_c_s')
-            ->where('tipe_stok', 'Stok Masuk')
-            ->sum('pcs');
-
-        $totalKeluar = DB::table('stok_c_s')
-            ->where('tipe_stok', 'Stok Keluar')
-            ->sum('pcs');
-
-        $grandtotal = $totalMasuk - $totalKeluar;
-
-        return view('karyawan.dashboard', [
-            'totalStok' => $grandtotal,
-            'totalMasuk' => $totalMasuk,
-            'totalKeluar' => $totalKeluar,
-        ]);
+        return view('karyawan.dashboard');
     });
 });
 
