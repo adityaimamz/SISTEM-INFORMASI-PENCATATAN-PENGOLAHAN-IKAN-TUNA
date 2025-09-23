@@ -27,7 +27,7 @@
                                     <tr>
                                         <th style="width: 50px;">No</th>
                                         <th>Grade</th>
-                                        <th class=text-center style=width: 100px;>Aksi</th>
+                                        <th class="text-center" style="width: 100px;">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -57,7 +57,7 @@
                                         aria-labelledby="editGradeServiceModalLabel{{ $gradeService->grade_service_id }}" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered">
                                             <div class="modal-content">
-                                                <div class="modal-header" style="backgorund: linear-gradient(135deg, #f6d365 0%, #fda085 100%);">
+                                                <div class="modal-header" style="background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);">
                                                     <h5 class="modal-title text-white" id="editGradeServiceModalLabel{{ $gradeService->grade_service_id }}">Edit Grading</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" arial-label="Close"></button>
                                                 </div>
@@ -105,7 +105,8 @@
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="grading" class="form-label">Grade Service</label>
-                            <input type="text" class="form-control" id="grading" name="grading" required>
+                            <input type="text" class="form-control" id="grading" 
+                                name="grading" required>
                         </div>
                     </div>
                     <div class="d-flex justify-content-end">

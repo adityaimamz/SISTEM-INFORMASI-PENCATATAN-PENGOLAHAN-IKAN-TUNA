@@ -32,7 +32,7 @@
                                 </thead>
                                 <tbody>
                                     @foreach($gradeHServices as $gradeHService)
-                                    <tr style="background: linier-gradient(to right, #f9f9f9 0%, #f0f7ff 100%);">
+                                    <tr style="background: linear-gradient(to right, #f9f9f9 0%, #f0f7ff 100%);">
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $gradeHService->grade_hservice }}</td>
                                         <td class="text-center" style="width: 100px;">
@@ -57,7 +57,7 @@
                                         aria-labelledby="editGradeHServiceModalLabel{{ $gradeHService->grade_servicehs_id }}" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered">
                                             <div class="modal-content">
-                                                <div class="modal-header" style="background: linier-gradient(135deg, #f6d365 0%, #fda085 100%);">
+                                                <div class="modal-header" style="background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);">
                                                     <h5 class="modal-title text-white" id="editGradeHServiceModalLabel{{ $gradeHService->grade_hservice_id }}"> Edit Grade Hasil Service</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
