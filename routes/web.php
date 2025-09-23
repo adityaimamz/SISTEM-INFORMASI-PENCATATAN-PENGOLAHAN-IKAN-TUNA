@@ -3,7 +3,6 @@
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CuttingController;
 use App\Http\Controllers\CuttingLController;
-use App\Http\Controllers\KodeTraceController;
 use App\Http\Controllers\KategoriByprodukCtController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\LoginController;
@@ -13,31 +12,45 @@ use App\Http\Controllers\GradeController;
 use App\Http\Controllers\GradeLController;
 use App\Http\Controllers\GradeSController;
 use App\Http\Controllers\GradeHController;
-use App\Http\Controllers\PackingController;
 use App\Http\Controllers\PenerimaanIkanController;
-use App\Http\Controllers\ProdukKeluarController;
-use App\Http\Controllers\ProdukMasukController;
-use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SupplierController;
-use App\Http\Controllers\NoContainersController;
 use App\Models\Cutting;
 use App\Models\CuttingL;
-use App\Models\Packing;
 use App\Models\StokCS;
-use App\Models\Kategori_produk;
 use App\Models\Penerimaan_ikan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
-Route::put('/suppliers/{supplier}', [SupplierController::class, 'update'])->name('suppliers.update');
-Route::get('/suppliers/{supplier}/edit', [SupplierController::class, 'edit'])->name('suppliers.edit');
-Route::get('/', [LoginController::class, 'index'])->name('login');
-Route::get('/reload-captcha', [LoginController::class, 'reloadCaptcha']);
+//POST
+Route::post('/login', [LoginController::class, 'store'])->name('login.store');
 
+//GET
+Route::get('/login', [LoginController::class, 'index'])->name('login');
+Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::get('/suppliers/{supplier}/edit', [SupplierController::class, 'edit'])->name('suppliers.edit');
+Route::get('/reload-captcha', [LoginController::class, 'reloadCaptcha']);
+Route::get('/penerimaan-ikan-pdf', [PenerimaanIkanController::class, 'penerimaanIkanPdf'])->name('penerimaan-ikan.pdf');
+Route::get('/cutting-pdf', [CuttingController::class, 'cuttingPdf'])->name('cutting.pdf');
+Route::get('/kategori-byproduk-ct-pdf', [KategoriByprodukCtController::class, 'kategoriByprodukCtPdf'])->name('kategori-byproduk-ct.pdf');
+Route::get('/grading', \App\Livewire\GradingProses::class)->name('grading.index')->middleware('auth');
+
+//PUT
+Route::put('/suppliers/{supplier}', [SupplierController::class, 'update'])->name('suppliers.update');
+
+//RESOURCE
+Route::resource('suppliers', SupplierController::class)->middleware('auth');
+Route::resource('penerimaan_ikan', PenerimaanIkanController::class)->middleware('auth');
+Route::resource('cutting', CuttingController::class)->middleware('auth');
+Route::resource('cuttingl', CuttingLController::class)->middleware('auth');
+Route::resource('kategori-byproduk-ct', KategoriByprodukCtController::class)
+    ->parameters(['kategori-byproduk-ct' => 'kategori_byproduk_id'])
+    ->names('kategori-byproduk-ct')
+    ->middleware('auth');
+
+//MIDDLEWARE ADMIN
 Route::middleware('is_admin')->group(function () {
     Route::get('/admin', function () {
         $stokCS = StokCS::all();
-        $packing = Packing::all();
 
         $totalMasuk = DB::table('stok_c_s')
             ->where('tipe_stok', 'Stok Masuk')
@@ -56,6 +69,7 @@ Route::middleware('is_admin')->group(function () {
             'totalKeluar' => $totalKeluar,
         ]);
     });
+    //Resource admin
     Route::resource('akun', AccountController::class);
     Route::resource('kategori', KategoriController::class);
     Route::resource('grade', GradeController::class);
@@ -70,6 +84,7 @@ Route::middleware('is_admin')->group(function () {
     Route::resource('penerimaan_ikan', PenerimaanIkanController::class);
 });
 
+//MIDDLEWARE KARYAWAN
 Route::middleware('is_karyawan')->group(function () {
     Route::get('/karyawan', function () {
         $stokCS = StokCS::all();
@@ -93,6 +108,7 @@ Route::middleware('is_karyawan')->group(function () {
     });
 });
 
+//GET LAPORAN
 Route::get('/laporan_ikan_masuk', function () {
     return view('admin.laporan_penerimaan_ikan');
 })->middleware('is_admin');
@@ -133,30 +149,3 @@ Route::get('/get-supplier-by-batch/{no_batch}', function ($no_batch) {
     }
     return response()->json(['supplier_id' => ''], 404);
 });
-
-Route::get('/penerimaan-ikan-pdf', [PenerimaanIkanController::class, 'penerimaanIkanPdf'])->name('penerimaan-ikan.pdf');
-Route::get('/cutting-pdf', [CuttingController::class, 'cuttingPdf'])->name('cutting.pdf');
-Route::get('/kategori-byproduk-ct-pdf', [KategoriByprodukCtController::class, 'kategoriByprodukCtPdf'])->name('kategori-byproduk-ct.pdf');
-Route::get('/service-pdf', [ServiceController::class, 'servicePdf'])->name('service.pdf');
-Route::get('/packing-pdf', [PackingController::class, 'packingPdf'])->name('packing.pdf');
-Route::get('/stok-masuk-pdf', [ProdukMasukController::class, 'stokMasukPdf'])->name('stok-masuk.pdf');
-Route::get('/stok-keluar-pdf', [ProdukKeluarController::class, 'stokKeluarPdf'])->name('stok-keluar.pdf');
-Route::get('/grading', \App\Livewire\GradingProses::class)->name('grading.index')->middleware('auth');
-Route::resource('penerimaan_ikan', PenerimaanIkanController::class)->middleware('auth');
-Route::resource('cutting', CuttingController::class)->middleware('auth');
-Route::resource('cuttingl', CuttingLController::class)->middleware('auth');
-Route::resource('kategori-byproduk-ct', KategoriByprodukCtController::class)
-    ->parameters(['kategori-byproduk-ct' => 'kategori_byproduk_id'])
-    ->names('kategori-byproduk-ct')
-    ->middleware('auth');
-Route::resource('no_container', NoContainersController::class)->middleware('auth');
-Route::resource('kode_trace', KodeTraceController::class)->middleware('auth');
-Route::resource('service', ServiceController::class)->middleware('auth');
-Route::resource('packing', PackingController::class)->middleware('auth');
-Route::resource('stok-cs', ProdukMasukController::class)->middleware('auth');
-Route::resource('produk-keluar', ProdukKeluarController::class)->middleware('auth');
-Route::resource('suppliers', SupplierController::class)->middleware('auth');
-
-Route::get('/login', [LoginController::class, 'index'])->name('login');
-Route::post('/login', [LoginController::class, 'store'])->name('login.store');
-Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
