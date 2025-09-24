@@ -6,6 +6,7 @@ use App\Models\CuttingL;
 use App\Models\Penerimaan_ikan;
 use App\Models\GradeL;
 use App\Models\GradeService;
+use App\Models\GradeHservice;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -24,6 +25,8 @@ class CuttingByL extends Component
     public $sizingLoin = [];
     public $selectedGradingService = [];
     public $gradingService = [];
+    public $selectedGradingHservice = [];
+    public $gradingHservice = [];
 
     public function mount()
     {
@@ -36,6 +39,9 @@ class CuttingByL extends Component
 
         $this->gradingService = GradeService::all();
         $this->selectedGradingService = [''];
+
+        $this->gradingHservice = GradeHservice::all();
+        $this->selectedGradingHservice = [''];
     }
     
 
@@ -55,6 +61,8 @@ class CuttingByL extends Component
             'sizingLoin' => $this->sizingLoin,
             'selectedGradingService' => $this->selectedGradingService,
             'gradingService' => $this->gradingService,
+            'selectedGradingHservice' => $this->selectedGradingHservice,
+            'gradingHservice' => $this->gradingHservice,
         ]);
     }
 

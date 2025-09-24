@@ -153,6 +153,7 @@
             border: 1px solid hsl(0, 89.20%, 7.30%);
             border-radius: 3px;
         }
+       
         .excel-input:focus {
             border-color: hsl(0, 89.20%, 7.30%);
             box-shadow: none;
@@ -189,7 +190,16 @@
                     <thead class="table-light text-center align-middle" style="background-color:rgb(121, 173, 246);">
                         <tr>
                             <th rowspan="4" style="width: 5px;">No</th>
-                            <th colspan="9" style="width: 200px;">No. Batch</th>
+                            <th colspan="9" style="width: 200px;">
+                                <input type="text" wire:model="no_batch" 
+                                    class="excel-input text-center" 
+                                    placeholder="No Batch" 
+                                    style="background-color:rgb(121, 173, 246); font-weight: bold; font-size: 0.8rem;"
+                                    required>
+                                        @error('no_batch')
+                                            <div class="text-danger small">{{ $message }}</div>
+                                        @enderror
+                            </th>
                             <th rowspan="4" style="width: 5px;">Aksi</th>
                         </tr>
                         <tr>
@@ -229,39 +239,7 @@
                             $gradingService = $gradingService ?? [];
                         @endphp
 
-                        @for($i = 0; $i < count($selectedGradingService); $i++)
-                            <th colspan="1" style="width: 30px;">
-                                <select wire:model.live="selectedGradingService.{{ $i }}"
-                                    class="excel-input @error('selectedGradingService.{{ $i }}') is-invalid @enderror"
-                                    style="font-size: .8rem; height: 30px; background-color:rgb(121, 173, 246);">
-                                    <option value="" class="text-center" style="font-weight: bold;">-- Grade --</option>
-                                    @foreach ($gradingService as $gradeService)
-                                        <option value="{{ $gradeService['grade_size_id'] ?? $gradeService->grade_size_id ?? '' }}" class="text-center">
-                                            {{ $gradeService['grading'] ?? $gradeService->grading ?? '' }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('selectedGradingService.{{ $i }}')
-                                    <div class="text-danger">{{ $message }}</div>
-                                @enderror
-                            </th>
-                        
-                            <th colspan="1" style="width: 30px;">
-                                <select wire:model.live="selectedGradingService.{{ $i }}"
-                                    class="excel-input @error('selectedGradingService.{{ $i }}') is-invalid @enderror"
-                                    style="font-size: .8rem; height: 30px; background-color:rgb(121, 173, 246);">
-                                    <option value="" class="text-center" style="font-weight: bold;">-- Grade --</option>
-                                    @foreach ($gradingService as $gradeService)
-                                        <option value="{{ $gradeService['grade_size_id'] ?? $gradeService->grade_size_id ?? '' }}" class="text-center">
-                                            {{ $gradeService['grading'] ?? $gradeService->grading ?? '' }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('selectedGradingService.{{ $i }}')
-                                    <div class="text-danger">{{ $message }}</div>
-                                @enderror
-                            </th>
-                       
+                        @for($i = 1;$i <= 3; $i++)
                             <th colspan="1" style="width: 30px;">
                                 <select wire:model.live="selectedGradingService.{{ $i }}"
                                     class="excel-input @error('selectedGradingService.{{ $i }}') is-invalid @enderror"
@@ -278,9 +256,31 @@
                                 @enderror
                             </th>
                         @endfor
-                            <th colspan="1" style="width: 30px;">Grade</th>
-                            <th colspan="1" style="width: 30px;">Grade</th>
-                            <th colspan="1" style="width: 30px;">Grade</th>
+
+                        {{-- Grade Hasil Service --}}
+                        @php
+                            $selectedGradingHservice = $selectedGradingHservice ?? [''];
+                            $gradingHservice = $gradingHservice ?? [];
+                        @endphp
+
+                        @for($i = 1; $i <= 3; $i++)
+                            <th colspan="1" style="width: 30px;">
+                                <select wire:model.live="selectedGradingHservice.{{ $i }}"
+                                    class="excel-input @error('selectedGradingHservice.{{ $i }}') is-invalid @enderror"
+                                    style="font-size: .8rem; height: 30px; background-color:rgb(121, 173, 246);">
+                                    <option value="" class="text-center" style="font-weight: bold;">-- Grade --</option>
+                                    @foreach ($gradingHservice as $gradeHservice)
+                                        <option value="{{ $gradeHservice['grade_servicehs_id'] ?? $gradeHservice->grade_servicehs_id ?? '' }}" class="text-center">
+                                            {{ $gradeHservice['grade_servicehs'] ?? $gradeHservice->grade_servicehs ?? '' }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('selectedGradingHservice.{{ $i }}')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                            </th>
+                        @endfor
+
                         </tr>
                         <tr>
                             <th colspan="1" style="width: 30px;">Berat</th>
