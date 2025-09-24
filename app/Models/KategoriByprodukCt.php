@@ -9,9 +9,10 @@ class KategoriByprodukCt extends Model
 {
     use HasFactory;
 
+    protected $table = 'kategori_byproduk_cts';
     protected $primaryKey = 'kategori_byproduk_id';
-    protected $guarded = [];
-    public $timestamps = false;
+    protected $fillable = ['nama_produk'];
+    public $timestamps = true;
 
     public function cuttings()
     {

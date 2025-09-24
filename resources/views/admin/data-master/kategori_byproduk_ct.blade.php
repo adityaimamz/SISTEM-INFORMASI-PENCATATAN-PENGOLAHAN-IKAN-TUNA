@@ -32,16 +32,16 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($kategori as $item)
+                                    @foreach ($kategoriByprodukCts as $kategoriByprodukCt)
                                     <tr style="background: linear-gradient(to right, #f9f9f9 0%, #f0f7ff 100%);">
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $item->nama_produk }}</td>
+                                        <td>{{ $kategoriByprodukCt->nama_produk }}</td>
                                         <td class="text-center">
                                             <button class="btn btn-sm btn-warning" data-bs-toggle="modal" 
-                                                data-bs-target="#editModal{{ $item->id }}">
+                                                data-bs-target="#editModal{{ $kategoriByprodukCt->kategori_byproduk_id }}">
                                                 <i class="bi bi-pencil"></i>
                                             </button>
-                                            <form action="{{ route('kategori-byproduk-ct.destroy', ['kategori_byproduk_id' => $item->kategori_byproduk_id]) }}" 
+                                            <form action="{{ route('kategori-byproduk-ct.destroy', $kategoriByprodukCt->kategori_byproduk_id) }}" 
                                                 method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
@@ -52,6 +52,34 @@
                                             </form>
                                         </td>
                                     </tr>
+
+                                    <!-- Modal Edit -->
+                                    <div class="modal fade" id="editModal{{ $kategoriByprodukCt->kategori_byproduk_id }}" tabindex="-1" role="dialog" 
+                                        aria-labelledby="editModalLabel{{ $kategoriByprodukCt->kategori_byproduk_id }}" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header" style="background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);">
+                                                    <h5 class="modal-title" id="editModalLabel{{ $kategoriByprodukCt->kategori_byproduk_id }}">Edit Produk</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form action="{{ route('kategori-byproduk-ct.update', $kategoriByprodukCt->kategori_byproduk_id) }}" method="POST">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <div class="mb-3">
+                                                            <label for="edit_nama_produk" class="form-label">Nama Produk</label>
+                                                            <input type="text" class="form-control" id="edit_nama_produk" name="nama_produk" 
+                                                                value="{{ $kategoriByprodukCt->nama_produk }}" required>
+                                                        </div>
+                                                        <div class="d-flex justify-content-end gap-2">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                                            <button type="submit" class="btn btn-warning text-white">Update</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     @endforeach
                                 </tbody>
                             </table>
@@ -87,59 +115,4 @@
             </div>
         </div>
     </div>
-
-    <!-- Modal Edit -->
-    @foreach ($kategori as $item)
-    <div class="modal fade" id="editModal{{ $item->id }}" tabindex="-1" role="dialog" 
-        aria-labelledby="editModalLabel{{ $item->id }}" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header" style="background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);">
-                    <h5 class="modal-title" id="editModalLabel{{ $item->id }}">Edit Produk</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="{{ route('kategori-byproduk-ct.update', ['kategori_byproduk_id' => $item->kategori_byproduk_id]) }}" method="POST">
-                        @csrf
-                        @method('PUT')
-                        <div class="mb-3">
-                            <label for="edit_nama_produk" class="form-label">Nama Produk</label>
-                            <input type="text" class="form-control" id="edit_nama_produk" name="nama_produk" 
-                                value="{{ $item->nama_produk }}" required>
-                        </div>
-                        <div class="d-flex justify-content-end gap-2">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                            <button type="submit" class="btn btn-warning text-white">Update</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    @endforeach
-
-    <style>
-        .card {
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            border: none;
-        }
-        .btn-warning {
-            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
-            border: none;
-        }
-        .table-hover tbody tr:hover {
-            background: linear-gradient(to right, #e6f0ff 0%, #f0f7ff 100%) !important;
-        }
-        .modal-header {
-            color: white;
-            border-radius: 10px 10px 0 0;
-        }
-    </style>
 @endsection

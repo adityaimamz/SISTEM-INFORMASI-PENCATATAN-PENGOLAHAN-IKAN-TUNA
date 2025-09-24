@@ -7,75 +7,64 @@ use App\Models\KategoriByprodukCt;
 
 class KategoriByprodukCtController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $kategori = KategoriByprodukCt::all();
-        return view('admin.data-master.kategori_byproduk_ct', compact('kategori'));
+        $kategoriByprodukCts = KategoriByprodukCt::all();
+        return view('admin.data-master.kategori_byproduk_ct', compact('kategoriByprodukCts'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        KategoriByprodukCt::create([
-            'nama_produk' => $request->nama_produk,
+        $request->validate([
+            'nama_produk' => 'required|string|max:255|unique:kategori_byproduk_cts,nama_produk',
         ]);
 
-        return redirect()->route('kategori-byproduk-ct.index')->with('success', 'Kategori By Produk Cutting berhasil ditambahkan.');
+        try {
+            KategoriByprodukCt::create([
+                'nama_produk' => $request->nama_produk,
+            ]);
+            return redirect()->route('kategori-byproduk-ct.index')->with('success', 'Kategori By Produk Cutting berhasil ditambahkan.');
+        } catch (\Exception $e) {
+            return redirect()->route('kategori-byproduk-ct.index')->with('error', 'Kategori By Produk Cutting sudah ada.');
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show($kategori_byproduk_ct)
+    public function edit($id)
     {
-        $kategori = KategoriByprodukCt::findOrFail($kategori_byproduk_ct);
-        return view('admin.data-master.kategori_byproduk_ct_show', compact('kategori'));
+        try {
+            $kategoriByprodukCts = KategoriByprodukCt::findOrFail($id);
+            return view('admin.data-master.kategori_byproduk_ct_edit', compact('kategoriByprodukCts'));
+        } catch (\Exception $e) {
+            return redirect()->route('kategori-byproduk-ct.index')->with('error', 'Kategori By Produk Cutting tidak ditemukan.');
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($kategori_byproduk_ct)
+    public function update(Request $request, $id)
     {
-        $kategori = KategoriByprodukCt::findOrFail($kategori_byproduk_ct);
-        return view('admin.data-master.kategori_byproduk_ct_edit', compact('kategori'));
+        $request->validate([
+            'nama_produk' => 'required',
+        ]);
+
+        try {
+            $kategoriByprodukCts = KategoriByprodukCt::findOrFail($kategori_byprodukid);
+            $kategoriByprodukCts->update([
+                'nama_produk' => $request->nama_produk,
+            ]);
+
+            return redirect()->route('kategori-byproduk-ct.index')->with('success', 'Kategori By Produk Cutting berhasil diperbarui.');
+        } catch (\Exception $e) {
+            return redirect()->route('kategori-byproduk-ct.index')->with('error', 'Kategori By Produk Cutting sudah ada.');
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $kategori_byproduk_ct)
+    public function destroy($id)
     {
-        $kategori = KategoriByprodukCt::findOrFail($kategori_byproduk_ct);
-        $data = [
-            'nama_produk' => $request->nama_produk,
-        ];
-
-        $kategori->update($request->all());
-
-        return redirect()->route('kategori-byproduk-ct.index')->with('success', 'Kategori By Produk Cutting berhasil diperbarui.');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($kategori_byproduk_id)
-    {
-        $kategori = KategoriByprodukCt::findOrFail($kategori_byproduk_id);
-        $kategori->delete();
-        return redirect()->route('kategori-byproduk-ct.index')->with('success', 'Kategori By Produk Cutting berhasil dihapus.');
+        try {
+            $kategoriByprodukCts = KategoriByprodukCt::findOrFail($id);
+            $kategoriByprodukCts->delete();
+            return redirect()->route('kategori-byproduk-ct.index')->with('success', 'Kategori By Produk Cutting berhasil dihapus.');
+        } catch (\Exception $e) {
+            return redirect()->route('kategori-byproduk-ct.index')->with('error', 'Kategori By Produk Cutting tidak ditemukan.');
+        }
     }
 }

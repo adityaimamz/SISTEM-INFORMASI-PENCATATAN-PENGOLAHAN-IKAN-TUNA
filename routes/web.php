@@ -44,13 +44,12 @@ Route::resource('grade', GradeController::class)
     ->parameters(['grade' => 'grade:grade_id'])
     ->middleware('auth');
 Route::resource('grade_hservice', GradeHController::class)
-    ->parameters(['grade_hservice' =>'grade_hservice_id'])
+    ->parameters(['grade_hservice' => 'grade_hservice_id'])
     ->middleware('auth');
 Route::resource('cutting', CuttingController::class)->middleware('auth');
 Route::resource('cuttingl', CuttingLController::class)->middleware('auth');
 Route::resource('kategori-byproduk-ct', KategoriByprodukCtController::class)
     ->parameters(['kategori-byproduk-ct' => 'kategori_byproduk_id'])
-    ->names('kategori-byproduk-ct')
     ->middleware('auth');
 
 //MIDDLEWARE ADMIN
@@ -69,7 +68,7 @@ Route::middleware('is_admin')->group(function () {
         ->parameters(['kategori_berat_penerimaan' => 'kategori_berat_id']);
     Route::resource('kategori_berat_cutting', KategoriBeratCuttingController::class);
     Route::resource('kategori-byproduk-ct', KategoriByprodukCtController::class)
-        ->parameters(['kategori-byproduk-ct'=> 'kategori_byproduk_ct']);
+        ->parameters(['kategori-byproduk-ct'=> 'kategori_byproduk_id']);
     Route::resource('suppliers', SupplierController::class);
     Route::resource('penerimaan_ikan', PenerimaanIkanController::class);
 });

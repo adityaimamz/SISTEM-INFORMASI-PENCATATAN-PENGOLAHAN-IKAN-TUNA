@@ -59,8 +59,12 @@ class GradeHController extends Controller
 
     public function destroy($id)
     {
-        $gradeHService = GradeHService::find($id);
-        $gradeHService->delete();
-        return redirect()->route('grade_hservice.index')->with('success', 'Grade H Service deleted successfully');
+        try {
+            $gradeHService = GradeHService::find($id);
+            $gradeHService->delete();
+            return redirect()->route('grade_hservice.index')->with('success', 'Grade H Service deleted successfully');
+        } catch (\Exception $e) {
+            return redirect()->route('grade_hservice.index')->with('error', 'Grade H Service not found');
+        }
     }
 }
