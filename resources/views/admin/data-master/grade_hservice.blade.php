@@ -67,9 +67,9 @@
                                                         @csrf
                                                         @method('PUT')
                                                         <div class="mb-3">
-                                                            <label for="grade_hservice" class="form-label">Grade Hasil Service</label>
-                                                            <input type="text" class="form-control" id="grade_hservice" 
-                                                                name="grade_hservice" value="{{ $gradeHService->grade_hservice }}" required>
+                                                            <label for="grade_servicehs" class="form-label">Grade Hasil Service</label>
+                                                            <input type="text" class="form-control" id="grade_servicehs" 
+                                                                name="grade_servicehs" value="{{ $gradeHService->grade_servicehs }}" required>
                                                         </div>
                                                         <div class="d-flex justify-content-end">
                                                             <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Batal</button>
@@ -103,9 +103,9 @@
                     <form action="{{ route('grade_hservice.store') }}" method="POST">
                         @csrf
                         <div class="mb-3">
-                            <label for="grade_hservice" class="form-label">Grade Hasil Service</label>
-                            <input type="text" class="form-control" id="grade_hservice" 
-                                   name="grade_hservice" required>
+                            <label for="grade_servicehs" class="form-label">Grade Hasil Service</label>
+                            <input type="text" class="form-control" id="grade_servicehs" 
+                                   name="grade_servicehs" required>
                         </div>
                         <div class="d-flex justify-content-end">
                             <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Batal</button>
