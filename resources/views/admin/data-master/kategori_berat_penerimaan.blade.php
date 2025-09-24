@@ -38,10 +38,10 @@
                                         <td>{{ $item->kategori_berat }}</td>
                                         <td class="text-center">
                                             <button class="btn btn-sm btn-warning" data-bs-toggle="modal" 
-                                                data-bs-target="#editKategoriBeratModal{{ $item->id }}">
+                                                data-bs-target="#editKategoriBeratModal{{ $item->kategori_berat_id }}">
                                                 <i class="bi bi-pencil"></i>
                                             </button>
-                                            <form action="{{ route('kategori_berat_penerimaan.destroy', $item->id) }}" 
+                                            <form action="{{ route('kategori_berat_penerimaan.destroy', $item->kategori_berat_id) }}" 
                                                 method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
@@ -54,16 +54,16 @@
                                     </tr>
 
                                     <!-- Edit Modal -->
-                                    <div class="modal fade" id="editKategoriBeratModal{{ $item->id }}" tabindex="-1" role="dialog" 
-                                        aria-labelledby="editKategoriBeratModalLabel{{ $item->id }}" aria-hidden="true">
+                                    <div class="modal fade" id="editKategoriBeratModal{{ $item->kategori_berat_id }}" tabindex="-1" role="dialog" 
+                                        aria-labelledby="editKategoriBeratModalLabel{{ $item->kategori_berat_id }}" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered">
                                             <div class="modal-content">
                                                 <div class="modal-header" style="background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);">
-                                                    <h5 class="modal-title text-white" id="editKategoriBeratModalLabel{{ $item->id }}">Edit</h5>
+                                                    <h5 class="modal-title text-white" id="editKategoriBeratModalLabel{{ $item->kategori_berat_id }}">Edit</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <form action="{{ route('kategori_berat_penerimaan.update', $item->id) }}" method="POST">
+                                                    <form action="{{ route('kategori_berat_penerimaan.update', $item->kategori_berat_id) }}" method="POST">
                                                         @csrf
                                                         @method('PUT')
                                                         <div class="mb-3">

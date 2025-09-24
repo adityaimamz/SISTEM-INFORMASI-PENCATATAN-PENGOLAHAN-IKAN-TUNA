@@ -9,7 +9,9 @@ class KategoriBeratPenerimaan extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id'];
+    protected $table = 'kategori_berat_penerimaans';
+    protected $primaryKey = 'kategori_berat_id';
+    protected $fillable = ['kategori_berat'];
 
     public function penerimaan_ikans()
     {

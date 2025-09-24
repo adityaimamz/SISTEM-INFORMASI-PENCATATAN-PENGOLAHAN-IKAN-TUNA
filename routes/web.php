@@ -65,7 +65,8 @@ Route::middleware('is_admin')->group(function () {
     Route::resource('gradel', GradeLController::class);
     Route::resource('grade_service', GradeSController::class);
     Route::resource('grade_hservice', GradeHController::class);
-    Route::resource('kategori_berat_penerimaan', KategoriBeratPenerimaanController::class);
+    Route::resource('kategori_berat_penerimaan', KategoriBeratPenerimaanController::class)
+        ->parameters(['kategori_berat_penerimaan' => 'kategori_berat_id']);
     Route::resource('kategori_berat_cutting', KategoriBeratCuttingController::class);
     Route::resource('kategori-byproduk-ct', KategoriByprodukCtController::class)
         ->parameters(['kategori-byproduk-ct'=> 'kategori_byproduk_ct']);
