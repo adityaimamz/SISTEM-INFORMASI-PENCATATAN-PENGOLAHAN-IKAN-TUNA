@@ -15,8 +15,9 @@
             <section class="section">
                 <div class="card" style="border-radius: 10px; overflow: hidden;">
                     <div class="card-header" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);">
-                        <h4 class="card-title text-white">Grading Hasil Service</h4>
-                        <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#tambahGradeHServiceModal">
+                        <h4 class="card-title text-white mb-0">Grading Hasil Service</h4>
+                        <button type="button" class="btn btn-light btn-sm" data-bs-toggle="modal" 
+                                data-bs-target="#tambahGradeHServiceModal">
                             <i class="bi bi-plus-circle"></i> Tambah
                         </button>
                     </div>
@@ -34,9 +35,9 @@
                                     @foreach($gradeHServices as $gradeHService)
                                     <tr style="background: linear-gradient(to right, #f9f9f9 0%, #f0f7ff 100%);">
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $gradeHService->grade_hservice }}</td>
+                                        <td>{{ $gradeHService->grade_servicehs }}</td>
                                         <td class="text-center" style="width: 100px;">
-                                            <button class="btn btn-sm bt-warning" data-bs-toggle="modal" 
+                                            <button class="btn btn-sm btn-warning" data-bs-toggle="modal" 
                                                 data-bs-target="#editGradeHServiceModal{{ $gradeHService->grade_servicehs_id }}">
                                                 <i class="bi bi-pencil"></i>
                                             </button>
@@ -45,7 +46,7 @@
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-sm btn-danger" 
-                                                    onclick="return confirm('Yakin ingin menghapus?')">
+                                                        onclick="return confirm('Yakin ingin menghapus?')">
                                                     <i class="bi bi-trash"></i>
                                                 </button>
                                             </form>
@@ -54,11 +55,11 @@
 
                                     <!-- Modal Edit -->
                                     <div class="modal fade" id="editGradeHServiceModal{{ $gradeHService->grade_servicehs_id }}" tabindex="-1" role="dialog"
-                                        aria-labelledby="editGradeHServiceModalLabel{{ $gradeHService->grade_servicehs_id }}" aria-hidden="true">
+                                         aria-labelledby="editGradeHServiceModalLabel{{ $gradeHService->grade_servicehs_id }}" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered">
                                             <div class="modal-content">
                                                 <div class="modal-header" style="background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);">
-                                                    <h5 class="modal-title text-white" id="editGradeHServiceModalLabel{{ $gradeHService->grade_hservice_id }}"> Edit Grade Hasil Service</h5>
+                                                    <h5 class="modal-title text-white" id="editGradeHServiceModalLabel{{ $gradeHService->grade_servicehs_id }}">Edit Grade Hasil Service</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
@@ -66,8 +67,8 @@
                                                         @csrf
                                                         @method('PUT')
                                                         <div class="mb-3">
-                                                            <label for="grade_hservice_edit{{ $gradeHService->grade_servicehs_id }}" class="form-label" >Grade Hasil Service</label>
-                                                            <input type="text" class="form-control" id="grade_hservice_edit{{ $gradeHService->grade_servicehs_id }}"
+                                                            <label for="grade_hservice" class="form-label">Grade Hasil Service</label>
+                                                            <input type="text" class="form-control" id="grade_hservice" 
                                                                 name="grade_hservice" value="{{ $gradeHService->grade_hservice }}" required>
                                                         </div>
                                                         <div class="d-flex justify-content-end">
@@ -85,26 +86,26 @@
                         </div>
                     </div>
                 </div>
-            </section> 
-        </div>       
+            </section>
+        </div>
     </div>
 
     <!-- Modal Tambah -->
-    <div class="modal fade" id="tambahGradeHServiceModal" tabindex="-1" role="dialog"
-        aria-labelledby="tambahGradeHServiceModalLabel" aria-hidden="true">
+    <div class="modal fade" id="tambahGradeHServiceModal" tabindex="-1" role="dialog" 
+         aria-labelledby="tambahGradeHServiceModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);">
-                    <h5 class="modal-title text-white" id="tambahGradeHServiceModalLabel">Tambah Grade/Sizing </h5>
+                    <h5 class="modal-title text-white" id="tambahGradeHServiceModalLabel">Tambah Grade Hasil Service</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" action="{{ route('grade_hservice.store') }}">
+                    <form action="{{ route('grade_hservice.store') }}" method="POST">
                         @csrf
                         <div class="mb-3">
-                            <label for="grade_servicehs" class="form-label">Grade Hasil Service</label>
-                            <input type="text" class="form-control" id="grade_servicehs" 
-                                name="grade_servicehs" required>
+                            <label for="grade_hservice" class="form-label">Grade Hasil Service</label>
+                            <input type="text" class="form-control" id="grade_hservice" 
+                                   name="grade_hservice" required>
                         </div>
                         <div class="d-flex justify-content-end">
                             <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Batal</button>

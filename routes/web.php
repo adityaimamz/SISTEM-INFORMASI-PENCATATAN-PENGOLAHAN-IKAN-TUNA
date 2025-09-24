@@ -43,6 +43,9 @@ Route::resource('penerimaan_ikan', PenerimaanIkanController::class)->middleware(
 Route::resource('grade', GradeController::class)
     ->parameters(['grade' => 'grade:grade_id'])
     ->middleware('auth');
+Route::resource('grade_hservice', GradeHController::class)
+    ->parameters(['grade_hservice' =>'grade_hservice_id'])
+    ->middleware('auth');
 Route::resource('cutting', CuttingController::class)->middleware('auth');
 Route::resource('cuttingl', CuttingLController::class)->middleware('auth');
 Route::resource('kategori-byproduk-ct', KategoriByprodukCtController::class)

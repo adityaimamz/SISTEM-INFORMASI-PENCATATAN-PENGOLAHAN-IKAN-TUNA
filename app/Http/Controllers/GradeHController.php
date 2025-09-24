@@ -16,32 +16,51 @@ class GradeHController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'grade_servicehs' => 'required|string|max:255',
+            'grade_servicehs' => 'required|string|max:255|unique:grade_servicehs, grade_servicehs',
         ]);
         
-        GradeHService::create([
-            'grade_servicehs' => $request->grade_servicehs,
-        ]);
-        
-        return redirect()->route('grade_hservice.index')->with('success', 'Grade H Service created successfully');
+        try {
+            GradeHService::create([
+                'grade_servicehs' => $request->grade_servicehs,
+            ]);
+            return redirect()->route('grade_hservice.index')->with('success', 'Grade H Service created successfully');
+        } catch (\Exception $e) {
+            return redirect()->route('grade_hservice.index')->with('error', 'Grade H Service already exists');
+        }
     }
 
-    public function update(Request $request, string $id)
+    public function edit($id)
+    {
+        try {
+            $gradeHService = GradeHService::find($id);
+            return view('admin.data-master.grade_hservice_edit', compact('gradeHService'));
+        } catch (\Exception $e) {
+            return redirect()->route('grade_hservice.index')->with('error', 'Grade H Service not found');
+        }
+    }
+
+    public function update(Request $request, $id)
     {
         $request->validate([
             'grade_servicehs' => 'required',
         ]);
         
-            GradeHService::find($id)->update([
-            'grade_servicehs' => $request->grade_servicehs,
-        ]);
-        
-        return redirect()->route('grade_hservice.index')->with('success', 'Grade H Service updated successfully');
+        try {
+
+            $gradeHService = GradeHService::find($id);
+            $gradeHService->update ([
+                'grade_servicehs' => $request->grade_servicehs,
+            ]);
+            return redirect()->route('grade_hservice.index')->with('success', 'Grade H Service updated successfully');
+        } catch (\Exception $e) {
+            return redirect()->route('grade_hservice.index')->with('error', 'Grade H Service already exists');
+        }
     }
 
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        GradeHService::find($id)->delete();
+        $gradeHService = GradeHService::find($id);
+        $gradeHService->delete();
         return redirect()->route('grade_hservice.index')->with('success', 'Grade H Service deleted successfully');
     }
 }
