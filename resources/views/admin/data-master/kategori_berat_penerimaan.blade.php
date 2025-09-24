@@ -42,11 +42,10 @@
                                                 <i class="bi bi-pencil"></i>
                                             </button>
                                             <form action="{{ route('kategori_berat_penerimaan.destroy', $item->kategori_berat_id) }}" 
-                                                method="POST" class="d-inline">
+                                                method="POST" class="d-inline delete-form">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger" 
-                                                    onclick="return confirm('Yakin ingin menghapus?')">
+                                                <button type="submit" class="btn btn-sm btn-danger delete-btn" >
                                                     <i class="bi bi-trash"></i>
                                                 </button>
                                             </form>

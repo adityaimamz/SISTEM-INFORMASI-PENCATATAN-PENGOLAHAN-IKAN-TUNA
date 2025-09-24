@@ -53,26 +53,18 @@ class KategoriBeratPenerimaanController extends Controller
         \DB::beginTransaction();
         try {
             $kategori = KategoriBeratPenerimaan::find($kategori_berat_id);
-            
-            if (!$kategori) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Data tidak ditemukan'
-                ], 404);
-            }
 
             $kategori->delete();
             \DB::commit();
             
-            return response()->json(['success' => true]);
+            return redirect()->route('kategori_berat_penerimaan.index')
+            ->with('success', 'Kategori Berat Penerimaan deleted successfully');
             
         } catch (\Exception $e) {
             \DB::rollBack();
             \Log::error('Error deleting kategori: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Gagal menghapus data: ' . $e->getMessage()
-            ], 500);
+            return redirect()->back()
+            ->with('error', 'Gagal menghapus data: ' . $e->getMessage());
         }
     
     }
