@@ -16,18 +16,29 @@ class KategoriBeratPenerimaanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'kategori_berat' => 'required|string|max:255|unique:kategori_berat_penerimaan'
+            'kategori_berat' => 'required|string|max:255|unique:kategori_berat_penerimaans,kategori_berat'
         ]);
-
-        KategoriBeratPenerimaan::create($request->all());
-        return redirect()->route('kategori_berat_penerimaan.index')
-            ->with('success', 'Kategori Berat Penerimaan created successfully.');
+    
+        try {
+            KategoriBeratPenerimaan::create([
+                'kategori_berat' => $request->kategori_berat
+            ]);
+    
+            return redirect()->route('kategori_berat_penerimaan.index')
+                ->with('success', 'Data berhasil disimpan');
+                
+        } catch (\Exception $e) {
+            \Log::error('Error storing kategori berat: ' . $e->getMessage());
+            return redirect()->back()
+                ->with('error', 'Gagal menyimpan data: ' . $e->getMessage())
+                ->withInput();
+        }
     }
 
     public function update(Request $request, $kategori_berat_id)
     {
         $request->validate([
-            'kategori_berat' => 'required|string|max:255|unique:kategori_berat_penerimaan,kategori_berat,'.$kategori_berat_id
+            'kategori_berat' => 'required|string|max:255|unique:kategori_berat_penerimaans,kategori_berat,'.$kategori_berat_id.',kategori_berat_id'
         ]);
 
         $kategori = KategoriBeratPenerimaan::findOrFail($kategori_berat_id);
@@ -37,14 +48,33 @@ class KategoriBeratPenerimaanController extends Controller
             ->with('success', 'Kategori Berat Penerimaan updated successfully');
     }
 
-    public function destroy($id)
+    public function destroy($kategori_berat_id)
     {
+        \DB::beginTransaction();
         try {
-            $kategori = KategoriBeratPenerimaan::findOrFail($kategori_berat_id);
+            $kategori = KategoriBeratPenerimaan::find($kategori_berat_id);
+            
+            if (!$kategori) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Data tidak ditemukan'
+                ], 404);
+            }
+
             $kategori->delete();
+            \DB::commit();
+            
             return response()->json(['success' => true]);
+            
         } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+            \DB::rollBack();
+            \Log::error('Error deleting kategori: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus data: ' . $e->getMessage()
+            ], 500);
         }
+    
     }
+    
 }
