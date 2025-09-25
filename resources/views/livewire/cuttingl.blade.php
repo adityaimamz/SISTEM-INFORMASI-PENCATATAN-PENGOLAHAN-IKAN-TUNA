@@ -296,7 +296,59 @@
                     </thead>
 
                     <tbody>
-                            
+                        @foreach($rows as $index => $row)
+                            <tr>
+                            {{-- berat --}}
+                                @for ($i = 0; $i <= count(); $i++)
+                                    <td>
+                                        <input type="number" step="0.01" 
+                                            wire:model.live="rows.{{ $index }}.berat_produk{{ $i }}"
+                                            wire:model.defer="rows.{{ $index }}.berat_produk{{ $i }}"
+                                            wire:change="calculateTotals"
+                                            class="excel-input text-center"
+                                            placeholder="Kg">
+                                    </td>
+                                @endfor
+                            </tr>
+                           
+                            <tr>
+                            {{-- suhu --}}
+                                <td colspan="1" style="width: 30px;">
+                                    <input type="number" step="0.1" 
+                                            wire:model.live="rows.{{ $index }}.suhu_loin"
+                                            wire:change="calculateTotals"
+                                            class="excel-input text-center"
+                                            placeholder="°C">
+                                </td>
+
+                            </tr>
+                            <tr>
+                                @for ($i = 0; $i <= count(); $i++)
+                                    <td>
+                                        <input type="number" step="0.01" 
+                                            wire:model.live="rows.{{ $index }}.suhu_produk{{ $i }}"
+                                            wire:model.defer="rows.{{ $index }}.suhu_produk{{ $i }}"
+                                            wire:change="calculateTotals"
+                                            class="excel-input text-center"
+                                            placeholder="Kg">
+                                    </td>
+                                @endfor
+                            </tr>
+
+                            <tr>
+                            {{-- Berat --}}
+                                @for ($i = 1; $i <= 6; $i++)
+                                    <td>
+                                        <input type="number" step="0.01" 
+                                            wire:model.live="rows.{{ $index }}.berat_produk{{ $i }}"
+                                            wire:model.defer="rows.{{ $index }}.berat_produk{{ $i }}"
+                                            wire:change="calculateTotals"
+                                            class="excel-input text-center"
+                                            placeholder="Kg">
+                                    </td>
+                                @endfor
+                            </tr>
+                        @endforeach
 
 
 

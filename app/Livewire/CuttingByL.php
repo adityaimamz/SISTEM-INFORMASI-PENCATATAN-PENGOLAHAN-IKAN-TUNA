@@ -27,6 +27,7 @@ class CuttingByL extends Component
     public $gradingService = [];
     public $selectedGradingHservice = [];
     public $gradingHservice = [];
+    public $rows = [];
 
     public function mount()
     {
@@ -42,6 +43,8 @@ class CuttingByL extends Component
 
         $this->gradingHservice = GradeHservice::all();
         $this->selectedGradingHservice = [''];
+
+        $this->rows = [];
     }
     
 
