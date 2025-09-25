@@ -9,6 +9,7 @@ use App\Models\KategoriBeratPenerimaan;
 use App\Models\KategoriByprodukCt;
 use App\Models\GradeL;
 use App\Models\GradeService;
+use App\Models\GradeHservice;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -90,6 +91,30 @@ class DatabaseSeeder extends Seeder
             ['grade_sizing' => 'Loin Parasit'],
         ];
         GradeL::insert($gradel);
+
+        //Buat data grade hasil service loin
+        $gradehs = [
+            ['grade_servicehs' => 'Saku AA'],
+            ['grade_servicehs' => 'Saku AAA'],
+            ['grade_servicehs' => 'AAA 4 Kg Up'],
+            ['grade_servicehs' => 'AAA 2,5 - 4 Kg'],
+            ['grade_servicehs' => 'AAA 2,5 Kg Down'],
+            ['grade_servicehs' => 'AA+ 4 Kg Up'],
+            ['grade_servicehs' => 'AA+ 2,5 - 4 Kg'],
+            ['grade_servicehs' => 'AA+ 2,5 Kg Down'],
+            ['grade_servicehs' => 'AA 4 Kg Up'],
+            ['grade_servicehs' => 'AA 2,5 - 4 Kg'],
+            ['grade_servicehs' => 'AA 2,5 Kg Down'],
+            ['grade_servicehs' => 'AA- 4 Kg Up'],
+            ['grade_servicehs' => 'AA- 2,5 - 4 Kg'],
+            ['grade_servicehs' => 'AA- 2,5 Kg Down'],
+            ['grade_servicehs' => 'Loin Co QD'],
+            ['grade_servicehs' => 'Loin LS'],
+            ['grade_servicehs' => 'Loin LP'],
+            ['grade_servicehs' => 'Loin LB'],
+            ['grade_servicehs' => 'Loin LH'],
+        ];
+        GradeHservice::insert($gradehs);
 
         //Buat data grade service
         $gradeservice = [
