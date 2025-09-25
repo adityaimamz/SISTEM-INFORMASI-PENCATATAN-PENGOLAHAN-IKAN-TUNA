@@ -235,68 +235,90 @@ class PenerimaanIkan extends Component
     public function filterData()
     {
         try {
-            $validated = $this->validate([
-                'session_date' => 'nullable|date',
-                'session_tgl_bongkar' => 'nullable|date',
-                'session_supplier' => 'nullable|exists:suppliers,supplier_id',
-                'session_jenis_penerimaan' => 'nullable|string|in:Fresh GG,Frozen WR YF,Frozen WR BF,Frozen WR BE,Frozen GG YF,Frozen GG BF,Frozen GG BE',
-                'session_no_bak' => 'nullable|string|max:50',
-                'selected_grade_id' => 'nullable|string',
-            ]);
-            $query = Penerimaan_Ikan::query();
-            $query = Penerimaan_Ikan::with('supplier', 'grade', 'kategoriBeratPenerimaan');
-            $query = $query->with(['supplier', 'grade', 'kategoriBeratPenerimaan']);
-            $query = \App\Models\Penerimaan_Ikan::with(['supplier', 'grade', 'kategoriBeratPenerimaan']);
-            
-            // Filter berdasarkan form input
-            if ($this->session_date) {
-                $query->whereDate('tgl_penerimaan', $this->session_date);  
-            }
-            
-            if ($this->session_tgl_bongkar) {
-                $query->whereDate('tgl_bongkar', $this->session_tgl_bongkar);
-            }
-            
-            if ($this->session_supplier) {
-                $query->where('supplier_id', $this->session_supplier);
-            }
-            
-            if ($this->session_jenis_penerimaan) {
-                $query->where('jenis_penerimaan', $this->session_jenis_penerimaan);
-            }
-            
-            if ($this->session_no_bak) {
-                $query->where('no_bak', 'like', '%' . $this->session_no_bak . '%');
-            }
-            
-            if ($this->selected_grade_id && strpos($this->selected_grade_id, '_') !== false) {
-                list($grade_id, $kategori_berat_id) = explode('_', $this->selected_grade_id);
-                $query->where('grade_id', $grade_id)
-                      ->where('kategori_berat_id', $kategori_berat_id);
-            } else {
-                $query->where('grade_id', $this->selected_grade_id);
-            }
-            $result = $query->orderBy('no_ikan', 'asc')->get();
-            $this->penerimaanIkans = $result;
-            $this->data = $this->penerimaanIkans;
-            
+            // Reset data terlebih dahulu
+            $this->penerimaanIkans = collect();
+            $this->data = collect();
             $this->rows = [];
-            foreach ($result as $data) {
-                $this->rows[] = [
-                    'penerimaan_id' => $data->penerimaan_id,
-                    'grade_id' => $data->grade_id,
-                    'kategori_berat_id' => $data->kategori_berat_id,
-                    'berat_ikan' => $data->berat_ikan,
-                    'suhu_ikan' => $data->suhu_ikan,
-                    'no_ikan' => $data->no_ikan,
-                ];
+    
+            // Hanya proses jika semua field filter terisi
+            if ($this->session_date && $this->session_tgl_bongkar && 
+                $this->session_supplier && $this->session_jenis_penerimaan && 
+                $this->session_no_bak && $this->selected_grade_id) {
+                
+                // Validasi input
+                $validated = $this->validate([
+                    'session_date' => 'required|date',
+                    'session_tgl_bongkar' => 'required|date|after_or_equal:session_date',
+                    'session_supplier' => 'required|exists:suppliers,supplier_id',
+                    'session_jenis_penerimaan' => 'required|in:Fresh GG,Frozen WR YF,Frozen WR BF,Frozen WR BE,Frozen GG YF,Frozen GG BF,Frozen GG BE',
+                    'session_no_bak' => 'required|string|max:50',
+                    'selected_grade_id' => 'required|string',
+                ]);
+    
+                // Inisialisasi query dengan eager loading
+                $query = Penerimaan_Ikan::query()
+                    ->with(['supplier', 'grade', 'kategoriBeratPenerimaan']);
+                
+                // Filter berdasarkan form input
+                $query->whereDate('tgl_penerimaan', $this->session_date)
+                    ->whereDate('tgl_bongkar', $this->session_tgl_bongkar)
+                    ->where('supplier_id', $this->session_supplier)
+                    ->where('jenis_penerimaan', $this->session_jenis_penerimaan)
+                    ->where('no_bak', $this->session_no_bak);
+    
+                // Handle selected_grade_id
+                if (strpos($this->selected_grade_id, '_') !== false) {
+                    list($grade_id, $kategori_berat_id) = explode('_', $this->selected_grade_id);
+                    $query->where('grade_id', $grade_id)
+                          ->where('kategori_berat_id', $kategori_berat_id);
+                } else {
+                    $query->where('grade_id', $this->selected_grade_id);
+                }
+    
+                // Eksekusi query
+                $result = $query->orderBy('no_ikan', 'asc')->get();
+    
+                // Update data
+                $this->penerimaanIkans = $result;
+                $this->data = $result;
+    
+                // Update rows
+                $mappedRows = $result->map(function($item) {
+                    return [
+                        'penerimaan_id' => $item->penerimaan_id,
+                        'grade_id' => $item->grade_id,
+                        'kategori_berat_id' => $item->kategori_berat_id,
+                        'berat_ikan' => $item->berat_ikan,
+                        'suhu_ikan' => $item->suhu_ikan,
+                        'no_ikan' => $item->no_ikan,
+                    ];
+                })->toArray();
+
+                $this->rows = $mappedRows;
+    
+                // Jika tidak ada data, tambahkan baris kosong
+                if (empty($mappedRows)) {
+                    $this->addRow();
+                }
+            } else {
+                $this->penerimaanIkans = collect();
+                $this->data = collect();
+                $this->rows = [];
+                $this->addRow ();
             }
+    
         } catch (\Exception $e) {
             \Log::error('Error filtering data: ' . $e->getMessage());
-            $this->data = [];
-            $this->penerimaanIkans = [];
+            $this->data = collect();
+            $this->penerimaanIkans = collect();
             $this->rows = [];
-            session()->flash('error', 'Gagal filter data: ' . $e->getMessage()); 
+            $this->addRow(); // Tetap tambahkan baris kosong meskipun error
+            
+            if (!app()->environment('production')) {
+                session()->flash('error', 'Gagal memfilter data: ' . $e->getMessage());
+            } else {
+                session()->flash('error', 'Terjadi kesalahan saat memfilter data');
+            }
         }
     }
 
