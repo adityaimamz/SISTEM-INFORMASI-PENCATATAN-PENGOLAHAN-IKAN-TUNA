@@ -86,7 +86,7 @@ class PenerimaanIkanController extends Controller
                 'tgl_penerimaan' => 'required|date',                                        // Tabel Penerimaan Ikan
                 'berat_ikan' => 'required|numeric|min:10',
                 'supplier_id' => 'required|exists:suppliers,supplier_id',                   // Tabel supplier
-                'grade_id' => 'required|exists:grades,id',                                  // Tabel grade
+                'grade_id' => 'required|integer|exists:grades,id',                                  // Tabel grade
                 'kategori_berat_id' => 'required|exists:kategori_berat_penerimaans,id',     // Tabel Kategori Berat Penerimaan
             ]);
 

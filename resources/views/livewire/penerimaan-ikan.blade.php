@@ -72,14 +72,14 @@
                             class="form-select form-select-sm @error('session_jenis_penerimaan') is-invalid @enderror"
                             @if(!$session_date || !$session_tgl_bongkar || !$session_supplier) disabled @endif 
                             required>
-                        <option value="" selected disabled>Pilih Jenis Penerimaan</option>
-                        <option value="Fresh GG">Fresh GG</option>
-                        <option value="Frozen GG YF">Frozen GG BE</option>
-                        <option value="Frozen GG BF">Frozen GG BF</option>
-                        <option value="Frozen GG BE">Frozen GG YF</option>
-                        <option value="Frozen WR YF">Frozen WR BE</option>
-                        <option value="Frozen WR BF">Frozen WR BF</option>
-                        <option value="Frozen WR BE">Frozen WR YF</option>
+                            <option value="" selected disabled>Pilih Jenis Penerimaan</option>
+                            <option value="Fresh GG">Fresh GG</option>
+                            <option value="Frozen GG BE">Frozen GG BE</option>
+                            <option value="Frozen GG BF">Frozen GG BF</option>
+                            <option value="Frozen GG YF">Frozen GG YF</option>
+                            <option value="Frozen WR BE">Frozen WR BE</option>
+                            <option value="Frozen WR BF">Frozen WR BF</option>
+                            <option value="Frozen WR YF">Frozen WR YF</option>
                     </select>
                     @error('session_jenis_penerimaan')
                         <div class="invalid-feedback small d-block">
@@ -206,13 +206,13 @@
                         {{-- Grade di atas --}}
                             <th colspan="3">
                                 <select wire:model.live="selected_grade_id" 
-                                        class="excel-input @error('selected_grade_id') is-invalid @enderror" 
+                                        class="form-select @error('selected_grade_id') is-invalid @enderror" 
                                         @if(!$session_date || !$session_tgl_bongkar || !$session_supplier || !$session_jenis_penerimaan || !$session_no_bak) disabled @endif 
                                         required style="font-size:.8rem; height:30px; background-color:rgb(121, 173, 246);">
                                     <option value="" class="text-center" style="font-weight: bold;">-- Grade/Size --</option>
                                     @foreach($grades as $grade)
                                         @foreach($kategori_berat as $kategori)
-                                            <option value="{{ $grade->id }}_{{ $kategori->id }}" class="text-center" style="font-weight: bold;">
+                                            <option value="{{ $grade->grade_id }}_{{ $kategori->kategori_berat_id }}" class="text-center" style="font-weight: bold;">
                                                 {{ $grade->grade }} - {{ $kategori->kategori_berat }}
                                             </option>
                                         @endforeach

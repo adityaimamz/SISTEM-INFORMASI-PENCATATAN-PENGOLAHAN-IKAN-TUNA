@@ -28,11 +28,12 @@ return new class extends Migration
                     ->references('kategori_berat_id')
                     ->on('kategori_berat_penerimaans')
                     ->onDelete('cascade');
-            $table->float('berat_ikan');
             $table->date('tgl_penerimaan');
             $table->date('tgl_bongkar');
-            $table->float('suhu_ikan');
+            $table->string('jenis_penerimaan');
             $table->string('no_bak')->nullable();
+            $table->float('berat_ikan');
+            $table->float('suhu_ikan');
             $table->string('no_ikan');
             $table->timestamps();
         });
