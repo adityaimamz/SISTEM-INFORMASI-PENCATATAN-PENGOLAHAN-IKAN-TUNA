@@ -4,6 +4,7 @@
     <title>Dashboard</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="shortcut icon" href="{{ asset('img/logo-removebg.png') }}" type="image/x-icon">
 
     <!-- CSS -->
@@ -25,11 +26,12 @@
     @include('layouts.additional.script')
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
-
-    <script src="{{ asset('assets/static/js/initTheme.js') }}"></script>
-
     
-    @stack('js')
+    
+    
+    
     @livewireScripts
+    <script src="{{ asset('assets/static/js/initTheme.js') }}"></script>
+    @stack('js')
 </body>
 </html>
