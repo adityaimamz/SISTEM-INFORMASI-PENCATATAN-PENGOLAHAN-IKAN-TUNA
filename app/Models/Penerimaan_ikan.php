@@ -14,6 +14,7 @@ class Penerimaan_Ikan extends Model
     protected $primaryKey = 'penerimaan_id';
 
     protected $fillable = [
+        'penerimaan_id',
         'tgl_penerimaan',
         'tgl_bongkar',
         'supplier_id',

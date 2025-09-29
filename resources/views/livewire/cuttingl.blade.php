@@ -66,19 +66,20 @@
                             class="form-select form-select-sm @error('penerimaan_id') is-invalid @enderror"
                             @if(!$session_tggl_service) disabled @endif
                             required>
-                        <option value="">Supplier</option>
+                        <option value="" style="text-align: center;">Supplier</option>
                         @forelse ($penerimaan_ikan as $penerimaan)
                             @php
                                 $jenis = $penerimaan->jenis_penerimaan;
+                                $no_ikan = $penerimaan->no_ikan;
                                 $supplier = $penerimaan->supplier->nama_supplier ?? 'Tidak ada supplier';
                                 $alamat = $penerimaan->supplier->alamat ?? 'Tidak ada alamat';
                                 $displayText = $jenis . '  ' . $alamat . '  ' . $supplier;
                             @endphp
-                            <option value="{{ $penerimaan->penerimaan_id }}">
+                            <option value="{{ $penerimaan->penerimaan_id }}" style="text-align: center;">
                                 {{ $displayText }}
                             </option>
                         @empty
-                            <option value="">Tidak ada data penerimaan ikan</option>
+                            <option value="" style="text-align: center;">Tidak ada data penerimaan ikan</option>
                         @endforelse
                     </select>
                     @error('penerimaan_id')
@@ -103,8 +104,8 @@
                     <div class="mt-1">
                         <span><strong>Tanggal Cutting:</strong> {{ \Carbon\Carbon::parse($session_tggl_cutting)->format('d F Y') }}</span><br>
                         <span><strong>Tanggal Injek CO:</strong> {{ \Carbon\Carbon::parse($session_tggl_injek_co)->format('d F Y') }}</span><br>
+                        <span><strong>Tanggal Service:</strong> {{ \Carbon\Carbon::parse($session_tggl_service)->format('d F Y') }}</span><br>
                         @if($selectedPenerimaan)
-                            <span><strong>Tanggal Penerimaan:</strong> {{ \Carbon\Carbon::parse($selectedPenerimaan->tgl_penerimaan)->format('d F Y') }}</span><br>
                             <span><strong>Jenis Penerimaan:</strong> {{ $selectedPenerimaan->jenis_penerimaan }}</span><br>
                             <span><strong>Supplier:</strong> {{ $selectedPenerimaan->supplier->nama_supplier ?? 'Tidak ada supplier' }}</span>
                         @endif
@@ -118,10 +119,10 @@
                         Pilih tanggal cutting terlebih dahulu.
                     @elseif(!$session_tggl_injek_co)
                         Pilih tanggal injek CO terlebih dahulu.
-                    @elseif(!$selectedTanggalPenerimaan)
-                        Pilih tanggal penerimaan untuk melanjutkan input data.
+                    @elseif(!$session_tggl_service)
+                        Pilih tanggal service terlebih dahulu.
                     @elseif(!$penerimaan_id)
-                        Pilih jenis penerimaan untuk melanjutkan input data.
+                        Pilih penerimaan untuk melanjutkan input data.
                     @else
                         Lengkapi semua data sesi terlebih dahulu.
                     @endif
@@ -188,6 +189,8 @@
             <div class="table-responsive">
                 <table class="excel-table">
                     <thead class="table-light text-center align-middle" style="background-color:rgb(121, 173, 246);">
+
+                        {{-- Nomor Batch --}}
                         <tr>
                             <th rowspan="4" style="width: 5px;">No</th>
                             <th colspan="9" style="width: 200px;">
@@ -286,76 +289,90 @@
                             <th colspan="1" style="width: 30px;">Berat</th>
                             <th colspan="1" style="width: 30px;">Suhu Loin</th>
                             <th colspan="1" style="width: 30px;">No. Loin</th>
-                            <th colspan="1" style="width: 30px;">Berat</th>
-                            <th colspan="1" style="width: 30px;">Berat</th>
-                            <th colspan="1" style="width: 30px;">Berat</th>
-                            <th colspan="1" style="width: 30px;">Berat</th>
-                            <th colspan="1" style="width: 30px;">Berat</th>
-                            <th colspan="1" style="width: 30px;">Berat</th>
+                            @for($i = 1; $i <= 6; $i++)
+                                <th colspan="1" style="width: 30px;">Berat</th>
+                            @endfor
                         </tr>
                     </thead>
 
                     <tbody>
                         @foreach($rows as $index => $row)
                             <tr>
-                            {{-- berat --}}
-                                @for ($i = 0; $i <= count(); $i++)
-                                    <td>
-                                        <input type="number" step="0.01" 
-                                            wire:model.live="rows.{{ $index }}.berat_produk{{ $i }}"
-                                            wire:model.defer="rows.{{ $index }}.berat_produk{{ $i }}"
-                                            wire:change="calculateTotals"
-                                            class="excel-input text-center"
-                                            placeholder="Kg">
-                                    </td>
-                                @endfor
-                            </tr>
-                           
-                            <tr>
-                            {{-- suhu --}}
-                                <td colspan="1" style="width: 30px;">
+                                <td class="text-center">{{ $index + 1 }}</td>
+                                {{-- berat --}}
+                                <td>
+                                    <input type="number" step="0.01" 
+                                        wire:model.live="rows.{{ $index }}.berat_produk"
+                                        class="excel-input text-center"
+                                        placeholder="Kg">
+                                </td>
+                    
+                                {{-- suhu loin --}}
+                                <td>
                                     <input type="number" step="0.1" 
                                             wire:model.live="rows.{{ $index }}.suhu_loin"
-                                            wire:change="calculateTotals"
                                             class="excel-input text-center"
                                             placeholder="°C">
                                 </td>
+                           
+                                {{-- No. Loin --}}
+                                <td>
+                                    <input type="text" 
+                                        value="{{ $row['no_loin'] ?? '' }}"
+                                        class="excel-input text-center"
+                                        placeholder="No. Loin"
+                                        readonly>
+                                    <input type="hidden" 
+                                        wire:model.live="rows.{{ $index }}.no_loin">
+                                </td>
+                            
 
-                            </tr>
-                            <tr>
-                                @for ($i = 0; $i <= count(); $i++)
-                                    <td>
-                                        <input type="number" step="0.01" 
-                                            wire:model.live="rows.{{ $index }}.suhu_produk{{ $i }}"
-                                            wire:model.defer="rows.{{ $index }}.suhu_produk{{ $i }}"
-                                            wire:change="calculateTotals"
-                                            class="excel-input text-center"
-                                            placeholder="Kg">
-                                    </td>
-                                @endfor
-                            </tr>
+                                {{-- input berat --}}
 
-                            <tr>
-                            {{-- Berat --}}
-                                @for ($i = 1; $i <= 6; $i++)
-                                    <td>
-                                        <input type="number" step="0.01" 
-                                            wire:model.live="rows.{{ $index }}.berat_produk{{ $i }}"
-                                            wire:model.defer="rows.{{ $index }}.berat_produk{{ $i }}"
-                                            wire:change="calculateTotals"
-                                            class="excel-input text-center"
-                                            placeholder="Kg">
-                                    </td>
+                                @for($i = 1; $i <= 6; $i++)
+                                <td>
+                                    <input type="number" step="0.01" 
+                                        wire:model.live="rows.{{ $index }}.berat {{ $i }}"
+                                        class="excel-input text-center"
+                                        placeholder="Kg">
+                                </td>
                                 @endfor
+
+                                <td>
+                                    <button class="btn btn-danger btn-sm py-0"
+                                        wire:click="removeRow({{ $index }})"
+                                        style="font-size:.7rem; height:30px; width:30px;">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </td>
                             </tr>
                         @endforeach
-
-
-
                     </tbody>
                 </table>
             </div>
         </div>
+    </div>
+
+    {{-- Button Simpan --}}
+    <div class="card-footer text-end py-1 px-2">
+        <button type="button" 
+                class="btn btn-primary btn-sm py-0 px-2" 
+                    wire:click.prevent="saveAll" 
+                    wire:loading.attr="disabled"
+                    style="font-size: 0.7rem; height: 30px;">
+                <span wire:loading.remove wire:target="saveAll">
+                    <i class="bi bi-save"></i> Simpan</span>
+                <span wire:loading wire:target="saveAll">
+                    <span class="spinner-border spinner-border-sm" role="status"></span> 
+                    Menyimpan...</span>
+        </button>
+
+        <button type="button" 
+                class="btn btn-secondary btn-sm py-0 px-2" 
+                    wire:click="print"
+                    style="font-size: 0.7rem; height: 30px;">
+                <i class="bi bi-printer"></i> Print
+        </button>
     </div>
 </div>
  
