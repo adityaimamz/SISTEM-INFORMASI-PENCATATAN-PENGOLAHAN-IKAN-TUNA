@@ -31,7 +31,7 @@
                     @error('session_tggl_cutting')
                         <div class="invalid-feedback small">{{ $message }}</div>
                     @enderror
-                </div>  
+                </div>
 
                 <div class="col-md-auto">
                     <label for="session_tggl_injek_co" class="form-label small">Tanggal Injek CO</label>
@@ -70,7 +70,6 @@
                         @forelse ($penerimaan_ikan as $penerimaan)
                             @php
                                 $jenis = $penerimaan->jenis_penerimaan;
-                                $no_ikan = $penerimaan->no_ikan;
                                 $supplier = $penerimaan->supplier->nama_supplier ?? 'Tidak ada supplier';
                                 $alamat = $penerimaan->supplier->alamat ?? 'Tidak ada alamat';
                                 $displayText = $jenis . '  ' . $alamat . '  ' . $supplier;
@@ -318,12 +317,9 @@
                                 {{-- No. Loin --}}
                                 <td>
                                     <input type="text" 
-                                        value="{{ $row['no_loin'] ?? '' }}"
+                                        wire:model.defer="rows.{{ $index }}.no_loin"
                                         class="excel-input text-center"
-                                        placeholder="No. Loin"
-                                        readonly>
-                                    <input type="hidden" 
-                                        wire:model.live="rows.{{ $index }}.no_loin">
+                                        placeholder="No. Loin">
                                 </td>
                             
 

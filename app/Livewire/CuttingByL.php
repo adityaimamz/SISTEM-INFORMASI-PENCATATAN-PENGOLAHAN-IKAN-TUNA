@@ -13,32 +13,35 @@ use Illuminate\Support\Facades\Log;
 
 class CuttingByL extends Component
 {
-    public $cuttingls = [];
-    public $session_tggl_cutting;
-    public $session_tggl_injek_co;
-    public $session_tggl_service;
+    public $cuttingls = [];                         // Data Cutting loin
+    public $session_tggl_cutting;                  
+    public $session_tggl_injek_co;                  
+    public $session_tggl_service;                   
     public $berat_loin = [];
     public $total_loin = [];
-    public $penerimaan_id;
+    public $penerimaan_id;                          // Data Penerimaan
     public $no_ikan;
+    public $selectedPenerimaan;
     public $penerimaan_ikan;
-    public $selectedSizingLoin = [];
+    public $selectedSizingLoin = [];                // Data Sizing Loin
     public $sizingLoin = [];
-    public $selectedGradingService = [];
+    public $selectedGradingService = [];            // Data Grading Service
     public $gradingService = [];
-    public $selectedGradingHservice = [];
+    public $selectedGradingHservice = [];           // Data Grading Hservice
     public $gradingHservice = [];
-    
 
     public $rows = [];
 
+// inisialisasi data
     public function mount()
     {
         $this->penerimaan_ikan = Penerimaan_ikan::with('supplier')
             ->orderBy('tgl_penerimaan', 'desc')
-            ->get();
+            ->get()
+            ->unique('penerimaan_id')
+            ->values();
+            
 
-        // inisialisasi data
         $this->sizingLoin = GradeL::all();
         $this->selectedSizingLoin = [''];
         $this->gradingService = GradeService::all();
@@ -49,31 +52,30 @@ class CuttingByL extends Component
         $this->rows = [];
     }
 
-    public function updatePenerimaanid($value) {
+
+//otomatis dipanggil jika penerimaan_id berubah
+    public function updatedPenerimaanId($value) {
         if ($value) {
-            $penerimaan = Penerimaan_Ikan::find($value);
+            $penerimaan = Penerimaan_ikan::with('supplier')->find($value);
             if ($penerimaan) {
                 $this->selectedPenerimaan = $penerimaan;
                 $this->no_ikan = $penerimaan->no_ikan;
-                $this->updateNoLoinInRows();
+                
+                foreach ($this->rows as $index=> $row) {
+                    $this->rows[$index]['no_loin'] = $this->no_ikan;
+                }
             }
         }else {
             $this->selectedPenerimaan = null;
             $this->no_ikan = null;
-            $this->updateNoLoinInRows();
+
+            foreach ($this->rows as $index=> $row) {
+                $this->rows[$index]['no_loin'] = '';
+            }
         }
     }
 
-    public function updateNoLoinInRows()
-    {
-        if(empty($this->no_ikan)) {
-            return;
-        }
-        foreach ($this->rows as $index=> $row) {
-            $this->rows[$index]['no_loin'] = $this->no_ikan;
-        }
-    }
-
+//tambah row
     public function addRow()
     {
         $this->rows[] = [
@@ -89,12 +91,14 @@ class CuttingByL extends Component
         ];
     }
 
+//hapus row
     public function removeRow($index)
     {
         unset($this->rows[$index]);
         $this->rows = array_values($this->rows);
     }
     
+//simpan data
     public function saveAll()
     {
 
@@ -115,6 +119,8 @@ class CuttingByL extends Component
         ]);
 
         try {
+            DB::beginTransaction();
+
             foreach ($this->rows as $row) {
                 CuttingL::create([
                     'tggl_cutting' => $this->session_tggl_cutting,
@@ -138,12 +144,14 @@ class CuttingByL extends Component
         }
     }
     
+//reset form
     public function resetForm()
     {
         $this->reset(['no_batch', 'rows']);
         $this->addRow();
     }
 
+//render view
     public function render()
     {
         return view('livewire.cuttingl', [
@@ -156,6 +164,7 @@ class CuttingByL extends Component
             'penerimaan_id' => $this->penerimaan_id,
             'penerimaan_ikan' => $this->penerimaan_ikan,
             'no_ikan' => $this->no_ikan,
+            'selectedPenerimaan' => $this->selectedPenerimaan,
             'selectedSizingLoin' => $this->selectedSizingLoin,
             'sizingLoin' => $this->sizingLoin,
             'selectedGradingService' => $this->selectedGradingService,
