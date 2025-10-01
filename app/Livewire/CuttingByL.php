@@ -52,7 +52,6 @@ class CuttingByL extends Component
             ->get()
             ->unique('no_ikan')
             ->values();
-            
 
         $this->sizingLoin = GradeL::all();
         $this->selectedSizingLoin = [''];
