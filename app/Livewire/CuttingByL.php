@@ -130,15 +130,13 @@ class CuttingByL extends Component
         $this->calculateTotals();
     }
 
+//hitung total berat & pcs
     public function calculateTotals()
     {
         $this->berat_loin = 0;
-        $this->total_loin = 0;
         $this->berat_rm = [0, 0, 0];
-        $this->total_rm = 0;
         $this->pcs_rm = [0, 0, 0];
         $this->berat_hs = [0, 0, 0];
-        $this->total_hs = 0;
         $this->pcs_hs = [0, 0, 0];
 
         //inisialisasi array untuk berat
@@ -149,30 +147,33 @@ class CuttingByL extends Component
             $berat[$i] = 0;
         }
 
-        //hitung total dari semua rows
+        //hitung total & pcs dari semua rows
         foreach($this->rows as $row) {
             //total berat (cutting loin)
             $this->berat_loin += (float) ($row['berat_loin'] ?? 0);
 
-            //total berat (RM service)
+            //total berat (RM service & pcs)
             for ($i= 1; $i <= 3; $i++) {
                 $berat = (float) ($row['berat_' . $i] ?? 0);
+                $this->berat_rm[$i-1] += $berat;
                 if ($berat > 0) {
-                    $this->berat_rm[$i-1] += $berat;
                     $this->pcs_rm[$i-1]++;
                 }
             } 
             
-            //total berat (HS service)
+            //total berat (HS service & pcs)
             for ($i=4; $i <= 6; $i++) {
-                $this->berat_hs[$i-4] += (float) ($row['berat_' . $i] ?? 0);
-                $this->pcs_hs[$i-4]++;
+                $berat = (float) ($row['berat_' . $i] ?? 0);
+                $this->berat_hs[$i-4] += $berat;
+                if ($berat > 0) {
+                    $this->pcs_hs[$i-4]++;
+                }
             }
         }
         // property untuk digunakan pada view
         $this->berat = $berat;
-        $this->berat_rm = $berat_rm;
-        $this->berat_hs = $berat_hs;
+        $this->berat_rm = array_map('floatval', $this->berat_rm);
+        $this->berat_hs = array_map('floatval', $this->berat_hs);
         $this->pcs_loin = count($this->rows);
     }
 

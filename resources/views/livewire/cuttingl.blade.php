@@ -347,14 +347,25 @@
 
                                 {{-- input berat RM --}}
 
-                                @for($i = 1; $i <= 6; $i++)
+                                @for($i = 1; $i <= 3; $i++)
                                 <td>
                                     <input type="number" step="0.01" 
-                                        wire:model.live="rows.{{ $index }}.berat {{ $i }}"
+                                        wire:model.live="rows.{{ $index }}.berat_{{ $i }}"
                                         class="excel-input text-center"
-                                        placeholder="Kg">
+                                        placeholder="0">
                                 </td>
                                 @endfor
+
+                                {{-- input berat HS --}}
+                                @for($i = 4; $i <= 6; $i++)
+                                <td>
+                                    <input type="number" step="0.01" 
+                                        wire:model.live="rows.{{ $index }}.berat_{{ $i }}"
+                                        class="excel-input text-center"
+                                        placeholder="0">
+                                </td>
+                                @endfor
+
                                 {{-- aksi --}}
                                 <td>
                                     <button class="btn btn-danger btn-sm py-0"
@@ -380,6 +391,7 @@
                                 @for ($i= 0; $i < 3; $i++)
                                     <td>{{ number_format($berat_hs[$i] ?? 0, 2) }} kg</td>
                                 @endfor
+                                <td></td>
                             </tr>
                         {{-- Pcs --}}
                             <tr class="table-secondary fw-bold excel-input text-center" style="background-color:rgb(121, 173, 246);">
@@ -393,6 +405,7 @@
                                 @for ($i= 0; $i < 3; $i++)
                                     <td>{{ $pcs_hs[$i] ?? 0 }}</td>
                                 @endfor
+                                <td></td>
                             </tr>
                     </tfoot>
                 </table>
