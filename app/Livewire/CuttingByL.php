@@ -16,13 +16,25 @@ class CuttingByL extends Component
     public $cuttingls = [];                         // Data Cutting loin
     public $session_tggl_cutting;                  
     public $session_tggl_injek_co;                  
-    public $session_tggl_service;                   
-    public $berat_loin = [];
-    public $total_loin = [];
+    public $session_tggl_service; 
+
+    public $berat = [];
+    public $berat_loin = 0;                         // penjumlahan berat
+    public $total_loin = 0;
+    public $berat_rm = [0, 0, 0];                       //array rm
+    public $total_rm = 0;
+    public $berat_hs = [0, 0, 0];                       //array hs
+    public $total_hs = 0;
+    public $pcs = [];
+    public $pcs_loin = [];
+    public $pcs_rm = [0, 0, 0];
+    public $pcs_hs = [0, 0, 0];
+    
     public $penerimaan_id;                          // Data Penerimaan
     public $no_ikan;
     public $selectedPenerimaan;
     public $penerimaan_ikan;
+    public $selectedTanggalPenerimaan;
     public $selectedSizingLoin = [];                // Data Sizing Loin
     public $sizingLoin = [];
     public $selectedGradingService = [];            // Data Grading Service
@@ -38,7 +50,7 @@ class CuttingByL extends Component
         $this->penerimaan_ikan = Penerimaan_ikan::with('supplier')
             ->orderBy('tgl_penerimaan', 'desc')
             ->get()
-            ->unique('penerimaan_id')
+            ->unique('no_ikan')
             ->values();
             
 
@@ -49,12 +61,19 @@ class CuttingByL extends Component
         $this->gradingHservice = GradeHservice::all();
         $this->selectedGradingHservice = [''];
 
+        //inisialisasi array berat
+        $this->berat_rm = [0, 0, 0];
+        $this->pcs_rm = [0, 0, 0];
+        $this->berat_hs = [0, 0, 0];
+        $this->pcs_hs = [0, 0, 0];
+
         $this->rows = [];
     }
 
 
 //otomatis dipanggil jika penerimaan_id berubah
-    public function updatedPenerimaanId($value) {
+    public function updatedPenerimaanId($value) 
+    {
         if ($value) {
             $penerimaan = Penerimaan_ikan::with('supplier')->find($value);
             if ($penerimaan) {
@@ -75,19 +94,31 @@ class CuttingByL extends Component
         }
     }
 
+//memanggil tanggal penerimaan ke cutting/service loin
+    public function updatedSelectedTanggalPenerimaan($penerimaan_id)
+    {
+        $this->selectedTanggalPenerimaan = $penerimaan_id;
+
+        if ($penerimaan_id) {
+            $penerimaan = Penerimaan_ikan::find($penerimaan_id);
+            if ($penerimaan) {
+                $this->penerimaan_id = $penerimaan_id;
+                $this->no_ikan = $penerimaan->no_ikan;
+            }
+        }
+    }
+
+
 //tambah row
     public function addRow()
     {
         $this->rows[] = [
-            'berat_produk' => '',
+            'berat_loin' => '',
             'suhu_loin' => '',
             'no_loin' => $this->no_ikan ?? '',
-            'berat_1' => '',
-            'berat_2' => '',
-            'berat_3' => '',
-            'berat_4' => '',
-            'berat_5' => '',
-            'berat_6' => '',
+            'berat_1' => '', 'berat_2' => '', 'berat_3' => '',
+            'berat_4' => '', 'berat_5' => '', 'berat_6' => '',
+            
         ];
     }
 
@@ -96,6 +127,64 @@ class CuttingByL extends Component
     {
         unset($this->rows[$index]);
         $this->rows = array_values($this->rows);
+        $this->calculateTotals();
+    }
+
+    public function calculateTotals()
+    {
+        $this->berat_loin = 0;
+        $this->total_loin = 0;
+        $this->berat_rm = [0, 0, 0];
+        $this->total_rm = 0;
+        $this->pcs_rm = [0, 0, 0];
+        $this->berat_hs = [0, 0, 0];
+        $this->total_hs = 0;
+        $this->pcs_hs = [0, 0, 0];
+
+        //inisialisasi array untuk berat
+        $berat = [];
+        $berat_rm = 0;
+        $berat_hs = 0;
+        for ($i=0; $i <= 5; $i++) {
+            $berat[$i] = 0;
+        }
+
+        //hitung total dari semua rows
+        foreach($this->rows as $row) {
+            //total berat (cutting loin)
+            $this->berat_loin += (float) ($row['berat_loin'] ?? 0);
+
+            //total berat (RM service)
+            for ($i= 1; $i <= 3; $i++) {
+                $berat = (float) ($row['berat_' . $i] ?? 0);
+                if ($berat > 0) {
+                    $this->berat_rm[$i-1] += $berat;
+                    $this->pcs_rm[$i-1]++;
+                }
+            } 
+            
+            //total berat (HS service)
+            for ($i=4; $i <= 6; $i++) {
+                $this->berat_hs[$i-4] += (float) ($row['berat_' . $i] ?? 0);
+                $this->pcs_hs[$i-4]++;
+            }
+        }
+        // property untuk digunakan pada view
+        $this->berat = $berat;
+        $this->berat_rm = $berat_rm;
+        $this->berat_hs = $berat_hs;
+        $this->pcs_loin = count($this->rows);
+    }
+
+    public function updated($propertyName)
+    {
+        if (str_starts_with($propertyName, 'rows.')) {
+            $this->calculateTotals();
+        }
+
+        if ($propertyName == 'selectedTanggalPenerimaan') {
+            $this->updatedSelectedTanggalPenerimaan($this->selectedTanggalPenerimaan);
+        }
     }
     
 //simpan data
@@ -108,6 +197,7 @@ class CuttingByL extends Component
             'session_tggl_service' => 'required',
             'penerimaan_id' => 'required',
             'no_ikan' => 'required',
+            'selectedTanggalPenerimaan' => 'required',
             'selectedSizingLoin' => 'required',
             'selectedGradingService' => 'required',
             'selectedGradingHservice' => 'required',
@@ -154,6 +244,8 @@ class CuttingByL extends Component
 //render view
     public function render()
     {
+        $this->calculateTotals();
+
         return view('livewire.cuttingl', [
             'cuttingls' => $this->cuttingls,
             'session_tggl_cutting' => $this->session_tggl_cutting,
@@ -161,6 +253,12 @@ class CuttingByL extends Component
             'session_tggl_service' => $this->session_tggl_service,
             'berat_loin' => $this->berat_loin,
             'total_loin' => $this->total_loin,
+            'berat_rm' => $this->berat_rm,
+            'berat_hs' => $this->berat_hs,
+            'pcs_rm' => $this->pcs_rm,
+            'pcs_hs' => $this->pcs_hs,
+            'berat' => $this->berat,
+            'pcs_loin' => $this->pcs_loin,
             'penerimaan_id' => $this->penerimaan_id,
             'penerimaan_ikan' => $this->penerimaan_ikan,
             'no_ikan' => $this->no_ikan,

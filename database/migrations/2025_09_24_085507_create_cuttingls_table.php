@@ -25,6 +25,12 @@ return new class extends Migration
             $table->string('no_batch');
             $table->float('berat_loin');
             $table->float('suhu_loin');
+            $table->float('pcs_loin');
+            $table->float('berat_rm');
+            $table->float('pcs_rm');
+            $table->float('berat_hs');
+            $table->float('pcs_hs');
+            
             
             $table->timestamps();
         });

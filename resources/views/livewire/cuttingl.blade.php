@@ -60,6 +60,27 @@
                 </div>
 
                 <div class="col-md-auto">
+                    <label for="selectedTanggalPenerimaan" class="form-label small">Tanggal Penerimaan</label>
+                    <select id="selectedTanggalPenerimaan" 
+                            wire:model.live="selectedTanggalPenerimaan"
+                            class="form-select form-select-sm @error('selectedTanggalPenerimaan') is-invalid @enderror"
+                            @if(!$session_tggl_service) disabled @endif 
+                            required>
+                        <option value="">Pilih Tanggal Penerimaan</option>
+                        @if(isset($penerimaan_ikan) && $penerimaan_ikan->isNotEmpty())
+                            @foreach ($penerimaan_ikan->unique('tgl_penerimaan') as $penerimaan)
+                                <option value="{{ $penerimaan->penerimaan_id }}">
+                                    {{ \Carbon\Carbon::parse($penerimaan->tgl_penerimaan)->format('d F Y') }}
+                                </option>
+                            @endforeach
+                        @endif
+                    </select>
+                    @error('selectedTanggalPenerimaan')
+                        <div class="invalid-feedback small">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="col-md-auto">
                     <label for="penerimaan_id" class="form-label small">Supplier</label>
                     <select id="penerimaan_id"
                             wire:model.live="penerimaan_id"
@@ -105,6 +126,7 @@
                         <span><strong>Tanggal Injek CO:</strong> {{ \Carbon\Carbon::parse($session_tggl_injek_co)->format('d F Y') }}</span><br>
                         <span><strong>Tanggal Service:</strong> {{ \Carbon\Carbon::parse($session_tggl_service)->format('d F Y') }}</span><br>
                         @if($selectedPenerimaan)
+                            <span><strong>Tanggal Penerimaan:</strong> {{ \Carbon\Carbon::parse($selectedPenerimaan->tgl_penerimaan)->format('d F Y') }}</span><br>
                             <span><strong>Jenis Penerimaan:</strong> {{ $selectedPenerimaan->jenis_penerimaan }}</span><br>
                             <span><strong>Supplier:</strong> {{ $selectedPenerimaan->supplier->nama_supplier ?? 'Tidak ada supplier' }}</span>
                         @endif
@@ -298,10 +320,10 @@
                         @foreach($rows as $index => $row)
                             <tr>
                                 <td class="text-center">{{ $index + 1 }}</td>
-                                {{-- berat --}}
+                                {{-- berat Loin --}}
                                 <td>
                                     <input type="number" step="0.01" 
-                                        wire:model.live="rows.{{ $index }}.berat_produk"
+                                        wire:model.live="rows.{{ $index }}.berat_loin"
                                         class="excel-input text-center"
                                         placeholder="Kg">
                                 </td>
@@ -323,7 +345,7 @@
                                 </td>
                             
 
-                                {{-- input berat --}}
+                                {{-- input berat RM --}}
 
                                 @for($i = 1; $i <= 6; $i++)
                                 <td>
@@ -333,7 +355,7 @@
                                         placeholder="Kg">
                                 </td>
                                 @endfor
-
+                                {{-- aksi --}}
                                 <td>
                                     <button class="btn btn-danger btn-sm py-0"
                                         wire:click="removeRow({{ $index }})"
@@ -344,6 +366,35 @@
                             </tr>
                         @endforeach
                     </tbody>
+                    
+                    <tfoot>
+                        {{-- Total --}}
+                            <tr class="table-secondary fw-bold excel-input text-center" style="background-color:rgb(121, 173, 246);">
+                                <td>Total</td>
+                                <td>{{ number_format($berat_loin, 2) }} kg</td>
+                                <td></td>
+                                <td></td>
+                                @for ($i= 0; $i < 3; $i++)
+                                    <td>{{ number_format($berat_rm[$i] ?? 0, 2) }} kg</td>
+                                @endfor
+                                @for ($i= 0; $i < 3; $i++)
+                                    <td>{{ number_format($berat_hs[$i] ?? 0, 2) }} kg</td>
+                                @endfor
+                            </tr>
+                        {{-- Pcs --}}
+                            <tr class="table-secondary fw-bold excel-input text-center" style="background-color:rgb(121, 173, 246);">
+                                <td>Pcs</td>
+                                <td>{{ $pcs_loin ?? 0 }}</td>
+                                <td></td>
+                                <td></td>
+                                @for ($i= 0; $i < 3; $i++)
+                                    <td>{{ $pcs_rm[$i] ?? 0 }}</td>
+                                @endfor
+                                @for ($i= 0; $i < 3; $i++)
+                                    <td>{{ $pcs_hs[$i] ?? 0 }}</td>
+                                @endfor
+                            </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>
