@@ -20,7 +20,7 @@ return new class extends Migration
             // Pastikan tipe data sama dengan tabel yang direferensi
             $table->unsignedBigInteger('grade_size_id');
             $table->unsignedBigInteger('grade_service_id');
-            $table->unsignedBigInteger('grade_hservice_id');
+            $table->unsignedBigInteger('grade_servicehs_id');
             $table->unsignedBigInteger('penerimaan_id');
 
             $table->string('no_batch');
@@ -48,9 +48,9 @@ return new class extends Migration
                   ->on('grade_services')
                   ->onDelete('cascade');
 
-            $table->foreign('grade_hservice_id')
-                  ->references('grade_hservice_id')
-                  ->on('grade_hservices')
+            $table->foreign('grade_servicehs_id')
+                  ->references('grade_servicehs_id')
+                  ->on('grade_servicehs')
                   ->onDelete('cascade');
 
             $table->foreign('penerimaan_id')
@@ -68,7 +68,7 @@ return new class extends Migration
         Schema::table('cuttingls', function (Blueprint $table) {
             $table->dropForeign(['grade_size_id']);
             $table->dropForeign(['grade_service_id']);
-            $table->dropForeign(['grade_hservice_id']);
+            $table->dropForeign(['grade_servicehs_id']);
             $table->dropForeign(['penerimaan_id']);
         });
         
