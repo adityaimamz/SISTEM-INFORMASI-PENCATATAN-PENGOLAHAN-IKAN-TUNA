@@ -19,6 +19,7 @@ class CuttingL extends Model
         'tggl_injek_co',
         'tggl_service',
         'penerimaan_id',
+        'no_batch',
         'grade_size_id',
         'berat_loin',
         'suhu_loin',

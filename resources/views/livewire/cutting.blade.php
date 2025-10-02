@@ -323,7 +323,6 @@
             </div>
         @endif
     </div>
-</form>
 </div>
 
 @push('scripts')

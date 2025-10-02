@@ -428,15 +428,18 @@
     {{-- Button Simpan --}}
     <div class="card-footer text-end py-1 px-2">
         <button type="button" 
-                class="btn btn-primary btn-sm py-0 px-2" 
-                    wire:click.prevent="saveAll" 
-                    wire:loading.attr="disabled"
-                    style="font-size: 0.7rem; height: 30px;">
-                <span wire:loading.remove wire:target="saveAll">
-                    <i class="bi bi-save"></i> Simpan</span>
-                <span wire:loading wire:target="saveAll">
-                    <span class="spinner-border spinner-border-sm" role="status"></span> 
-                    Menyimpan...</span>
+            class="btn btn-primary btn-sm py-0 px-2" 
+            wire:click.prevent="saveAll" 
+            wire:loading.attr="disabled"
+            wire:target="saveAll"
+            style="font-size: 0.7rem; height: 30px;">
+            <span wire:loading.remove wire:target="saveAll">
+                <i class="bi bi-save"></i> <span>Simpan</span>
+            </span>
+            <span wire:loading wire:target="saveAll">
+                <span class="spinner-border spinner-border-sm" role="status"></span> 
+                Menyimpan...
+            </span>
         </button>
 
         <button type="button" 
@@ -445,6 +448,44 @@
                     style="font-size: 0.7rem; height: 30px;">
                 <i class="bi bi-printer"></i> Print
         </button>
+
+        {{-- ALERT PESAN --}}
+        @if (session()->has('message'))
+            <div class="alert alert-success mt-3">
+                {{ session('message') }}
+            </div>
+        @endif
     </div>
 </div>
+
+@push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('livewire:initialized', () => {
+            @this.on('show-error', (message) => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: message,
+                    confirmButtonText: 'OK'
+                });
+            });
+
+            @this.on('show-success', (message) => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil',
+                    text: message,
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Refresh halaman setelah simpan berhasil
+                        location.reload();
+                    }
+                });
+            });
+        });
+    </script>
+@endpush
+
  

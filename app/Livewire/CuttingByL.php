@@ -17,6 +17,7 @@ class CuttingByL extends Component
     public $session_tggl_cutting;                  
     public $session_tggl_injek_co;                  
     public $session_tggl_service; 
+    public $no_batch;
 
     public $berat = [];
     public $berat_loin = 0;                         // penjumlahan berat
@@ -203,20 +204,20 @@ class CuttingByL extends Component
     {
 
         $validateData = $this->validate([
-            'session_tggl_cutting' => 'required',
-            'session_tggl_injek_co' => 'required',
-            'session_tggl_service' => 'required',
-            'penerimaan_id' => 'required',
-            'no_ikan' => 'required',
-            'selectedTanggalPenerimaan' => 'required',
-            'selectedSizingLoin' => 'required',
-            'selectedGradingService' => 'required',
-            'selectedGradingHservice' => 'required',
-            'rows' => 'required',
-            'no_batch' => 'required',
-            'rows.*.berat' => 'required',
-            'rows.*.suhu_loin' => 'required',
-            'rows.*.no_loin' => 'required',
+            'session_tggl_cutting' => 'required|date',
+            'session_tggl_injek_co' => 'required|date',
+            'session_tggl_service' => 'required|date',
+            'penerimaan_id' => 'required|exists:penerimaan_ikans,penerimaan_id',
+            'no_ikan' => 'required|string',
+            'selectedTanggalPenerimaan' => 'required|date',
+            'selectedSizingLoin' => 'required|exists:grade_sizes,grade_size_id',
+            'selectedGradingService' => 'required|exists:grade_services,grade_service_id',
+            'selectedGradingHservice' => 'required|exists:grade_hservices,grade_hservice_id',
+            'rows' => 'required|array',
+            'no_batch' => 'required|string',
+            'rows.*.berat' => 'required|numeric',
+            'rows.*.suhu_loin' => 'required|numeric',
+            'rows.*.no_loin' => 'required|string',
         ]);
 
         try {
@@ -229,7 +230,10 @@ class CuttingByL extends Component
                     'tggl_service' => $this->session_tggl_service,
                     'penerimaan_id' => $this->penerimaan_id,
                     'no_ikan' => $this->no_ikan,
+                    'no_batch' => $this->no_batch,
                     'grade_size_id' => $this->selectedSizingLoin,
+                    'grade_service_id' => $this->selectedGradingService,
+                    'grade_hservice_id' => $this->selectedGradingHservice,
                     'berat_loin' => $row['berat'],
                     'suhu_loin' => $row['suhu_loin'],
                     'no_loin' => $row['no_loin'],
