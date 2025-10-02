@@ -89,7 +89,7 @@
                 </div>
 
                 <div class="col-md-1">
-                    <label for="session_no_bak" class="form-label small">No. Bak</label>
+                    <label for="session_no_bak" class="form-label small">No Bak</label>
                         <input type="text" id="session_no_bak" 
                             wire:model.live="session_no_bak" 
                             class="form-control form-control-sm @error('session_no_bak') is-invalid @enderror"
@@ -115,11 +115,19 @@
                     <i class="bi bi-check-circle-fill me-1"></i> 
                     <strong>Sesi Aktif:</strong>
                     <div class="mt-1">
-                        <span><strong>Tanggal:</strong> {{ \Carbon\Carbon::parse($session_date)->format('d F Y') }}</span><br>
-                        <span><strong>Tanggal Bongkar:</strong> {{ \Carbon\Carbon::parse($session_tgl_bongkar)->format('d F Y') }}</span><br>
-                        <span><strong>Supplier:</strong> {{ $selectedSupplier ? $selectedSupplier->nama_supplier : 'Unknown' }}</span><br>
-                        <span><strong>Jenis Penerimaan:</strong> {{ $session_jenis_penerimaan }}</span><br>
-                        <span><strong>No. Bak:</strong> {{ $session_no_bak }}</span>
+                        <div class="row">
+                            <div class="col-4 text-start">
+                                <div><strong>Tanggal Penerimaan:</strong> {{ \Carbon\Carbon::parse($session_date)->format('d F Y') }}</div>
+                                <div><strong>Tanggal Bongkar:</strong> {{ \Carbon\Carbon::parse($session_tgl_bongkar)->format('d F Y') }}</div>
+                            </div>
+                            <div class="col-4 text-center">
+                                <div><strong>Supplier:</strong> {{ $selectedSupplier ? $selectedSupplier->nama_supplier : 'Unknown' }}</div>
+                                <div><strong>Jenis Penerimaan:</strong> {{ $session_jenis_penerimaan }}</div>
+                            </div>
+                            <div class="col-4 text-end">
+                                <div><strong>No. Bak:</strong> {{ $session_no_bak }}</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             @else

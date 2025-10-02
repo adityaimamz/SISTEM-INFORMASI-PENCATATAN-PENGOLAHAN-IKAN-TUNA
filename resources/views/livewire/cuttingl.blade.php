@@ -125,14 +125,24 @@
                     <i class="bi bi-check-circle-fill me-1"></i> 
                     <strong>Sesi Aktif:</strong>
                     <div class="mt-1">
-                        <span><strong>Tanggal Cutting:</strong> {{ \Carbon\Carbon::parse($session_tggl_cutting)->format('d F Y') }}</span><br>
-                        <span><strong>Tanggal Injek CO:</strong> {{ \Carbon\Carbon::parse($session_tggl_injek_co)->format('d F Y') }}</span><br>
-                        <span><strong>Tanggal Service:</strong> {{ \Carbon\Carbon::parse($session_tggl_service)->format('d F Y') }}</span><br>
-                        @if($selectedPenerimaan)
-                            <span><strong>Tanggal Penerimaan:</strong> {{ \Carbon\Carbon::parse($selectedPenerimaan->tgl_penerimaan)->format('d F Y') }}</span><br>
-                            <span><strong>Jenis Penerimaan:</strong> {{ $selectedPenerimaan->jenis_penerimaan }}</span><br>
-                            <span><strong>Supplier:</strong> {{ $selectedPenerimaan->supplier->nama_supplier ?? 'Tidak ada supplier' }}</span>
-                        @endif
+                        <div class="row">
+                            <div class="col-4 text-start">
+                                <div><strong>Tanggal Cutting:</strong> {{ \Carbon\Carbon::parse($session_tggl_cutting)->format('d F Y') }}</div>
+                                <div><strong>Tanggal Injek CO:</strong> {{ \Carbon\Carbon::parse($session_tggl_injek_co)->format('d F Y') }}</div>
+                            </div>
+                            <div class="col-4 text-center">
+                                <div><strong>Tanggal Service:</strong> {{ \Carbon\Carbon::parse($session_tggl_service)->format('d F Y') }}</div>
+                                @if($selectedPenerimaan)
+                                    <div><strong>Tanggal Penerimaan:</strong> {{ \Carbon\Carbon::parse($selectedPenerimaan->tgl_penerimaan)->format('d F Y') }}</div>
+                                @endif
+                            </div>
+                            <div class="col-4 text-end">
+                                @if($selectedPenerimaan)
+                                    <div><strong>Jenis Penerimaan:</strong> {{ $selectedPenerimaan->jenis_penerimaan }}</div>
+                                    <div><strong>Supplier:</strong> {{ $selectedPenerimaan->supplier->nama_supplier ?? 'Tidak ada supplier' }}</div>
+                                @endif
+                            </div>
+                        </div>
                     </div>
                 </div>
             @else
