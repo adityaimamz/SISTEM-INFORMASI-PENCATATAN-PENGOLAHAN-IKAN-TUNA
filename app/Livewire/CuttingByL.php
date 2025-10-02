@@ -125,7 +125,7 @@ class CuttingByL extends Component
         $this->rows[] = [
             'berat_loin' => '',
             'suhu_loin' => '',
-            'no_loin' => $this->no_ikan ?? '',
+            'no_loin' => '',
             'berat_1' => '', 'berat_2' => '', 'berat_3' => '',
             'berat_4' => '', 'berat_5' => '', 'berat_6' => '',
             
