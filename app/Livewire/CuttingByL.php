@@ -34,7 +34,8 @@ class CuttingByL extends Component
     public $no_ikan;
     public $selectedPenerimaan;
     public $penerimaan_ikan;
-    public $selectedTanggalPenerimaan;
+    public $filteredPenerimaan = [];
+    public $selectedTanggalPenerimaan;              // selected tgl penerimaan
     public $selectedSizingLoin = [];                // Data Sizing Loin
     public $sizingLoin = [];
     public $selectedGradingService = [];            // Data Grading Service
@@ -47,10 +48,20 @@ class CuttingByL extends Component
 // inisialisasi data
     public function mount()
     {
-        $this->penerimaan_ikan = Penerimaan_ikan::with('supplier')
+        $this->penerimaan_ikan = Penerimaan_ikan::with(['supplier' => function ($query) {
+            $query->select('supplier_id', 'nama_supplier', 'alamat');
+        }])
+            ->select('penerimaan_ikans.*')
             ->orderBy('tgl_penerimaan', 'desc')
             ->get()
-            ->unique('no_ikan')
+            ->unique('supplier_id')
+            ->map(function ($item) {
+                $item->tgl_penerimaan = \Carbon\Carbon::parse($item->tgl_penerimaan)->toDateString();
+                return $item;
+            })
+            ->filter(function ($item) {
+                return $item->supplier_id !== null;
+            })
             ->values();
 
         $this->sizingLoin = GradeL::all();
@@ -60,13 +71,19 @@ class CuttingByL extends Component
         $this->gradingHservice = GradeHservice::all();
         $this->selectedGradingHservice = [''];
 
-        //inisialisasi array berat
+        //inisialisasi array
         $this->berat_rm = [0, 0, 0];
-        $this->pcs_rm = [0, 0, 0];
         $this->berat_hs = [0, 0, 0];
+        $this->pcs_rm = [0, 0, 0];
         $this->pcs_hs = [0, 0, 0];
+        $this->pcs_loin = 0;
+        $this->berat_loin = 0;
+        $this->selectedTanggalPenerimaan = null;
+        $this->filteredPenerimaan = collect();
 
-        $this->rows = [];
+        if (!is_array($this->rows)) {
+            $this->rows = [];
+        }
     }
 
 
@@ -74,36 +91,30 @@ class CuttingByL extends Component
     public function updatedPenerimaanId($value) 
     {
         if ($value) {
-            $penerimaan = Penerimaan_ikan::with('supplier')->find($value);
+            $penerimaan = Penerimaan_ikan::find($value);
             if ($penerimaan) {
                 $this->selectedPenerimaan = $penerimaan;
                 $this->no_ikan = $penerimaan->no_ikan;
-                
-                foreach ($this->rows as $index=> $row) {
-                    $this->rows[$index]['no_loin'] = $this->no_ikan;
-                }
             }
         }else {
             $this->selectedPenerimaan = null;
             $this->no_ikan = null;
-
-            foreach ($this->rows as $index=> $row) {
-                $this->rows[$index]['no_loin'] = '';
-            }
         }
     }
 
 //memanggil tanggal penerimaan ke cutting/service loin
-    public function updatedSelectedTanggalPenerimaan($penerimaan_id)
+    public function updatedSelectedTanggalPenerimaan($value)
     {
-        $this->selectedTanggalPenerimaan = $penerimaan_id;
+        $this->selectedTanggalPenerimaan = $value;
+        $this->penerimaan_id = $value;
+        $this->no_ikan = null;
 
-        if ($penerimaan_id) {
-            $penerimaan = Penerimaan_ikan::find($penerimaan_id);
-            if ($penerimaan) {
-                $this->penerimaan_id = $penerimaan_id;
-                $this->no_ikan = $penerimaan->no_ikan;
-            }
+        if ($value) {
+            $this->filteredPenerimaan = $this->penerimaan_ikan->filter(function ($item) use ($value) {
+                return \Carbon\Carbon::parse($item->tgl_penerimaan)->toDateString() === $value;
+            })->values();
+        } else {
+            $this->filteredPenerimaan = collect();
         }
     }
 
@@ -244,25 +255,38 @@ class CuttingByL extends Component
 //render view
     public function render()
     {
+        // filter berdasarlan tgl penerimaan
+        $filteredPenerimaan = $this->penerimaan_ikan;
+        if ($this->selectedTanggalPenerimaan) {
+            //jika memilih tgl penerimaan
+            $filteredPenerimaan = $this->penerimaan_ikan->filter(function($item) {
+                return $item->tgl_penerimaan == $this->selectedTanggalPenerimaan;
+            });
+        }
+        //perhitungan total & pcs
         $this->calculateTotals();
 
         return view('livewire.cuttingl', [
-            'cuttingls' => $this->cuttingls,
+            'cuttingls' => $this->cuttingls,                                        // data session
             'session_tggl_cutting' => $this->session_tggl_cutting,
             'session_tggl_injek_co' => $this->session_tggl_injek_co,
             'session_tggl_service' => $this->session_tggl_service,
-            'berat_loin' => $this->berat_loin,
-            'total_loin' => $this->total_loin,
+
+            'berat_loin' => $this->berat_loin,                                      // berat & pcs
             'berat_rm' => $this->berat_rm,
             'berat_hs' => $this->berat_hs,
+            'pcs_loin' => $this->pcs_loin,
             'pcs_rm' => $this->pcs_rm,
             'pcs_hs' => $this->pcs_hs,
-            'berat' => $this->berat,
-            'pcs_loin' => $this->pcs_loin,
-            'penerimaan_id' => $this->penerimaan_id,
+            'total_loin' => $this->total_loin,
+
+            'penerimaan_id' => $this->penerimaan_id,                                // penerimaan    
             'penerimaan_ikan' => $this->penerimaan_ikan,
             'no_ikan' => $this->no_ikan,
-            'selectedPenerimaan' => $this->selectedPenerimaan,
+            'selectedTanggalPenerimaan' => $this->selectedTanggalPenerimaan,
+            'filteredPenerimaan' => $filteredPenerimaan,
+
+            'selectedPenerimaan' => $this->selectedPenerimaan,                      // selected penerimaan  
             'selectedSizingLoin' => $this->selectedSizingLoin,
             'sizingLoin' => $this->sizingLoin,
             'selectedGradingService' => $this->selectedGradingService,

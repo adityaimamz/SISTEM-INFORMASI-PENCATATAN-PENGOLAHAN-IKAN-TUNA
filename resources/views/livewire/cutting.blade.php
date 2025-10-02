@@ -121,7 +121,7 @@
                 </div>
             @else
                 <div class="p-2 rounded-3 shadow-sm text-white"
-                    style="background:hsl(210, 97.60%, 48.80%); border: 1px solid rgb(255, 255, 255); font-size: 0.75rem;">
+                    style="background:linear-gradient(135deg,hsl(210, 97.60%, 48.80%),rgba(209, 202, 0, 0.88)); border: 1px solid rgb(255, 255, 255); font-size: 0.75rem;">
                     <i class="bi bi-info-circle me-1"></i> 
                     @if(!$session_tgl_cutting)
                         Pilih tanggal cutting terlebih dahulu.

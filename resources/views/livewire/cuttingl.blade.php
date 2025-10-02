@@ -16,7 +16,7 @@
 
     {{-- Form Input Data & Filter --}}
     <div class="card shadow-sm border-0">
-        <div class="card-header py-2 px-3 text white"
+        <div class="card-header py-2 px-3 text-white"
             style="background: linear-gradient(135deg, hsl(210, 97.60%, 48.80%), rgba(209, 202, 0, 0.88)); font-size: 0.85rem;">
             <i class="bi bi-pencil-square me-1"></i>Form Input Data Cutting
         </div>
@@ -66,10 +66,10 @@
                             class="form-select form-select-sm @error('selectedTanggalPenerimaan') is-invalid @enderror"
                             @if(!$session_tggl_service) disabled @endif 
                             required>
-                        <option value="">Pilih Tanggal Penerimaan</option>
+                        <option value="">Tanggal Penerimaan</option>
                         @if(isset($penerimaan_ikan) && $penerimaan_ikan->isNotEmpty())
                             @foreach ($penerimaan_ikan->unique('tgl_penerimaan') as $penerimaan)
-                                <option value="{{ $penerimaan->penerimaan_id }}">
+                                <option value="{{ \Carbon\Carbon::parse($penerimaan->tgl_penerimaan)->toDateString() }}">
                                     {{ \Carbon\Carbon::parse($penerimaan->tgl_penerimaan)->format('d F Y') }}
                                 </option>
                             @endforeach
@@ -88,12 +88,15 @@
                             @if(!$session_tggl_service) disabled @endif
                             required>
                         <option value="" style="text-align: center;">Supplier</option>
-                        @forelse ($penerimaan_ikan as $penerimaan)
+                        @forelse ($filteredPenerimaan as $penerimaan)
                             @php
-                                $jenis = $penerimaan->jenis_penerimaan;
-                                $supplier = $penerimaan->supplier->nama_supplier ?? 'Tidak ada supplier';
-                                $alamat = $penerimaan->supplier->alamat ?? 'Tidak ada alamat';
-                                $displayText = $jenis . '  ' . $alamat . '  ' . $supplier;
+                                $supplier = $penerimaan->supplier;
+                                $displayText = sprintf(
+                                    '%s %s %s',
+                                    strtoupper($penerimaan->jenis_penerimaan ?? 'TIDAK ADA JENIS'),
+                                    $supplier->alamat ?? 'TIDAK ADA ALAMAT',
+                                    strtoupper($supplier->nama_supplier ?? 'TIDAK ADA SUPPLIER')  
+                                );
                             @endphp
                             <option value="{{ $penerimaan->penerimaan_id }}" style="text-align: center;">
                                 {{ $displayText }}
@@ -134,7 +137,7 @@
                 </div>
             @else
                 <div class="p-2 rounded-3 shadow-sm text-white"
-                    style="background:hsl(210, 97.60%, 48.80%); border: 1px solid rgb(255, 255, 255); font-size: 0.75rem;">
+                    style="background:linear-gradient(135deg,hsl(210, 97.60%, 48.80%),rgba(209, 202, 0, 0.88)); border: 1px solid rgb(255, 255, 255); font-size: 0.75rem;">
                     <i class="bi bi-info-circle me-1"></i> 
                     @if(!$session_tggl_cutting)
                         Pilih tanggal cutting terlebih dahulu.
@@ -346,7 +349,6 @@
                             
 
                                 {{-- input berat RM --}}
-
                                 @for($i = 1; $i <= 3; $i++)
                                 <td>
                                     <input type="number" step="0.01" 
