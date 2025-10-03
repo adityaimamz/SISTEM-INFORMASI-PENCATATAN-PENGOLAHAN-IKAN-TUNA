@@ -21,8 +21,11 @@ class CuttingL extends Model
         'penerimaan_id',
         'no_batch',
         'grade_size_id',
+        'grade_service_id',
+        'grade_servicehs_id',
         'berat_loin',
         'suhu_loin',
+        'no_loin',
     ];
 
     public function grade_size()
@@ -33,6 +36,16 @@ class CuttingL extends Model
     public function penerimaan()
     {
         return $this->belongsTo(Penerimaan_ikan::class, 'penerimaan_id');
+    }
+
+    public function grade_service()
+    {
+        return $this->belongsTo(GradeService::class, 'grade_service_id');
+    }
+
+    public function grade_servicehs()
+    {
+        return $this->belongsTo(GradeHService::class, 'grade_servicehs_id');
     }
 }
 

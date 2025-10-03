@@ -33,6 +33,7 @@ Route::get('/penerimaan-ikan-pdf', [PenerimaanIkanController::class, 'penerimaan
 Route::get('/cutting-pdf', [CuttingController::class, 'cuttingPdf'])->name('cutting.pdf');
 Route::get('/kategori-byproduk-ct-pdf', [KategoriByprodukCtController::class, 'kategoriByprodukCtPdf'])->name('kategori-byproduk-ct.pdf');
 Route::get('/grading', \App\Livewire\GradingProses::class)->name('grading.index')->middleware('auth');
+Route::get('/cuttingl', \App\Livewire\CuttingByL::class)->name('cuttingl.index')->middleware('auth');
 
 //PUT
 Route::put('/suppliers/{supplier}', [SupplierController::class, 'update'])->name('suppliers.update');

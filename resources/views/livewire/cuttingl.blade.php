@@ -228,14 +228,15 @@
                         <tr>
                             <th rowspan="4" style="width: 5px;">No</th>
                             <th colspan="9" style="width: 200px;">
-                                <input type="text" wire:model="no_batch" 
+                                <input type="text" id="no_batch" 
+                                    wire:model.live="no_batch" 
                                     class="excel-input text-center" 
                                     placeholder="No Batch" 
                                     style="background-color:rgb(121, 173, 246); font-weight: bold; font-size: 0.8rem;"
                                     required>
-                                        @error('no_batch')
-                                            <div class="text-danger small">{{ $message }}</div>
-                                        @enderror
+                                @error('no_batch')
+                                    <div class="text-danger small">{{ $message }}</div>
+                                @enderror
                             </th>
                             <th rowspan="4" style="width: 5px;">Aksi</th>
                         </tr>

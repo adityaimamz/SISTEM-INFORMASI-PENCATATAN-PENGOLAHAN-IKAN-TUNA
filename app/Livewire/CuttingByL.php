@@ -209,12 +209,12 @@ class CuttingByL extends Component
             'session_tggl_service' => 'required|date',
             'penerimaan_id' => 'required|exists:penerimaan_ikans,penerimaan_id',
             'no_ikan' => 'required|string',
+            'no_batch' => 'required|string',
             'selectedTanggalPenerimaan' => 'required|date',
             'selectedSizingLoin' => 'required|exists:grade_sizings,grade_size_id',
             'selectedGradingService' => 'required|exists:grade_services,grade_service_id',
             'selectedGradingHservice' => 'required|exists:grade_servicehs,grade_servicehs_id',
-            'rows' => 'required|array',
-            'no_batch' => 'required|string',
+            'rows' => 'required|array|min:1',
             'rows.*.berat' => 'required|numeric',
             'rows.*.suhu_loin' => 'required|numeric',
             'rows.*.no_loin' => 'required|string',
@@ -241,11 +241,11 @@ class CuttingByL extends Component
             }
             
             DB::commit();
-            $this->dispatch('alert', type: 'success', message: 'Data berhasil disimpan');
+            session()->flash('message', 'Data berhasil disimpan');
             $this->resetForm();
         } catch (\Throwable $th) {
             DB::rollBack();
-            $this->dispatch('alert', type: 'error', message: 'Gagal menyimpan data: ' . $th->getMessage());
+            session()->flash('error', 'Gagal menyimpan data: ' . $th->getMessage());
         }
     }
     
