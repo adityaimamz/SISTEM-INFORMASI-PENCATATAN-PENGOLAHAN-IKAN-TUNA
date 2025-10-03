@@ -273,7 +273,7 @@
 
                         {{-- Grade Service RM Service --}}
                         @php
-                            $selectedGradingService = $selectedGradingService ?? [''];
+                            $selectedGradingService = $selectedGradingService ?? [1 => null, 2 => null,3 => null];
                             $gradingService = $gradingService ?? [];
                         @endphp
 
@@ -284,8 +284,8 @@
                                     style="font-size: .8rem; height: 30px; background-color:rgb(121, 173, 246);">
                                     <option value="" class="text-center" style="font-weight: bold;">-- Grade --</option>
                                     @foreach ($gradingService as $gradeService)
-                                        <option value="{{ $gradeService['grade_size_id'] ?? $gradeService->grade_size_id ?? '' }}" class="text-center">
-                                            {{ $gradeService['grading'] ?? $gradeService->grading ?? '' }}
+                                        <option value="{{ $gradeService->grade_size_id }}" class="text-center">
+                                            {{ $gradeService->grading  }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -297,23 +297,24 @@
 
                         {{-- Grade Hasil Service --}}
                         @php
-                            $selectedGradingHservice = $selectedGradingHservice ?? [''];
-                            $gradingHservice = $gradingHservice ?? [];
+                            $selectedGradingHservice = $selectedGradingHservice ?? [1 => null, 2 => null, 3 => null];
+                            $gradingHservice = $gradingHservice ?? collect();
                         @endphp
 
                         @for($i = 1; $i <= 3; $i++)
                             <th colspan="1" style="width: 30px;">
                                 <select wire:model.live="selectedGradingHservice.{{ $i }}"
-                                    class="excel-input @error('selectedGradingHservice.{{ $i }}') is-invalid @enderror"
+                                    class="excel-input @error('selectedGradingHservice.'.$i) is-invalid @enderror"
                                     style="font-size: .8rem; height: 30px; background-color:rgb(121, 173, 246);">
                                     <option value="" class="text-center" style="font-weight: bold;">-- Grade --</option>
                                     @foreach ($gradingHservice as $gradeHservice)
-                                        <option value="{{ $gradeHservice['grade_servicehs_id'] ?? $gradeHservice->grade_servicehs_id ?? '' }}" class="text-center">
-                                            {{ $gradeHservice['grade_servicehs'] ?? $gradeHservice->grade_servicehs ?? '' }}
+                                        <option value="{{ $gradeHservice->grade_servicehs_id }}" class="text-center"
+                                            @if(($selectedGradingHservice[$i] ?? null) == $gradeHservice->grade_servicehs_id) selected @endif>
+                                            {{ $gradeHservice->grade_servicehs }}
                                         </option>
                                     @endforeach
                                 </select>
-                                @error('selectedGradingHservice.{{ $i }}')
+                                @error('selectedGradingHservice.'.$i)
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </th>

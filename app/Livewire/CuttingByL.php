@@ -22,14 +22,14 @@ class CuttingByL extends Component
     public $berat = [];
     public $berat_loin = 0;                         // penjumlahan berat
     public $total_loin = 0;
-    public $berat_rm = [0, 0, 0];                       //array rm
+    public $berat_rm = [1=> 0, 2=> 0, 3=> 0];                       //array rm
     public $total_rm = 0;
-    public $berat_hs = [0, 0, 0];                       //array hs
+    public $berat_hs = [1=> 0, 2=> 0, 3=> 0];                       //array hs
     public $total_hs = 0;
     public $pcs = [];
     public $pcs_loin = [];
-    public $pcs_rm = [0, 0, 0];
-    public $pcs_hs = [0, 0, 0];
+    public $pcs_rm = [1=> 0, 2=> 0, 3=> 0];
+    public $pcs_hs = [1=> 0, 2=> 0, 3=> 0];
     
     public $penerimaan_id;                          // Data Penerimaan
     public $no_ikan;
@@ -68,14 +68,14 @@ class CuttingByL extends Component
         $this->sizingLoin = GradeL::all();
         $this->selectedSizingLoin = [''];
         $this->gradingService = GradeService::all();
-        $this->selectedGradingService = [''];
+        $this->selectedGradingService = [1 => null, 2 => null, 3 => null];
         $this->gradingHservice = GradeHservice::all();
-        $this->selectedGradingHservice = [''];
+        $this->selectedGradingHservice = [1 => null, 2 => null, 3 => null];
 
         //inisialisasi array
         $this->berat_rm = [0, 0, 0];
-        $this->berat_hs = [0, 0, 0];
         $this->pcs_rm = [0, 0, 0];
+        $this->berat_hs = [0, 0, 0];
         $this->pcs_hs = [0, 0, 0];
         $this->pcs_loin = 0;
         $this->berat_loin = 0;
@@ -83,7 +83,13 @@ class CuttingByL extends Component
         $this->filteredPenerimaan = collect();
 
         if (!is_array($this->rows)) {
-            $this->rows = [];
+            $this->rows = [
+                [
+                    'no_loin' => '',
+                    'berat_loin' => 0,
+                    'suhu_loin' => 0
+                ]
+            ];
         }
     }
 
@@ -202,53 +208,91 @@ class CuttingByL extends Component
 //simpan data
     public function saveAll()
     {
-
-        $validateData = $this->validate([
-            'session_tggl_cutting' => 'required|date',
-            'session_tggl_injek_co' => 'required|date',
-            'session_tggl_service' => 'required|date',
-            'penerimaan_id' => 'required|exists:penerimaan_ikans,penerimaan_id',
-            'no_ikan' => 'required|string',
-            'no_batch' => 'required|string',
-            'selectedTanggalPenerimaan' => 'required|date',
-            'selectedSizingLoin' => 'required|exists:grade_sizings,grade_size_id',
-            'selectedGradingService' => 'required|exists:grade_services,grade_service_id',
-            'selectedGradingHservice' => 'required|exists:grade_servicehs,grade_servicehs_id',
-            'rows' => 'required|array|min:1',
-            'rows.*.berat' => 'required|numeric',
-            'rows.*.suhu_loin' => 'required|numeric',
-            'rows.*.no_loin' => 'required|string',
-        ]);
-
         try {
+
             DB::beginTransaction();
 
+            $validatedData = $this->validate([
+                'session_tggl_cutting' => 'required|date',
+                'session_tggl_injek_co' => 'required|date',
+                'session_tggl_service' => 'required|date',
+                'penerimaan_id' => 'required|exists:penerimaan_ikans,penerimaan_id',
+                'no_batch' => 'required|string',
+                'rows.*.berat_loin' => 'required|numeric',
+                'rows.*.suhu_loin' => 'required|numeric',
+                'rows.*.no_loin' => 'required|string',
+            ]);
+
             foreach ($this->rows as $row) {
-                CuttingL::create([
+                //data pertama
+                $firstRecord = [
                     'tggl_cutting' => $this->session_tggl_cutting,
                     'tggl_injek_co' => $this->session_tggl_injek_co,
                     'tggl_service' => $this->session_tggl_service,
                     'penerimaan_id' => $this->penerimaan_id,
-                    'no_ikan' => $this->no_ikan,
                     'no_batch' => $this->no_batch,
-                    'grade_size_id' => $this->selectedSizingLoin,
-                    'grade_service_id' => $this->selectedGradingService,
-                    'grade_servicehs_id' => $this->selectedGradingHservice,
-                    'berat_loin' => $row['berat'],
-                    'suhu_loin' => $row['suhu_loin'],
+                    'grade_size_id' => $this->selectedSizingLoin[1] ?? null,
                     'no_loin' => $row['no_loin'],
-                ]);
+                    'berat_loin' => $row['berat_loin'],
+                    'suhu_loin' => $row['suhu_loin'],
+                    'pcs_loin' => 0,
+
+                    // Data RM Service
+                    'grade_service_id' => $this->selectedGradingService[1] ?? null,
+                    'berat_rm' => $this->berat_rm[1] ?? 0,
+                    'pcs_rm' => $this->pcs_rm[1] ?? 0,
+
+                    // Data Hasil Service
+                    'grade_servicehs_id' => $this->selectedGradingHservice[1] ?? null,
+                    'berat_hs' => $this->berat_hs[1] ?? 0,
+                    'pcs_hs' => $this->pcs_hs[1] ?? 0,
+                ];
+                $cuttingL = CuttingL::create($firstRecord);
+                
+                //data tambahan
+                for ($i = 2; $i <= 3; $i++) {
+                    if (isset($this->selectedGradingService[$i]) || isset($this->selectedGradingHservice[$i])) {
+                        $additionalRecord = [
+                            'tggl_cutting' => $this->session_tggl_cutting,
+                            'tggl_injek_co' => $this->session_tggl_injek_co,
+                            'tggl_service' => $this->session_tggl_service,
+                            'penerimaan_id' => $this->penerimaan_id,
+                            'no_batch' => $this->no_batch,
+                            'grade_size_id' => $this->selectedSizingLoin[$i] ?? null,
+                            'no_loin' => $row['no_loin'],
+                            'berat_loin' => $row['berat_loin'],
+                            'suhu_loin' => $row['suhu_loin'],
+                            'pcs_loin' => 0,
+
+                            // Data RM Service
+                            'grade_service_id' => $this->selectedGradingService[$i] ?? null,
+                            'berat_rm' => $this->berat_rm[$i] ?? 0,
+                            'pcs_rm' => $this->pcs_rm[$i] ?? 0,
+
+                            // Data Hasil Service
+                            'grade_servicehs_id' => $this->selectedGradingHservice[$i] ?? null,
+                            'berat_hs' => $this->berat_hs[$i] ?? 0,
+                            'pcs_hs' => $this->pcs_hs[$i] ?? 0,
+                        ];
+                        $cuttingL = CuttingL::create($additionalRecord);
+                    }
+                }
             }
-            
+
             DB::commit();
             session()->flash('message', 'Data berhasil disimpan');
             $this->resetForm();
-        } catch (\Throwable $th) {
+
+        } catch (\Exception $e) {
             DB::rollBack();
-            session()->flash('error', 'Gagal menyimpan data: ' . $th->getMessage());
-        }
+            session()->flash('error', 'Gagal menyimpan data: ' . $e->getMessage());
+            \Log::error('Error saving cutting data:', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+        } 
     }
-    
+
 //reset form
     public function resetForm()
     {
@@ -298,7 +342,6 @@ class CuttingByL extends Component
             'selectedGradingHservice' => $this->selectedGradingHservice,
             'gradingHservice' => $this->gradingHservice,
             'rows' => $this->rows,
-        ]);
+            ]);
+        }
     }
-
-}

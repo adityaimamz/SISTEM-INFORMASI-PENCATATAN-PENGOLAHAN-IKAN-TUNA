@@ -24,13 +24,14 @@ return new class extends Migration
             $table->unsignedBigInteger('penerimaan_id');
 
             $table->string('no_batch');
+            $table->string('no_loin');
             $table->float('berat_loin');
             $table->float('suhu_loin');
-            $table->float('pcs_loin');
-            $table->float('berat_rm');
-            $table->float('pcs_rm');
-            $table->float('berat_hs');
-            $table->float('pcs_hs');
+            $table->float('pcs_loin')->default(0)->change();
+            $table->float('berat_rm')->default(0)->change();
+            $table->float('pcs_rm')->default(0)->change();
+            $table->float('berat_hs')->default(0)->change();
+            $table->float('pcs_hs')->default(0)->change();
 
             $table->timestamps();
         });
@@ -70,6 +71,12 @@ return new class extends Migration
             $table->dropForeign(['grade_service_id']);
             $table->dropForeign(['grade_servicehs_id']);
             $table->dropForeign(['penerimaan_id']);
+
+            $table->float('pcs_loin')->nullable()->change();
+            $table->float('berat_rm')->nullable()->change();
+            $table->float('pcs_rm')->nullable()->change();
+            $table->float('berat_hs')->nullable()->change();
+            $table->float('pcs_hs')->nullable()->change();
         });
         
         Schema::dropIfExists('cuttingls');

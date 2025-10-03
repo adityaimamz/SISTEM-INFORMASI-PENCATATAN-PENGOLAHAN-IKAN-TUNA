@@ -20,12 +20,17 @@ class CuttingL extends Model
         'tggl_service',
         'penerimaan_id',
         'no_batch',
+        'no_loin',
         'grade_size_id',
         'grade_service_id',
         'grade_servicehs_id',
         'berat_loin',
         'suhu_loin',
-        'no_loin',
+        'pcs_loin',
+        'berat_rm',
+        'pcs_rm',
+        'berat_hs',
+        'pcs_hs',
     ];
 
     public function grade_size()
