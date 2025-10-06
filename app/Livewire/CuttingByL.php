@@ -37,7 +37,7 @@ class CuttingByL extends Component
     public $penerimaan_ikan;
     public $filteredPenerimaan = [];
     public $selectedTanggalPenerimaan;              // selected tgl penerimaan
-    public $selectedSizingLoin = [];                // Data Sizing Loin
+    public $selectedSizingLoin = [1 => null];                // Data Sizing Loin
     public $sizingLoin = [];
     public $selectedGradingService = [];            // Data Grading Service
     public $gradingService = [];
@@ -66,7 +66,7 @@ class CuttingByL extends Component
             ->values();
 
         $this->sizingLoin = GradeL::all();
-        $this->selectedSizingLoin = [''];
+        $this->selectedSizingLoin = [1 => null];
         $this->gradingService = GradeService::all();
         $this->selectedGradingService = [1 => null, 2 => null, 3 => null];
         $this->gradingHservice = GradeHservice::all();
@@ -218,52 +218,66 @@ class CuttingByL extends Component
                 'session_tggl_service' => 'required|date',
                 'penerimaan_id' => 'required|exists:penerimaan_ikans,penerimaan_id',
                 'no_batch' => 'required|string',
+                'selectedSizingLoin.1' => 'required|exists:grade_sizings,grade_size_id',
                 'rows.*.berat_loin' => 'required|numeric',
                 'rows.*.suhu_loin' => 'required|numeric',
                 'rows.*.no_loin' => 'required|string',
+
+                'selectedGradingService.1' => 'nullable|exists:grade_services,grade_service_id',
+                'berat_rm.1' => 'nullable|numeric',
+                'pcs_rm.1' => 'nullable|integer',
+
+                'selectedGradingHservice.1' => 'nullable|exists:grade_servicehs,grade_servicehs_id',
+                'berat_hs.1' => 'nullable|numeric',
+                'pcs_hs.1' => 'nullable|integer',
             ]);
 
-            foreach ($this->rows as $row) {
-                //data pertama
-                $firstRecord = [
-                    'tggl_cutting' => $this->session_tggl_cutting,
-                    'tggl_injek_co' => $this->session_tggl_injek_co,
-                    'tggl_service' => $this->session_tggl_service,
-                    'penerimaan_id' => $this->penerimaan_id,
-                    'no_batch' => $this->no_batch,
-                    'grade_size_id' => $this->selectedSizingLoin[1] ?? null,
-                    'no_loin' => $row['no_loin'],
-                    'berat_loin' => $row['berat_loin'],
-                    'suhu_loin' => $row['suhu_loin'],
-                    'pcs_loin' => 0,
+            $additionalData = [];
 
-                    // Data RM Service
-                    'grade_service_id' => $this->selectedGradingService[1] ?? null,
-                    'berat_rm' => $this->berat_rm[1] ?? 0,
-                    'pcs_rm' => $this->pcs_rm[1] ?? 0,
+            for ($i = 2; $i <= 3; $i++) {
 
-                    // Data Hasil Service
-                    'grade_servicehs_id' => $this->selectedGradingHservice[1] ?? null,
-                    'berat_hs' => $this->berat_hs[1] ?? 0,
-                    'pcs_hs' => $this->pcs_hs[1] ?? 0,
-                ];
-                $cuttingL = CuttingL::create($firstRecord);
+                if (isset($this->selectedGradingService[$i])) {
+                }
+            }
+
+            $additionalData =  $additionalData ?? [];
+
+            $additionalData = array_merge($additionalData, [
+                'tggl_cutting' => $this->session_tggl_cutting,
+                'tggl_injek_co' => $this->session_tggl_injek_co,
+                'tggl_service' => $this->session_tggl_service,
+                'penerimaan_id' => $this->penerimaan_id,
+                'no_batch' => $this->no_batch,
+                'grade_size_id' => $this->selectedSizingLoin[1],
+                'no_loin' => $this->rows[0]['no_loin'],
+                'berat_loin' => $this->rows[0]['berat_loin'],
+                'suhu_loin' => $this->rows[0]['suhu_loin'],
+                'grade_service_id' => $this->selectedGradingService[1] ?? null,
+                'grade_servicehs_id' => $this->selectedGradingHservice[1] ?? null,
+            ]);
+
+                if(!empty($this->selectedGradingService[1])) {
+                    $additionalData = array_merge($additionalData, [
+                        'grade_service_id' => $this->selectedGradingService[1] ?? null,
+                        'berat_rm' => $this->berat_rm[1] ?? 0,
+                        'pcs_rm' => $this->pcs_rm[1] ?? 0,
+                    ]);
+                }
+
+                if(!empty($this->selectedGradingHservice[1])) {
+                    $additionalData = array_merge($additionalData, [
+                        'grade_servicehs_id' => $this->selectedGradingHservice[1] ?? null,
+                        'berat_hs' => $this->berat_hs[1] ?? 0,
+                        'pcs_hs' => $this->pcs_hs[1] ?? 0,
+                    ]);
+                }
+
+                $cuttingL = CuttingL::create($additionalData);
                 
                 //data tambahan
                 for ($i = 2; $i <= 3; $i++) {
                     if (isset($this->selectedGradingService[$i]) || isset($this->selectedGradingHservice[$i])) {
-                        $additionalRecord = [
-                            'tggl_cutting' => $this->session_tggl_cutting,
-                            'tggl_injek_co' => $this->session_tggl_injek_co,
-                            'tggl_service' => $this->session_tggl_service,
-                            'penerimaan_id' => $this->penerimaan_id,
-                            'no_batch' => $this->no_batch,
-                            'grade_size_id' => $this->selectedSizingLoin[$i] ?? null,
-                            'no_loin' => $row['no_loin'],
-                            'berat_loin' => $row['berat_loin'],
-                            'suhu_loin' => $row['suhu_loin'],
-                            'pcs_loin' => 0,
-
+                        $additionalRecord = array_merge($additionalData, [
                             // Data RM Service
                             'grade_service_id' => $this->selectedGradingService[$i] ?? null,
                             'berat_rm' => $this->berat_rm[$i] ?? 0,
@@ -273,11 +287,10 @@ class CuttingByL extends Component
                             'grade_servicehs_id' => $this->selectedGradingHservice[$i] ?? null,
                             'berat_hs' => $this->berat_hs[$i] ?? 0,
                             'pcs_hs' => $this->pcs_hs[$i] ?? 0,
-                        ];
+                        ]);
                         $cuttingL = CuttingL::create($additionalRecord);
                     }
                 }
-            }
 
             DB::commit();
             session()->flash('message', 'Data berhasil disimpan');

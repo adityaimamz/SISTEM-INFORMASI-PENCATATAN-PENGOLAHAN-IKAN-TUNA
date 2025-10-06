@@ -19,19 +19,19 @@ return new class extends Migration
 
             // Pastikan tipe data sama dengan tabel yang direferensi
             $table->unsignedBigInteger('grade_size_id');
-            $table->unsignedBigInteger('grade_service_id');
-            $table->unsignedBigInteger('grade_servicehs_id');
+            $table->unsignedBigInteger('grade_service_id')->nullable();
+            $table->unsignedBigInteger('grade_servicehs_id')->nullable();
             $table->unsignedBigInteger('penerimaan_id');
 
             $table->string('no_batch');
             $table->string('no_loin');
             $table->float('berat_loin');
             $table->float('suhu_loin');
-            $table->float('pcs_loin')->default(0)->change();
-            $table->float('berat_rm')->default(0)->change();
-            $table->float('pcs_rm')->default(0)->change();
-            $table->float('berat_hs')->default(0)->change();
-            $table->float('pcs_hs')->default(0)->change();
+            $table->float('pcs_loin')->default(0)->nullable();
+            $table->float('berat_rm')->default(0)->nullable();
+            $table->float('pcs_rm')->default(0)->nullable();
+            $table->float('berat_hs')->default(0)->nullable();
+            $table->float('pcs_hs')->default(0)->nullable();
 
             $table->timestamps();
         });
@@ -47,12 +47,12 @@ return new class extends Migration
             $table->foreign('grade_service_id')
                   ->references('grade_service_id')
                   ->on('grade_services')
-                  ->onDelete('cascade');
+                  ->onDelete('set null');
 
             $table->foreign('grade_servicehs_id')
                   ->references('grade_servicehs_id')
                   ->on('grade_servicehs')
-                  ->onDelete('cascade');
+                  ->onDelete('set null');
 
             $table->foreign('penerimaan_id')
                   ->references('penerimaan_id')
@@ -72,11 +72,11 @@ return new class extends Migration
             $table->dropForeign(['grade_servicehs_id']);
             $table->dropForeign(['penerimaan_id']);
 
-            $table->float('pcs_loin')->nullable()->change();
-            $table->float('berat_rm')->nullable()->change();
-            $table->float('pcs_rm')->nullable()->change();
-            $table->float('berat_hs')->nullable()->change();
-            $table->float('pcs_hs')->nullable()->change();
+            $table->float('pcs_loin')->default(0)->nullable()->change();
+            $table->float('berat_rm')->default(0)->nullable()->change();
+            $table->float('pcs_rm')->default(0)->nullable()->change();
+            $table->float('berat_hs')->default(0)->nullable()->change();
+            $table->float('pcs_hs')->default(0)->nullable()->change();
         });
         
         Schema::dropIfExists('cuttingls');
