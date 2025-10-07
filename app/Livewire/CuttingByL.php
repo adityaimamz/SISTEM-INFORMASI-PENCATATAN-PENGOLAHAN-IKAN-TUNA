@@ -306,6 +306,47 @@ class CuttingByL extends Component
         } 
     }
 
+//searh no batch
+    public $searchBatch = '';
+    public $allBatches = [];
+
+    public function searchByBatch () {
+        $this->validate([
+            'searchBatch' => 'required|string',
+        ]);
+
+        if (empty($this->searchBatch)) {
+            return collect();
+        }
+
+        try {
+            $query = \App\Models\CuttingL::query()
+                ->where('no_batch', $this->searchBatch);
+
+            if (!$query->exists()) {
+                return collect();
+            }
+
+            $result = $query->with([
+                    'grade_size', 'grade_service', 
+                    'grade_servicehs', 'penerimaan'
+                ])
+                ->get();
+
+            return $result ?: collect();
+        } catch (\Exception $e) {
+            return collect();
+        }
+
+    }
+    // method mendapatkan daftar no batch
+    public function getAvailableBatches () {
+        return CuttingL::select('no_batch')
+            ->distinct()
+            ->orderBy('no_batch', 'asc')
+            ->pluck('no_batch');
+    }
+
 //reset form
     public function resetForm()
     {
@@ -326,6 +367,11 @@ class CuttingByL extends Component
         }
         //perhitungan total & pcs
         $this->calculateTotals();
+        $this->allBatches = $this->getAvailableBatches();
+        if (!empty($this->no_batch)) {
+            $cuttingData = $this->searchByBatch();
+        }
+        $cuttingData = collect();
 
         return view('livewire.cuttingl', [
             'cuttingls' => $this->cuttingls,                                        // data session
@@ -355,6 +401,9 @@ class CuttingByL extends Component
             'selectedGradingHservice' => $this->selectedGradingHservice,
             'gradingHservice' => $this->gradingHservice,
             'rows' => $this->rows,
+
+            'cuttingData' => $cuttingData,
+            'allBatches' => $this->allBatches,
             ]);
         }
     }

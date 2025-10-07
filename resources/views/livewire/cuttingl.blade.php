@@ -229,11 +229,16 @@
                             <th rowspan="4" style="width: 5px;">No</th>
                             <th colspan="9" style="width: 200px;">
                                 <input type="text" id="no_batch" 
-                                    wire:model.live="no_batch" 
+                                    wire:model.live.debounce.500ms="no_batch" 
                                     class="excel-input text-center" 
                                     placeholder="No Batch" 
                                     style="background-color:rgb(121, 173, 246); font-weight: bold; font-size: 0.8rem;"
                                     required>
+                                        <datalist id="no_batch">
+                                            @foreach ($allBatches as $batch)
+                                                <option value="{{ $batch }}"></option>
+                                            @endforeach
+                                        </datalist>
                                 @error('no_batch')
                                     <div class="text-danger small">{{ $message }}</div>
                                 @enderror

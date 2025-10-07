@@ -52,5 +52,6 @@ class CuttingL extends Model
     {
         return $this->belongsTo(GradeHService::class, 'grade_servicehs_id');
     }
+    
 }
 
