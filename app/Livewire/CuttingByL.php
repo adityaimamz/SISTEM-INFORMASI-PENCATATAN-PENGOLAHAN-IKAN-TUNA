@@ -44,6 +44,10 @@ class CuttingByL extends Component
     public $selectedGradingHservice = [];           // Data Grading Hservice
     public $gradingHservice = [];
 
+    public $filterTanggalCutting;                   // filter data
+    public $filterTanggalInjekCo;
+    public $filterTanggalService;
+
     public $rows = [];
 
 // inisialisasi data
@@ -72,6 +76,14 @@ class CuttingByL extends Component
         $this->gradingHservice = GradeHservice::all();
         $this->selectedGradingHservice = [1 => null, 2 => null, 3 => null];
 
+        //Inisialisasi filter tanggal
+        $this->filterTanggalCutting = $this->session_tggl_cutting;
+        $this->filterTanggalInjekCo = $this->session_tggl_injek_co;
+        $this->filterTanggalService = $this->session_tggl_service;
+        if ($this->filterTanggalCutting || $this->filterTanggalInjekCo || $this->filterTanggalService) {
+            $this->searchByBatch();
+        }
+
         //inisialisasi array
         $this->berat_rm = [0, 0, 0];
         $this->pcs_rm = [0, 0, 0];
@@ -81,6 +93,10 @@ class CuttingByL extends Component
         $this->berat_loin = 0;
         $this->selectedTanggalPenerimaan = null;
         $this->filteredPenerimaan = collect();
+        
+        //inisialisasi no batch
+        $this->allBatches = $this->getAvailableBatches();
+        $this->resetForm();
 
         if (!is_array($this->rows)) {
             $this->rows = [
@@ -92,7 +108,6 @@ class CuttingByL extends Component
             ];
         }
     }
-
 
 //otomatis dipanggil jika penerimaan_id berubah
     public function updatedPenerimaanId($value) 
@@ -124,7 +139,6 @@ class CuttingByL extends Component
             $this->filteredPenerimaan = collect();
         }
     }
-
 
 //tambah row
     public function addRow()
@@ -194,22 +208,10 @@ class CuttingByL extends Component
         $this->pcs_loin = count($this->rows);
     }
 
-    public function updated($propertyName)
-    {
-        if (str_starts_with($propertyName, 'rows.')) {
-            $this->calculateTotals();
-        }
-
-        if ($propertyName == 'selectedTanggalPenerimaan') {
-            $this->updatedSelectedTanggalPenerimaan($this->selectedTanggalPenerimaan);
-        }
-    }
-    
 //simpan data
     public function saveAll()
     {
         try {
-
             DB::beginTransaction();
 
             $validatedData = $this->validate([
@@ -232,16 +234,26 @@ class CuttingByL extends Component
                 'pcs_hs.1' => 'nullable|integer',
             ]);
 
-            $additionalData = [];
+            foreach ($this->rows as $row) {
+                \App\Models\CuttingL::updateOrCreate (
+                    [
+                        'no_batch' => $this->no_batch,
+                        'no_loin' => $row['no_loin']
+                    ],
+                    [
+                        'berat_loin' => $row['berat_loin'],
+                        'suhu_loin' => $row['suhu_loin']
+                    ]
+                );
+            }
 
+            $additionalData = [];
             for ($i = 2; $i <= 3; $i++) {
 
                 if (isset($this->selectedGradingService[$i])) {
                 }
             }
-
             $additionalData =  $additionalData ?? [];
-
             $additionalData = array_merge($additionalData, [
                 'tggl_cutting' => $this->session_tggl_cutting,
                 'tggl_injek_co' => $this->session_tggl_injek_co,
@@ -306,35 +318,108 @@ class CuttingByL extends Component
         } 
     }
 
-//searh no batch
+// update data
+    public function updated($propertyName)
+    {
+        if (in_array($propertyName, ['session_tggl_cutting', 'session_tggl_injek_co', 'session_tggl_service'])) {
+            $this->searchByBatch();
+        }
+
+        if (str_starts_with($propertyName, 'rows.')) {
+            $this->calculateTotals();
+            $index = explode('.', $propertyName)[1];
+            $row = $this->rows[$index] ?? null;
+
+            if ($row) {
+                //update data ke database
+                \App\Models\CuttingL::updateOrCreate(
+                    [
+                        'no_batch' => $this->no_batch,
+                        'no_loin' => $row['no_loin']
+                    ],
+                    [
+                        'berat_loin' => $row['berat_loin'],
+                        'suhu_loin' => $row['suhu_loin']
+                    ]
+                );
+            }
+        }
+        //handle perubahan tanggal penerimaan
+        if ($propertyName === 'selectedTanggalPenerimaan') {
+            $this->updatedSelectedTanggalPenerimaan($this->selectedTanggalPenerimaan);
+        }
+    }
+
+//filter tanggal
+    public function updateFilterTanggal($type) {
+        switch ($type) {
+            case 'cutting':
+                $this->filterTanggalCutting = $this->session_tggl_cutting;
+                break;
+            case 'injek_co':
+                $this->filterTanggalInjekCo = $this->session_tggl_injek_co;
+                break;
+            case 'service':
+                $this->filterTanggalService = $this->session_tggl_service;
+                break;
+        }
+        $this->searchByBatch();
+    }
+
+    //searh no batch
     public $searchBatch = '';
     public $allBatches = [];
 
     public function searchByBatch () {
-        $this->validate([
-            'searchBatch' => 'required|string',
-        ]);
-
-        if (empty($this->searchBatch)) {
-            return collect();
-        }
-
         try {
-            $query = \App\Models\CuttingL::query()
-                ->where('no_batch', $this->searchBatch);
+            $query = \App\Models\CuttingL::query();
 
-            if (!$query->exists()) {
-                return collect();
+            if (!empty($this->session_tggl_cutting)) {
+                $query->whereDate('tggl_cutting', $this->session_tggl_cutting);
             }
 
-            $result = $query->with([
-                    'grade_size', 'grade_service', 
-                    'grade_servicehs', 'penerimaan'
+            if (!empty($this->session_tggl_injek_co)) {
+                $query->whereDate('tggl_injek_co', $this->session_tggl_injek_co);
+            }
+
+            if (!empty($this->session_tggl_service)) {
+                $query->whereDate('tggl_service', $this->session_tggl_service);
+            }
+
+            if (!empty($this->no_batch)) {
+                $query->where('no_batch', $this->no_batch);
+                return collect();
+            }
+    
+            $results = $query->with([
+                    'grade_size',
+                    'grade_service', 
+                    'grade_servicehs',
+                    'penerimaan.supplier'
                 ])
                 ->get();
 
-            return $result ?: collect();
+            if ($results->isNotEmpty()) {
+                $this->selectedSizingLoin = [1 => $results->first()->grade_size_id ?? null];
+
+                $this->rows = $results->map(function ($item) {
+                    return [
+                        'no_batch' => $item->no_batch ?? '',
+                        'grade_size_id' => $item->grade_size_id ?? '',
+                        'no_loin' => $item->no_loin ?? '',
+                        'berat_loin' => $item->berat_loin ?? 0,
+                        'suhu_loin' => $item->suhu_loin ?? 0,
+                    ];
+                })->toArray();
+
+                return $results;
+            } else {
+                $this->resetForm();
+                return collect();
+            }
+
         } catch (\Exception $e) {
+            \Log::error('Error in searchByBatch: ' . $e->getMessage());
             return collect();
         }
 
@@ -346,10 +431,37 @@ class CuttingByL extends Component
             ->orderBy('no_batch', 'asc')
             ->pluck('no_batch');
     }
+    // method memicu pencarian no batch
+    public function updatedNoBatch($value) {
+        if (!empty($value)) {
+            $this->searchByBatch();
+        } else {
+            $this->resetForm();
+        }
+    }
+    // reset filter
+    public function resetFilters () {
+        $this->reset([
+            'session_tggl_cutting',
+            'session_tggl_injek_co',
+            'session_tggl_service',
+            'filterTanggalCutting',
+            'filterTanggalInjekCo',
+            'filterTanggalService',
+        ]);
+        $this->searchByBatch();
+    }
 
 //reset form
     public function resetForm()
     {
+        $this->rows = [[
+            'no_batch' => '',
+            'grade_size_id' => '',
+            'no_loin' => '',
+            'berat_loin' => '',
+            'suhu_loin' => '',
+        ]];
         $this->reset(['no_batch', 'rows']);
         $this->addRow();
     }
@@ -368,10 +480,12 @@ class CuttingByL extends Component
         //perhitungan total & pcs
         $this->calculateTotals();
         $this->allBatches = $this->getAvailableBatches();
+
+        $cuttingData = collect();
         if (!empty($this->no_batch)) {
             $cuttingData = $this->searchByBatch();
         }
-        $cuttingData = collect();
+        
 
         return view('livewire.cuttingl', [
             'cuttingls' => $this->cuttingls,                                        // data session
@@ -405,5 +519,5 @@ class CuttingByL extends Component
             'cuttingData' => $cuttingData,
             'allBatches' => $this->allBatches,
             ]);
-        }
     }
+}

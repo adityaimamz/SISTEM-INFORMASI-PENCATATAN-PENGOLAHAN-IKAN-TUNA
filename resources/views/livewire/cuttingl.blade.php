@@ -26,6 +26,7 @@
                     <label for="session_tggl_cutting" class="form-label small">Tanggal Cutting</label>
                     <input type="date" id="session_tggl_cutting" 
                            wire:model.live="session_tggl_cutting" 
+                           wire:change="updateFilterTanggal('cutting')"
                            class="form-control form-control-sm @error('session_tggl_cutting') is-invalid @enderror"
                            required>
                     @error('session_tggl_cutting')
@@ -37,6 +38,7 @@
                     <label for="session_tggl_injek_co" class="form-label small">Tanggal Injek CO</label>
                     <input type="date" id="session_tggl_injek_co" 
                            wire:model.live="session_tggl_injek_co"
+                           wire:change="updateFilterTanggal('injek_co')"
                            class="form-control form-control-sm @error('session_tggl_injek_co') is-invalid @enderror"
                            @if(!$session_tggl_cutting) disabled @endif 
                            min="{{ $session_tggl_cutting }}"
@@ -50,6 +52,7 @@
                     <label for="session_tggl_service" class="form-label small">Tanggal Service</label>
                     <input type="date" id="session_tggl_service" 
                            wire:model.live="session_tggl_service"
+                           wire:change="updateFilterTanggal('service')"
                            class="form-control form-control-sm @error('session_tggl_service') is-invalid @enderror"
                            @if(!$session_tggl_injek_co) disabled @endif 
                            min="{{ $session_tggl_injek_co }}"
@@ -230,11 +233,12 @@
                             <th colspan="9" style="width: 200px;">
                                 <input type="text" id="no_batch" 
                                     wire:model.live.debounce.500ms="no_batch" 
+                                    wire:key="no_batch_{{ rand() }}"
                                     class="excel-input text-center" 
                                     placeholder="No Batch" 
                                     style="background-color:rgb(121, 173, 246); font-weight: bold; font-size: 0.8rem;"
                                     required>
-                                        <datalist id="no_batch">
+                                        <datalist id="batch_list">
                                             @foreach ($allBatches as $batch)
                                                 <option value="{{ $batch }}"></option>
                                             @endforeach
@@ -343,7 +347,7 @@
                                 {{-- berat Loin --}}
                                 <td>
                                     <input type="number" step="0.01" 
-                                        wire:model.live="rows.{{ $index }}.berat_loin"
+                                        wire:model.live.debounce.500ms="rows.{{ $index }}.berat_loin"
                                         class="excel-input text-center"
                                         placeholder="Kg">
                                 </td>
@@ -351,7 +355,7 @@
                                 {{-- suhu loin --}}
                                 <td>
                                     <input type="number" step="0.1" 
-                                            wire:model.live="rows.{{ $index }}.suhu_loin"
+                                            wire:model.live.debounce.500ms="rows.{{ $index }}.suhu_loin"
                                             class="excel-input text-center"
                                             placeholder="°C">
                                 </td>
@@ -359,7 +363,7 @@
                                 {{-- No. Loin --}}
                                 <td>
                                     <input type="text" 
-                                        wire:model.defer="rows.{{ $index }}.no_loin"
+                                        wire:model.live.debounce.500ms="rows.{{ $index }}.no_loin"
                                         class="excel-input text-center"
                                         placeholder="No. Loin">
                                 </td>

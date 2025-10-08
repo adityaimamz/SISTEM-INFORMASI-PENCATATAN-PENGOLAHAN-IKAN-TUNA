@@ -35,7 +35,7 @@ class CuttingL extends Model
 
     public function grade_size()
     {
-        return $this->belongsTo(GradeSize::class, 'grade_size_id');
+        return $this->belongsTo(GradeL::class, 'grade_size_id');
     }
 
     public function penerimaan()
