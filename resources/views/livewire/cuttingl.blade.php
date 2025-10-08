@@ -232,7 +232,8 @@
                             <th rowspan="4" style="width: 5px;">No</th>
                             <th colspan="9" style="width: 200px;">
                                 <input type="text" id="no_batch" 
-                                    wire:model.live.debounce.500ms="no_batch" 
+                                    wire:model.live.debounce.500ms="no_batch"
+                                    wire:change="searchByBatch" 
                                     wire:key="no_batch_{{ rand() }}"
                                     class="excel-input text-center" 
                                     placeholder="No Batch" 

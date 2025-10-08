@@ -400,6 +400,9 @@ class CuttingByL extends Component
                 ->get();
 
             if ($results->isNotEmpty()) {
+                if (empty($this->no_batch) && $results->first()->no_batch) {
+                    $this->no_batch = $results->first()->no_batch;
+                }
                 $this->selectedSizingLoin = [1 => $results->first()->grade_size_id ?? null];
 
                 $this->rows = $results->map(function ($item) {
