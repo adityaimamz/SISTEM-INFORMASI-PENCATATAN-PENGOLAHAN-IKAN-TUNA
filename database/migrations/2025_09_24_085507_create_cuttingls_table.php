@@ -13,15 +13,15 @@ return new class extends Migration
     {
         Schema::create('cuttingls', function (Blueprint $table) {
             $table->bigIncrements('cuttingl_id');
-            $table->date('tggl_cutting');
-            $table->date('tggl_injek_co');
-            $table->date('tggl_service');
+            $table->date('tggl_cutting')->nullable();
+            $table->date('tggl_injek_co')->nullable();
+            $table->date('tggl_service')->nullable();
 
             // Pastikan tipe data sama dengan tabel yang direferensi
-            $table->unsignedBigInteger('grade_size_id');
+            $table->unsignedBigInteger('grade_size_id')->nullable();
             $table->unsignedBigInteger('grade_service_id')->nullable();
             $table->unsignedBigInteger('grade_servicehs_id')->nullable();
-            $table->unsignedBigInteger('penerimaan_id');
+            $table->unsignedBigInteger('penerimaan_id')->nullable();
 
             $table->string('no_batch');
             $table->string('no_loin');
@@ -72,11 +72,11 @@ return new class extends Migration
             $table->dropForeign(['grade_servicehs_id']);
             $table->dropForeign(['penerimaan_id']);
 
-            $table->float('pcs_loin')->default(0)->nullable()->change();
-            $table->float('berat_rm')->default(0)->nullable()->change();
-            $table->float('pcs_rm')->default(0)->nullable()->change();
-            $table->float('berat_hs')->default(0)->nullable()->change();
-            $table->float('pcs_hs')->default(0)->nullable()->change();
+            $table->float('pcs_loin')->default(0)->nullable();
+            $table->float('berat_rm')->default(0)->nullable();
+            $table->float('pcs_rm')->default(0)->nullable();
+            $table->float('berat_hs')->default(0)->nullable();
+            $table->float('pcs_hs')->default(0)->nullable();
         });
         
         Schema::dropIfExists('cuttingls');

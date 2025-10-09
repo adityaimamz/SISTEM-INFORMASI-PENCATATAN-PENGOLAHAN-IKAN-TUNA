@@ -8,6 +8,8 @@ use App\Models\GradeL;
 use App\Models\GradeService;
 use App\Models\GradeHservice;
 use Livewire\Component;
+use Livewire\Attributes\On;
+use Livewire\Attributes\Renderless;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -47,6 +49,8 @@ class CuttingByL extends Component
     public $filterTanggalCutting;                   // filter data
     public $filterTanggalInjekCo;
     public $filterTanggalService;
+    public $updateTimeout;
+    public $saveTimeout;
 
     public $rows = [];
 
@@ -147,6 +151,10 @@ class CuttingByL extends Component
             'berat_loin' => '',
             'suhu_loin' => '',
             'no_loin' => '',
+            'grade_size_id' => null,
+            'grade_service_id' => null,
+            'grade_servicehs_id' => null,
+            'penerimaan_id' => null,
             'berat_1' => '', 'berat_2' => '', 'berat_3' => '',
             'berat_4' => '', 'berat_5' => '', 'berat_6' => '',
             
@@ -156,9 +164,39 @@ class CuttingByL extends Component
 //hapus row
     public function removeRow($index)
     {
-        unset($this->rows[$index]);
-        $this->rows = array_values($this->rows);
-        $this->calculateTotals();
+        try {
+            $row = $this->rows[$index] ?? null;
+            if (isset($row['cutting_id'])) {
+                \App\Models\CuttingL::where('cutting_id', $row['cutting_id'])->delete();
+            }
+            unset($this->rows[$index]);
+            $this->rows = array_values($this->rows);
+            $this->calculateTotals();
+
+            if ($this->no_batch) {
+                $this->searchByBatch();
+            }
+            
+        } catch (\Exception $e) {
+        }
+    }
+
+//method tombol hapus
+    public function deleteRow ($cuttingId)
+    {
+        try {
+            \App\Models\CuttingL::where('cutting_id', $cuttingId)->delete();
+            $this->rows = array_filter($this->rows, function($row) use ($cuttingId) {
+                return ($row['cutting_id'] ?? null) != $cuttingId;
+            });
+
+            $this->rows = array_values($this->rows);
+            $this->calculateTotals();
+
+            session()->flash('message', 'Data berhasil dihapus');
+
+        } catch (\Exception $e) {
+        }
     }
 
 //hitung total berat & pcs
@@ -321,33 +359,76 @@ class CuttingByL extends Component
 // update data
     public function updated($propertyName)
     {
+        // Handle perubahan tanggal
         if (in_array($propertyName, ['session_tggl_cutting', 'session_tggl_injek_co', 'session_tggl_service'])) {
             $this->searchByBatch();
+            return;
         }
 
+        // Handle perubahan data di dalam rows
         if (str_starts_with($propertyName, 'rows.')) {
-            $this->calculateTotals();
-            $index = explode('.', $propertyName)[1];
+            $parts = explode('.', $propertyName);
+            if (count($parts) < 3) return; // Pastikan format property name benar
+
+            $index = $parts[1];
+            $field = $parts[2];
             $row = $this->rows[$index] ?? null;
 
-            if ($row) {
-                //update data ke database
+            if (!$row || empty($row['no_loin'])) {
+                return;
+            }
+            $this->dispatch('debounce-save');
+        }
+    }
+    #[On('debounce-save')]
+    public function presaveData()
+    {
+        if (isset($this->saveTimeout)) {
+            $this->js("clearTimeout({$this->saveTimeout})");
+        }
+        $this->saveTimeout = $this->js("setTimeout(() => \$wire.call('saveData'), 500)");
+
+    }
+
+    public function saveData()
+    {
+        foreach($this->rows as $row) {
+            if (empty($row['no_loin'])) continue;
+            try {
+                //format tanggal
+                $data = [
+                    'no_loin' => $row['no_loin'],
+                    'berat_loin' => (float) ($row['berat_loin'] ?? 0),
+                    'suhu_loin' => (float) ($row['suhu_loin'] ?? 0),
+                    'penerimaan_id' => $this->penerimaan_id,
+                    'grade_size_id' => $this->selectedSizingLoin[1],
+                    'grade_service_id' => $this->selectedGradingService[1] ?? null,
+                    'grade_servicehs_id' => $this->selectedGradingHservice[1] ?? null,
+                    'tggl_cutting' => $this->session_tggl_cutting
+                    ? \Carbon\Carbon::parse($this->session_tggl_cutting)->format('Y-m-d')
+                    : now()->format('Y-m-d'),
+                    'tggl_injek_co' => $this->session_tggl_injek_co
+                    ? \Carbon\Carbon::parse($this->session_tggl_injek_co)->format('Y-m-d')
+                    : null,
+                    'tggl_service' => $this->session_tggl_service
+                    ? \Carbon\Carbon::parse($this->session_tggl_service)->format('Y-m-d')
+                    : null,
+                    'no_batch' => $this->no_batch,
+                ];
                 \App\Models\CuttingL::updateOrCreate(
                     [
+                        'no_loin' => $row['no_loin'],
                         'no_batch' => $this->no_batch,
-                        'no_loin' => $row['no_loin']
-                    ],
-                    [
-                        'berat_loin' => $row['berat_loin'],
-                        'suhu_loin' => $row['suhu_loin']
-                    ]
-                );
+                    ], 
+                    $data
+                );            
+            } catch (\Exception $e) {
+                session()->flash('error', 'Gagal menyimpan data: ' . $e->getMessage());
             }
         }
-        //handle perubahan tanggal penerimaan
-        if ($propertyName === 'selectedTanggalPenerimaan') {
-            $this->updatedSelectedTanggalPenerimaan($this->selectedTanggalPenerimaan);
-        }
+
+        //refresh data
+        $this->searchByBatch();
     }
 
 //filter tanggal
@@ -374,50 +455,34 @@ class CuttingByL extends Component
         try {
             $query = \App\Models\CuttingL::query();
 
-            if (!empty($this->session_tggl_cutting)) {
-                $query->whereDate('tggl_cutting', $this->session_tggl_cutting);
-            }
-
-            if (!empty($this->session_tggl_injek_co)) {
-                $query->whereDate('tggl_injek_co', $this->session_tggl_injek_co);
-            }
-
-            if (!empty($this->session_tggl_service)) {
-                $query->whereDate('tggl_service', $this->session_tggl_service);
-            }
-
             if (!empty($this->no_batch)) {
                 $query->where('no_batch', $this->no_batch);
                 return collect();
             }
     
-            $results = $query->with([
-                    'grade_size',
-                    'grade_service', 
-                    'grade_servicehs',
-                    'penerimaan.supplier'
-                ])
-                ->get();
+            $results = $query->get();
 
             if ($results->isNotEmpty()) {
-                if (empty($this->no_batch) && $results->first()->no_batch) {
-                    $this->no_batch = $results->first()->no_batch;
-                }
-                $this->selectedSizingLoin = [1 => $results->first()->grade_size_id ?? null];
-
                 $this->rows = $results->map(function ($item) {
                     return [
-                        'no_batch' => $item->no_batch ?? '',
-                        'grade_size_id' => $item->grade_size_id ?? '',
-                        'no_loin' => $item->no_loin ?? '',
-                        'berat_loin' => $item->berat_loin ?? 0,
-                        'suhu_loin' => $item->suhu_loin ?? 0,
+                        'cutting_id' => $item->cutting_id,
+                        'no_loin' => $item->no_loin,
+                        'berat_loin' => $item->berat_loin,
+                        'suhu_loin' => $item->suhu_loin,
+                        'pcs_loin' => $item->pcs_loin,
+                        'grade_size_id' => $item->grade_size_id,
+                        'grade_service_id' => $item->grade_service_id,
+                        'grade_servicehs_id' => $item->grade_servicehs_id,
+                        'penerimaan_id' => $item->penerimaan_id,
+                        'berat_rm' => $item->berat_rm,
+                        'pcs_rm' => $item->pcs_rm,
+                        'berat_hs' => $item->berat_hs,
+                        'pcs_hs' => $item->pcs_hs
                     ];
                 })->toArray();
 
-                return $results;
             } else {
-                $this->resetForm();
+                $this->rows = [['no_loin' => '', 'berat_loin' => 0, 'suhu_loin' => 0]];
                 return collect();
             }
 
@@ -452,6 +517,7 @@ class CuttingByL extends Component
             'filterTanggalInjekCo',
             'filterTanggalService',
         ]);
+        $this->resetForm();
         $this->searchByBatch();
     }
 

@@ -393,7 +393,7 @@
                                 {{-- aksi --}}
                                 <td>
                                     <button class="btn btn-danger btn-sm py-0"
-                                        wire:click="removeRow({{ $index }})"
+                                        wire:click="deleteRow({{ $row['cutting_id'] ?? 'null' }})"
                                         style="font-size:.7rem; height:30px; width:30px;">
                                         <i class="bi bi-trash"></i>
                                     </button>
