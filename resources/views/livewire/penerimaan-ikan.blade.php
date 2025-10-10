@@ -72,7 +72,7 @@
                             class="form-select form-select-sm @error('session_jenis_penerimaan') is-invalid @enderror"
                             @if(!$session_date || !$session_tgl_bongkar || !$session_supplier) disabled @endif 
                             required>
-                            <option value="" selected disabled>Pilih Jenis Penerimaan</option>
+                            <option value="Pilih Jenis Penerimaan">Jenis Penerimaan</option>
                             <option value="Fresh GG">Fresh GG</option>
                             <option value="Frozen GG BE">Frozen GG BE</option>
                             <option value="Frozen GG BF">Frozen GG BF</option>
