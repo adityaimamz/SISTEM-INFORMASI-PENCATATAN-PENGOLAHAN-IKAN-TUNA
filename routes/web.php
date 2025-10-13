@@ -4,6 +4,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CuttingController;
 use App\Http\Controllers\CuttingLController;
 use App\Http\Controllers\KategoriByprodukCtController;
+use App\Http\Controllers\KategoriProdukController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\KategoriBeratPenerimaanController;
@@ -52,7 +53,9 @@ Route::resource('cuttingl', CuttingLController::class)->middleware('auth');
 Route::resource('kategori-byproduk-ct', KategoriByprodukCtController::class)
     ->parameters(['kategori-byproduk-ct' => 'kategori_byproduk_id'])
     ->middleware('auth');
-
+Route::resource('kategori-produk', KategoriProdukController::class)
+    ->parameters(['kategori-produk' => 'kategori_produk_id'])
+    ->middleware('auth');
 //MIDDLEWARE ADMIN
 Route::middleware('is_admin')->group(function () {
     Route::get('/admin', function () {

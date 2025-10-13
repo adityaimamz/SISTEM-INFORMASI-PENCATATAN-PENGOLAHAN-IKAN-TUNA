@@ -124,6 +124,10 @@
                         <li class="submenu-item {{ Request::is('kategori_byproduk_ct') ? 'active' : '' }} ">
                             <a href="/kategori-byproduk-ct" class="submenu-link">By Produk</a>
                         </li>
+
+                        <li class="submenu-item {{ Request::is('kategori_produk') ? 'active' : '' }} ">
+                            <a href="/kategori-produk" class="submenu-link">Produk</a>
+                        </li>
                     </ul>
                 </li>
                 @endif
