@@ -3,13 +3,15 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use App\Models\Grade;
 use App\Models\Supplier;
-use App\Models\KategoriBeratPenerimaan;
-use App\Models\KategoriByprodukCt;
+use App\Models\Grade;
 use App\Models\GradeL;
 use App\Models\GradeService;
 use App\Models\GradeHservice;
+use App\Models\KategoriBeratPenerimaan;
+use App\Models\KategoriByprodukCt;
+use App\Models\KategoriProduk;
+
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -31,7 +33,7 @@ class DatabaseSeeder extends Seeder
         Supplier::truncate();
         KategoriBeratPenerimaan::truncate();
         KategoriByprodukCt::truncate();
-
+        KategoriProduk::truncate();
         // Aktifkan foreign key check
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
@@ -144,6 +146,14 @@ class DatabaseSeeder extends Seeder
             ['nama_produk' => 'TM (Tetelan Merah)'],
         ];
         KategoriByprodukCt::insert($byproducts);
+
+        // Buat data kategori produk
+        $produks = [
+            ['nama_produk' => 'Saku'],
+            ['nama_produk' => 'Cube'],
+            ['nama_produk' => 'Loin'],
+        ];
+        KategoriProduk::insert($produks);
 
         $this->command->info('Database seeded successfully!');
     }
