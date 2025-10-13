@@ -151,7 +151,9 @@ class DatabaseSeeder extends Seeder
         $produks = [
             ['nama_produk' => 'Saku'],
             ['nama_produk' => 'Cube'],
-            ['nama_produk' => 'Loin'],
+            ['nama_produk' => 'Loin CC'],
+            ['nama_produk' => 'Steak'],
+            ['nama_produk' => 'Strips'],
         ];
         KategoriProduk::insert($produks);
 
