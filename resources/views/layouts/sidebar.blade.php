@@ -149,6 +149,10 @@
                         <li class="submenu-item  {{ Request::is('cuttingl') ? 'active' : '' }}">
                             <a href="/cuttingl" class="submenu-link">Cutting by Loin</a>
                         </li>
+
+                        <li class="submenu-item  {{ Request::is('servicel') ? 'active' : '' }}">
+                            <a href="/servicel" class="submenu-link">Service by Loin</a>
+                        </li>
                     </ul>
                 </li>
 

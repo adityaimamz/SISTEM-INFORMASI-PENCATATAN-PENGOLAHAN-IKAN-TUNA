@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CuttingController;
 use App\Http\Controllers\CuttingLController;
+use App\Http\Controllers\ServiceLController;
 use App\Http\Controllers\KategoriByprodukCtController;
 use App\Http\Controllers\KategoriProdukController;
 use App\Http\Controllers\KategoriController;
@@ -17,6 +18,7 @@ use App\Http\Controllers\PenerimaanIkanController;
 use App\Http\Controllers\SupplierController;
 use App\Models\Cutting;
 use App\Models\CuttingL;
+use App\Models\ServiceL;
 use App\Models\Penerimaan_ikan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -35,6 +37,7 @@ Route::get('/cutting-pdf', [CuttingController::class, 'cuttingPdf'])->name('cutt
 Route::get('/kategori-byproduk-ct-pdf', [KategoriByprodukCtController::class, 'kategoriByprodukCtPdf'])->name('kategori-byproduk-ct.pdf');
 Route::get('/grading', \App\Livewire\GradingProses::class)->name('grading.index')->middleware('auth');
 Route::get('/cuttingl', \App\Livewire\CuttingByL::class)->name('cuttingl.index')->middleware('auth');
+Route::get('/servicel', \App\Livewire\ServiceByL::class)->name('servicel.index')->middleware('auth');
 
 //PUT
 Route::put('/suppliers/{supplier}', [SupplierController::class, 'update'])->name('suppliers.update');
@@ -50,6 +53,7 @@ Route::resource('grade_hservice', GradeHController::class)
     ->middleware('auth');
 Route::resource('cutting', CuttingController::class)->middleware('auth');
 Route::resource('cuttingl', CuttingLController::class)->middleware('auth');
+Route::resource('servicel', ServiceLController::class)->middleware('auth');
 Route::resource('kategori-byproduk-ct', KategoriByprodukCtController::class)
     ->parameters(['kategori-byproduk-ct' => 'kategori_byproduk_id'])
     ->middleware('auth');
