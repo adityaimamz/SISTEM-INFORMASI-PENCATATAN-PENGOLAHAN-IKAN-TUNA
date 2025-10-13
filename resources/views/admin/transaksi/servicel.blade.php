@@ -12,7 +12,7 @@
         <div class="page-title">
             <div class="row">
                 <div class="col-12 col-md-6 order-md-1 order-last">
-                    <h3>Data Service L</h3>
+                    <h3>Data Service Loin</h3>
                     <p class="text-subtitle text-muted">Silahkan kelola data service Loin</p>
                 </div>
 
@@ -32,7 +32,7 @@
                 aria-labelledby="tambahPenerimaanModalTitle" aria-hidden="true">
             </div>
             <div class="card-body">
-                @livewire('servicel')
+                @livewire('service-by-l')
             </div>
         </section>
     </div>
